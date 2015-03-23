@@ -98,7 +98,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
 	}
 
 
-/** Uses swipe to change to the camera activity*/
+/** Uses swipe to change to the bluetooth activity*/
 	
 	@Override
 	public boolean onDown(MotionEvent e) {
