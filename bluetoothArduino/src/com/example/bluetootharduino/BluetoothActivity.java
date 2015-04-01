@@ -43,7 +43,8 @@ public class BluetoothActivity extends Activity implements OnClickListener, OnGe
     boolean stop = false;
     int position;
     byte read[];
-    
+    Netstrings nt = new Netstrings();
+
     GestureDetector detector;
 	
     @SuppressWarnings("deprecation")
@@ -134,7 +135,7 @@ public class BluetoothActivity extends Activity implements OnClickListener, OnGe
                                     
                                     handler.post(new Runnable() {
                                         public void run() {
-                                            data.setText(result);
+                                            data.setText(nt.decodedNetstring(result));
                                         }
                                     });
                                     
@@ -169,8 +170,7 @@ public class BluetoothActivity extends Activity implements OnClickListener, OnGe
 		} else if(v.getId() == R.id.send) {
 			
 			try {
-			String text = input.getText().toString();
-	        text += "\n";
+			String text = nt.encodedNetstring(input.getText().toString());
 			out.write(text.getBytes());
 			data.setText("message sent");			
 			} catch (IOException e) {
