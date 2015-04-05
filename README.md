@@ -4,7 +4,7 @@
 
 Either bundled with your IDE or downloaded from https://developer.android.com/sdk/index.html#Other
 
-See bluetoothArduino\app\build.gradle for version information.
+See \app\build.gradle for version information (subject to change).
 
 ###2. Download and extract the openCV for android sdk:
 http://sourceforge.net/projects/opencvlibrary/files/opencv-android/
@@ -36,12 +36,12 @@ opencv.dir = F\:\\OpenCV\\OpenCV-android-sdk
 #### Option1 building from terminal/cmd (Recommended)
 Run gradlew, or gradlew.bat (from cmd) if using windows.
 
-It will automaticly download and extract gradle for you.
+It will automatically download and extract gradle for you.
 
 You can then run:
 > gradlew build
 
-To build the APK's, the are generated to \app\build\outputs
+To build the APK's, they are generated to \app\build\outputs
 #### Option2 Import the gradle project to your IDE
 * The following topic shows how you can genarate a "insert IDE here" project using gradle:
 http://stackoverflow.com/questions/10722773/import-existing-gradle-git-project-into-eclipse-for-example-hibernate-orm
