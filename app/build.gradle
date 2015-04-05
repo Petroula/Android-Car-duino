@@ -1,0 +1,70 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+apply plugin: 'com.android.application'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def sdkDir = properties.getProperty('sdk.dir')
+def ndkDir = properties.getProperty('ndk.dir')
+def openCvDir = properties.getProperty('opencv.dir')
+def sources = "Cpp.cpp"
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 21
+        versionCode 101
+        versionName "1.0.1"
+    }
+
+    splits {
+        abi {
+            enable true // enable ABI split feature to create one APK per ABI
+            universalApk true //generate an additional APK that targets all the ABIs
+        }
+    }
+
+    sourceSets.main {
+        jniLibs.srcDir 'src/main/libs'
+        jni.srcDirs = [] //disable automatic ndk-build call
+    }
+
+    project.ext.versionCodes = ['armeabi': 1, 'armeabi-v7a': 2, 'arm64-v8a': 3, 'mips': 5, 'mips64': 6, 'x86': 8, 'x86_64': 9]
+    //versionCode digit for each supported ABI, with 64bit>32bit and x86>armeabi-*
+
+    android.applicationVariants.all { variant ->
+        // assign different version code for each output
+        variant.outputs.each { output ->
+            output.versionCodeOverride =
+                    project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) * 1000000 + defaultConfig.versionCode
+        }
+
+    }
+
+    // call regular ndk-build(.cmd) script from app directory, with generated makefile using $sources and $openCvDir variable
+    task ndkBuild(type: Exec) {
+        String ANDROIDMK = "" +
+                "LOCAL_PATH := \$(call my-dir)\n" +
+                "include \$(CLEAR_VARS)\n" +
+                "include $openCvDir\\sdk\\native\\jni\\OpenCV.mk\n" +
+                "LOCAL_MODULE := jniLibs\n" +
+                "LOCAL_SRC_FILES := $sources\n" +
+                "include \$(BUILD_SHARED_LIBRARY)"
+
+        new File("${project.projectDir}/src/main/jni/Android.mk").write(ANDROIDMK)
+
+        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+            commandLine ndkDir + '/ndk-build.cmd', '-C', file('src/main').absolutePath
+        } else {
+            commandLine 'ndk-build', '-C', file('src/main').absolutePath
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn ndkBuild
+    }
+//    sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jni/'] } }
+}
