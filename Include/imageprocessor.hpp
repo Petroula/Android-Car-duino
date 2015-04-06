@@ -32,31 +32,12 @@ namespace Autodrive {
         int max_right = 24;// max turning steering
         //cout << " width:"<< width<<endl;
         //cout << " height:"<< height<<endl;
-        CvScalar red = CV_RGB(250, 0, 0);
-        CvScalar green = CV_RGB(0, 250, 0);
-        CvScalar blue = CV_RGB(0, 0, 250);
-        int thickness = 1;
-        int connectivity = 8;
         bool near_lost = 0;// near vision lost
         bool far_lost = 0;//  far vision lost
         bool left_lost = 0; // left vision lost (left)
 
 
         double left_range = 0.4; // (0,0.5)
-
-        CvPoint ver_centr_start = cvPoint(width / 2, height);
-        CvPoint ver_centr_end = cvPoint(width / 2, 0);
-        CvPoint near_sample_start = cvPoint(width / 2, height - sample_near);
-        CvPoint mid_sample_start = cvPoint(width / 2, height - sample_mid);
-        CvPoint mid2_sample_start = cvPoint(width / 2, height - sample_mid2);
-        CvPoint mid3_sample_start = cvPoint(width / 2, height - sample_mid3);
-        CvPoint near_sample_end;
-        CvPoint mid_sample_left_end;
-        CvPoint mid2_sample_left_end;
-        CvPoint mid3_sample_left_end;
-        CvPoint near_sample_left_end;
-        CvPoint far_sample_start = cvPoint(width / 2, height - sample_far);
-        CvPoint far_sample_end;
 
         //TODO: Start here.
         int right_near = 0;
@@ -149,13 +130,27 @@ namespace Autodrive {
 #endif
 
 #ifdef _DEBUG
-        near_sample_end = cvPoint(width / 2 + right_near, height - sample_near);
-        far_sample_end = cvPoint(width / 2 + right_far, height - sample_far);
-        near_sample_left_end = cvPoint(width / 2 - left_near, height - sample_near);
-        mid_sample_left_end = cvPoint(width / 2 - left_mid, height - sample_mid);
-        mid2_sample_left_end = cvPoint(width / 2 - left_mid2, height - sample_mid2);
-        mid3_sample_left_end = cvPoint(width / 2 - left_mid3, height - sample_mid3);
         if (mat.data != NULL) {
+            CvScalar red = CV_RGB(250, 0, 0);
+            CvScalar green = CV_RGB(0, 250, 0);
+            CvScalar blue = CV_RGB(0, 0, 250);
+            
+            int thickness = 1;
+            int connectivity = 8;
+            
+            CvPoint ver_centr_start = cvPoint(width / 2, height);
+            CvPoint ver_centr_end = cvPoint(width / 2, 0);
+            CvPoint near_sample_start = cvPoint(width / 2, height - sample_near);
+            CvPoint mid_sample_start = cvPoint(width / 2, height - sample_mid);
+            CvPoint mid2_sample_start = cvPoint(width / 2, height - sample_mid2);
+            CvPoint mid3_sample_start = cvPoint(width / 2, height - sample_mid3);
+            CvPoint far_sample_start = cvPoint(width / 2, height - sample_far);
+            CvPoint near_sample_end = cvPoint(width / 2 + right_near, height - sample_near);
+            CvPoint far_sample_end = cvPoint(width / 2 + right_far, height - sample_far);
+            CvPoint near_sample_left_end = cvPoint(width / 2 - left_near, height - sample_near);
+            CvPoint mid_sample_left_end = cvPoint(width / 2 - left_mid, height - sample_mid);
+            CvPoint mid2_sample_left_end = cvPoint(width / 2 - left_mid2, height - sample_mid2);
+            CvPoint mid3_sample_left_end = cvPoint(width / 2 - left_mid3, height - sample_mid3);
             cv::line(mat, ver_centr_start, ver_centr_end, red, thickness, connectivity);
             cv::line(mat, near_sample_start, near_sample_end, green, thickness, connectivity);
             cv::line(mat, far_sample_start, far_sample_end, green, thickness, connectivity);

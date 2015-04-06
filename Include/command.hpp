@@ -6,15 +6,15 @@ namespace Autodrive {
     struct command{
         bool changedAngle = false;
         bool changedSpeed = false;
-        double angle;
-        double speed;
-        inline void setSpeed(double speed){
+        double angle = 0.0;
+        double speed = 0.0;
+        inline void setSpeed(double newspeed) {
             changedSpeed = true;
-            this->speed = speed;
+            speed = newspeed;
         }
-        inline void setAngle(double angle){
+        inline void setAngle(double newangle){
             changedAngle = true;
-            this->angle = angle;
+            angle = newangle;
         }
     };
 
