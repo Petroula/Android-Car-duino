@@ -1,12 +1,10 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
+#include "../Source/imageprocessor.h"
 
 using namespace cv;
 using namespace std;
-
-
-extern void processImage(cv::Mat mat, int widthStep);
 
 int main()
 {
