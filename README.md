@@ -2,19 +2,22 @@
 
 ![Alt text](Diagram.png?raw=true "You are now looking at the android app")
 
+###Related repos:
+[Autodrive](https://github.com/davidkron/Autodrive)
+
 # Building
 
 ###1. Get the android sdk
 
-Either bundled with your IDE or downloaded from https://developer.android.com/sdk/index.html#Other
+Either bundled with your IDE or downloaded from [here](https://developer.android.com/sdk/index.html#Other)
 
 See \app\build.gradle for version information (subject to change).
 
 ###2. Download and extract the openCV for android sdk:
-http://sourceforge.net/projects/opencvlibrary/files/opencv-android/
+[Download link](http://sourceforge.net/projects/opencvlibrary/files/opencv-android/)
 
 ###3. Download the Android-NDK
-http://developer.android.com/tools/sdk/ndk/index.html
+[Download link](http://developer.android.com/tools/sdk/ndk/index.html)
 
 ##4. Set paths in the local.properties file
 
@@ -47,7 +50,7 @@ You can then run:
 
 To build the APK's, they are generated to \app\build\outputs
 #### Option2 Import the gradle project to your IDE
-* The following topic shows how you can genarate a "insert IDE here" project using gradle:
-http://stackoverflow.com/questions/10722773/import-existing-gradle-git-project-into-eclipse-for-example-hibernate-orm
+* The following topic shows how you can genarate a an ide specific project using gradle:
+[importing gradle project into eclipse](http://stackoverflow.com/questions/10722773/import-existing-gradle-git-project-into-eclipse-for-example-hibernate-orm)
 * Alternativly, check this out if you want the gradle toolchain integrated into eclipse:
-https://github.com/spring-projects/eclipse-integration-gradle/
+[Eclipse Gradle Integration](https://github.com/spring-projects/eclipse-integration-gradle/)
