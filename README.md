@@ -1,3 +1,7 @@
+# ANDROID CAR DUINO
+
+![Alt text](Diagram.png?raw=true "You are now looking at the android app")
+
 # Building
 
 ###1. Get the android sdk
