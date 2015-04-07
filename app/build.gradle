@@ -49,17 +49,15 @@ android {
         String ANDROIDMK = "" +
                 "LOCAL_PATH := \$(call my-dir)\n" +
                 "include \$(CLEAR_VARS)\n" +
-                "include $openCvDir\\sdk\\native\\jni\\OpenCV.mk\n" +
+                "include $openCvDir/sdk/native/jni/OpenCV.mk\n" +
                 "LOCAL_MODULE := jniLibs\n" +
                 "LOCAL_SRC_FILES := $sources\n" +
                 "include \$(BUILD_SHARED_LIBRARY)"
-
         new File("${project.projectDir}/src/main/jni/Android.mk").write(ANDROIDMK)
-
         if (Os.isFamily(Os.FAMILY_WINDOWS)) {
             commandLine ndkDir + '/ndk-build.cmd', '-C', file('src/main').absolutePath
         } else {
-            commandLine 'ndk-build', '-C', file('src/main').absolutePath
+            commandLine ndkDir + '/ndk-build', '-C', file('src/main').absolutePath
         }
     }
 
