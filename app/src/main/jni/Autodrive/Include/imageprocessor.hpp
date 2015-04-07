@@ -4,14 +4,16 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+#include "command.hpp"
+
 using namespace std;
 
 int intersection_protect = 0;
 
-    // You should start your work in this method.
-    void processImage(cv::Mat mat,int widthStep) {
-        // Example: Show the image.
+namespace Autodrive {
 
+    // You should start your work in this method.
+    command processImage(cv::Mat mat, int widthStep) {
         //draw a line
         int width = mat.size().width;
         int height = mat.size().height;
@@ -55,7 +57,7 @@ int intersection_protect = 0;
         CvPoint near_sample_left_end;
         CvPoint far_sample_start = cvPoint(width / 2, height - sample_far);
         CvPoint far_sample_end;
-        
+
         //TODO: Start here.
         int right_near = 0;
         int right_near1 = 0;
@@ -127,6 +129,7 @@ int intersection_protect = 0;
             left_lost = 0;
         }
 
+#ifdef _DEBUGIMAGEPROCESSING
 
         // state machine
 
@@ -143,24 +146,25 @@ int intersection_protect = 0;
         else{
             cout << "right_far:" << right_far << endl;
         }
+#endif
 
+#ifdef _DEBUG
         near_sample_end = cvPoint(width / 2 + right_near, height - sample_near);
         far_sample_end = cvPoint(width / 2 + right_far, height - sample_far);
         near_sample_left_end = cvPoint(width / 2 - left_near, height - sample_near);
         mid_sample_left_end = cvPoint(width / 2 - left_mid, height - sample_mid);
         mid2_sample_left_end = cvPoint(width / 2 - left_mid2, height - sample_mid2);
         mid3_sample_left_end = cvPoint(width / 2 - left_mid3, height - sample_mid3);
-        #ifdef _DEBUG
-            if (mat.data != NULL) {
-                cv::line(mat, ver_centr_start, ver_centr_end, red, thickness, connectivity);
-                cv::line(mat, near_sample_start, near_sample_end, green, thickness, connectivity);
-                cv::line(mat, far_sample_start, far_sample_end, green, thickness, connectivity);
-                cv::line(mat, near_sample_start, near_sample_left_end, blue, thickness, connectivity);
-                cv::line(mat, mid_sample_start, mid_sample_left_end, blue, thickness, connectivity);
-                cv::line(mat, mid2_sample_start, mid2_sample_left_end, blue, thickness, connectivity);
-                cv::line(mat, mid3_sample_start, mid3_sample_left_end, blue, thickness, connectivity);
-            }
-        #endif
+        if (mat.data != NULL) {
+            cv::line(mat, ver_centr_start, ver_centr_end, red, thickness, connectivity);
+            cv::line(mat, near_sample_start, near_sample_end, green, thickness, connectivity);
+            cv::line(mat, far_sample_start, far_sample_end, green, thickness, connectivity);
+            cv::line(mat, near_sample_start, near_sample_left_end, blue, thickness, connectivity);
+            cv::line(mat, mid_sample_start, mid_sample_left_end, blue, thickness, connectivity);
+            cv::line(mat, mid2_sample_start, mid2_sample_left_end, blue, thickness, connectivity);
+            cv::line(mat, mid3_sample_start, mid3_sample_left_end, blue, thickness, connectivity);
+        }
+#endif
 
         // 2. Calculate desired steering commands from your image features to be processed by driver.
         double difference = 0;
@@ -183,14 +187,8 @@ int intersection_protect = 0;
         if (difference < max_left) difference = max_left;
         if (difference > max_right) difference = max_right;
 
-        /*
-
-        // Here, you see an example of how to send the data structure SteeringData to the ContainerConference. This data structure will be received by all running components. In our example, it will be processed by Driver. To change this data structure, have a look at Data.odvd in the root folder of this source.
-        SteeringData sd;
-        sd.setExampleData(difference);
-
-        // Create container for finally sending the data.
-        Container c(Container::USER_DATA_1, sd);
-        // Send container.
-        getConference().send(c);*/
+        command carCommand;
+        carCommand.setAngle(difference);
+        return carCommand;
     }
+}
