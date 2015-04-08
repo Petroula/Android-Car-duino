@@ -1,4 +1,4 @@
-package bluetootharduino;
+package pegasus.bluetootharduino;
 
 public class Netstrings {
 	

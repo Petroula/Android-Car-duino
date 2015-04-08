@@ -1,3 +1,4 @@
+import com.android.build.gradle.tasks.PackageApplication
 import org.apache.tools.ant.taskdefs.condition.Os
 
 apply plugin: 'com.android.application'
@@ -18,6 +19,11 @@ android {
         targetSdkVersion 21
         versionCode 101
         versionName "1.0.1"
+        applicationId "pegasus.bluetootharduino"
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
     }
 
     splits {
@@ -25,11 +31,6 @@ android {
             enable true // enable ABI split feature to create one APK per ABI
             universalApk true //generate an additional APK that targets all the ABIs
         }
-    }
-
-    sourceSets.main {
-        jniLibs.srcDir 'src/main/libs'
-        jni.srcDirs = [] //disable automatic ndk-build call
     }
 
     project.ext.versionCodes = ['armeabi': 1, 'armeabi-v7a': 2, 'arm64-v8a': 3, 'mips': 5, 'mips64': 6, 'x86': 8, 'x86_64': 9]
@@ -41,7 +42,11 @@ android {
             output.versionCodeOverride =
                     project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) * 1000000 + defaultConfig.versionCode
         }
+    }
 
+    sourceSets.main {
+        jniLibs.srcDir 'src/main/libs'
+        jni.srcDirs = [] //disable automatic ndk-build call
     }
 
     // call regular ndk-build(.cmd) script from app directory, with generated makefile using $sources and $openCvDir variable
@@ -49,8 +54,9 @@ android {
         String ANDROIDMK = "" +
                 "LOCAL_PATH := \$(call my-dir)\n" +
                 "include \$(CLEAR_VARS)\n" +
+                "OPENCV_LIB_TYPE:=STATIC\n" +
                 "include $openCvDir/sdk/native/jni/OpenCV.mk\n" +
-                "LOCAL_MODULE := jniLibs\n" +
+                "LOCAL_MODULE := autodrive\n" +
                 "LOCAL_SRC_FILES := $sources\n" +
                 "include \$(BUILD_SHARED_LIBRARY)"
         new File("${project.projectDir}/src/main/jni/Android.mk").write(ANDROIDMK)
@@ -64,5 +70,4 @@ android {
     tasks.withType(JavaCompile) {
         compileTask -> compileTask.dependsOn ndkBuild
     }
-//    sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jni/'] } }
 }

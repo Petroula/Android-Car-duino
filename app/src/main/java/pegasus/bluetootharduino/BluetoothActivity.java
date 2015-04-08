@@ -3,7 +3,7 @@
  * https://bellcode.wordpress.com/2012/01/02/android-and-arduino-bluetooth-communication/
  */
 
-package bluetootharduino;
+package pegasus.bluetootharduino;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +26,7 @@ import android.widget.Toast;
 import android.bluetooth.*;
 import android.content.Intent;
 
-import com.example.bluetootharduino.R;
+import pegasus.bluetootharduino.R;
 
 public class BluetoothActivity extends Activity implements OnClickListener, OnGestureListener {
 

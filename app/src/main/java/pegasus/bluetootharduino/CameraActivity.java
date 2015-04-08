@@ -1,8 +1,9 @@
-package bluetootharduino;
+package pegasus.bluetootharduino;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.GestureDetector;
@@ -10,14 +11,14 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.example.bluetootharduino.R;
+import pegasus.bluetootharduino.R;
 
 public class CameraActivity extends Activity implements OnGestureListener {
 
 	private static final String TAG = "CameraActivity";
-	
+
+    AutomaticCarDriver autodriver;
 	GestureDetector detector;
-	
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -31,43 +32,32 @@ public class CameraActivity extends Activity implements OnGestureListener {
         detector = new GestureDetector(this);
        
         Toast.makeText(getApplicationContext(), "Swipe to Bluetooth", Toast.LENGTH_SHORT).show();
-        
-    }
 
+        System.loadLibrary("autodrive");
+
+        autodriver = new AutomaticCarDriver();
+        autodriver.start();
+    }
 	
 	@Override
 	public void onResume()
 	{
+        autodriver = new AutomaticCarDriver();
+        autodriver.start();
 	    super.onResume();
-	    //OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_6, this, mLoaderCallback);
 	}
-	
 	
 	/** activity implements the camera view */
 	
 	 public void onPause() {
+         autodriver.close();
 	     super.onPause();
-	     //if (mOpenCvCameraView != null)
-	     //    mOpenCvCameraView.disableView();
 	 }
 
 	 public void onDestroy() {
-	     super.onDestroy();
-	     //if (mOpenCvCameraView != null)
-	     //    mOpenCvCameraView.disableView();
-	 }
-/*
-	@Override
-	public void onCameraViewStarted(int width, int height) {}
-
-	@Override
-	public void onCameraViewStopped() {}
-
-	@Override
-	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-		return inputFrame.rgba();
-	}
-*/
+         super.onDestroy();
+         autodriver.close();
+     }
 
 /** Uses swipe to change to the bluetooth activity*/
 	
@@ -96,7 +86,7 @@ public class CameraActivity extends Activity implements OnGestureListener {
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,	float velocityY) {
 		
 		if(e1.getX()<e2.getX()) {		
-			/** Changes to Bluetooth screen */  	
+			/** Changes to Bluetooth screen */
        	    Intent changeToBluetooth= new Intent(getApplicationContext(), BluetoothActivity.class);
 			startActivity(changeToBluetooth);
 			return true;
@@ -107,6 +97,6 @@ public class CameraActivity extends Activity implements OnGestureListener {
 	
 	public boolean onTouchEvent(MotionEvent ev) {
 		return detector.onTouchEvent(ev);	
-	} 
+	}
 
 }
