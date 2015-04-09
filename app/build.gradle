@@ -1,22 +1,19 @@
 import com.android.build.gradle.tasks.PackageApplication
 import org.apache.tools.ant.taskdefs.condition.Os
-
 apply plugin: 'com.android.application'
-
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def sdkDir = properties.getProperty('sdk.dir')
 def ndkDir = properties.getProperty('ndk.dir')
 def openCvDir = properties.getProperty('opencv.dir')
 def sources = "Cpp.cpp"
-
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 21
+        minSdkVersion 14
+        targetSdkVersion 19
         versionCode 101
         versionName "1.0.1"
         applicationId "pegasus.bluetootharduino"
@@ -33,16 +30,16 @@ android {
         }
     }
 
-    project.ext.versionCodes = ['armeabi': 1, 'armeabi-v7a': 2, 'arm64-v8a': 3, 'mips': 5, 'mips64': 6, 'x86': 8, 'x86_64': 9]
-    //versionCode digit for each supported ABI, with 64bit>32bit and x86>armeabi-*
+    /*   project.ext.versionCodes = ['armeabi': 1, 'armeabi-v7a': 2, 'arm64-v8a': 3, 'mips': 5, 'mips64': 6, 'x86': 8, 'x86_64': 9]
+       //versionCode digit for each supported ABI, with 64bit>32bit and x86>armeabi-*
 
-    android.applicationVariants.all { variant ->
-        // assign different version code for each output
-        variant.outputs.each { output ->
-            output.versionCodeOverride =
-                    project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) * 1000000 + defaultConfig.versionCode
-        }
-    }
+       android.applicationVariants.all { variant ->
+           // assign different version code for each output
+           variant.outputs.each { output ->
+               output.versionCodeOverride =
+                       project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) * 1000000 + defaultConfig.versionCode
+           }
+       }*/
 
     sourceSets.main {
         jniLibs.srcDir 'src/main/libs'
@@ -54,10 +51,13 @@ android {
         String ANDROIDMK = "" +
                 "LOCAL_PATH := \$(call my-dir)\n" +
                 "include \$(CLEAR_VARS)\n" +
-                "OPENCV_LIB_TYPE:=STATIC\n" +
+                "OPENCV_INSTALL_MODULES:=on\n" +
+                "OPENCV_LIB_TYPE:=SHARED\n" +
+                "OPENCV_CAMERA_MODULES:=on\n" +
                 "include $openCvDir/sdk/native/jni/OpenCV.mk\n" +
                 "LOCAL_MODULE := autodrive\n" +
                 "LOCAL_SRC_FILES := $sources\n" +
+                "LOCAL_LDLIBS += -llog -ldl -lstdc++\n" +
                 "include \$(BUILD_SHARED_LIBRARY)"
         new File("${project.projectDir}/src/main/jni/Android.mk").write(ANDROIDMK)
         if (Os.isFamily(Os.FAMILY_WINDOWS)) {
@@ -70,4 +70,7 @@ android {
     tasks.withType(JavaCompile) {
         compileTask -> compileTask.dependsOn ndkBuild
     }
+}
+dependencies {
+    compile project(':openCVLibrary2411')
 }

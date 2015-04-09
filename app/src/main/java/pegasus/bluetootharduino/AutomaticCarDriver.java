@@ -1,23 +1,15 @@
 package pegasus.bluetootharduino;
 
-import java.io.IOException;
+import org.opencv.core.Mat;
 
-public class AutomaticCarDriver extends Thread /* ALLWAYS RAN IN ITS OWN THREAD*/ {
+public class AutomaticCarDriver{
 
-    private boolean running = true;
-
-    public void close(){
-        running = false;
+    public AutomaticCarDriver(){
+        System.loadLibrary("autodrive");
     }
 
-    @Override
-    public void run() {
-        try {
-            while (running) {
-                int a = Natives.Tick();
-            }
-        } catch (Exception e) {
-            running = false;
-        }
+    public Mat processImage(Mat image) {
+        float diff = Natives.processImage(image.getNativeObjAddr());
+        return image;
     }
 }
