@@ -23,6 +23,20 @@ android {
         testCompile 'junit:junit:4.12'
     }
 
+    preBuild.doFirst {
+        if (sdkDir == null){
+            throw new GradleException('"sdk.dir" not setup in local.properties')
+        }
+
+        if (ndkDir == null){
+            throw new GradleException('"ndk.dir" not setup in local.properties')
+        }
+
+        if (openCvDir == null){
+            throw new GradleException('"opencv.dir" not setup in local.properties')
+        }
+    }
+
     splits {
         abi {
             enable true // enable ABI split feature to create one APK per ABI
