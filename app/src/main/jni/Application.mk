@@ -1,4 +1,4 @@
-APP_STL := gnustl_static
+APP_STL := gnustl_shared
 APP_CPPFLAGS := -frtti -fexceptions
-NDK_TOOLCHAIN_VERSION := clang
-APP_ABI := x86
+NDK_TOOLCHAIN_VERSION := 4.8
+APP_ABI := mips armeabi armeabi-v7a x86
