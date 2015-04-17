@@ -1,11 +1,7 @@
 package pegasus.bluetootharduino;
 
+//TODO: We might want to remove this class completely and just use something like Autodrive.SensorData instead
 public class SensorData {
-    private static final double PULSES_PER_CM = 0.5; //to be determined experimentally
-    private static int[] ultrasound = {0,0,0};
-    private static int[] infrared = {0,0};
-    private static long encoderPulses = 0;
-
     public enum UltrasoundSensor{
         FRONT(0),
         FRONT_RIGHT(1),
@@ -34,24 +30,28 @@ public class SensorData {
             return value;
         }
     }
-    static void setUltrasound(UltrasoundSensor sensor, int value){ ultrasound[sensor.toInt()] = value; };
+    static void setUltrasound(UltrasoundSensor sensor, int value){
+        Autodrive.setUltrasound(sensor.toInt(), value);
+    };
 
-    static int getUltrasoundSensor(UltrasoundSensor sensor){ return ultrasound[sensor.toInt()]; }
+    static int getUltrasoundSensor(UltrasoundSensor sensor){
+        return Autodrive.getUltrasoundSensor(sensor.toInt());
+    }
 
     static void setInfrared(InfraredSensor sensor, int value){
-        infrared[sensor.toInt()] = value;
+        Autodrive.setInfrared(sensor.toInt(),value);
     }
 
     static int getInfraredSensor(InfraredSensor sensor){
-        return infrared[sensor.toInt()];
+        return Autodrive.getInfraredSensor(sensor.toInt());
     }
 
     static void setEncoderPulses(int value){
-        encoderPulses = value;
+        Autodrive.setEncoderPulses(value);
     }
 
     static double getEncoderDistance(){
-        return encoderPulses/PULSES_PER_CM;
+        return Autodrive.getEncoderDistance();
     }
 
 

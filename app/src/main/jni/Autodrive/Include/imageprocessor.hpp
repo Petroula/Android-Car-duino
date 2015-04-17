@@ -5,16 +5,24 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include "command.hpp"
+#include "sensordata.h"
 
 using namespace std;
 
-int intersection_protect = 0;
 
 namespace Autodrive {
 
+    command processImage(cv::Mat& mat, int widthStep);
+
+    int intersection_protect = 0;
+
+    command drive()
+    {
+        return processImage(*Autodrive::SensorData::image,Autodrive::SensorData::image->step );
+    }
+
     // You should start your work in this method.
-    command processImage(cv::Mat mat, int widthStep) {
-        //draw a line
+    command processImage(cv::Mat& mat, int widthStep) {
         int width = mat.size().width;
         int height = mat.size().height;
         int step = widthStep;
@@ -81,17 +89,6 @@ namespace Autodrive {
         while ((image + step * (height - sample_mid))[(width / 2 - left_mid) * 3] < threshold && left_mid < width / 2){ left_mid++; }
         while ((image + step * (height - sample_mid2))[(width / 2 - left_mid2) * 3] < threshold && left_mid2 < width / 2){ left_mid2++; }
         while ((image + step * (height - sample_mid3))[(width / 2 - left_mid3) * 3] < threshold && left_mid3 < width / 2){ left_mid3++; }
-        /*
-        while(isBlackPix(mat,width/2+right_near1,height- sample_near -2) && right_near1 < width/2 ){ right_near1 ++;}
-
-        while(isBlackPix(mat,width/2+right_near2,height- sample_near +2)&& right_near2 < width/2 ){ right_near2 ++;}
-        while(isBlackPix(mat,width/2+right_far,height- sample_far) && right_far < width/2 ){ right_far ++;}
-        while(isBlackPix(mat,width/2+left_near,height- sample_near) && left_near < width/2 ){ left_near ++;}
-        while(isBlackPix(mat,width/2+left_mid,height- sample_mid)&& left_mid < width/2 ){ left_mid ++;}
-        while(isBlackPix(mat,width/2+left_mid2,height- sample_mid2) && left_mid2 < width/2 ){ left_mid2 ++;}
-        while(isBlackPix(mat,width/2+left_mid3,height- sample_mid3) && left_mid3 < width/2 ){ left_mid3 ++;}
-        */
-
 
 
         if (right_near1 == 0 || right_near2 == 0){ // this case happens only when running into the stop line when entering the intersection
