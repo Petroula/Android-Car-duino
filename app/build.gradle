@@ -6,7 +6,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 def sdkDir = properties.getProperty('sdk.dir')
 def ndkDir = properties.getProperty('ndk.dir')
 def openCvDir = properties.getProperty('opencv.dir')
-def sources = "Cpp.cpp"
+def sources = "AutodriveJavaFacade.cpp"
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
