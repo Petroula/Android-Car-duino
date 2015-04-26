@@ -5,16 +5,24 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include "command.hpp"
+#include "sensordata.h"
 
 using namespace std;
 
-int intersection_protect = 0;
 
 namespace Autodrive {
 
+    command processImage(cv::Mat& mat, int widthStep);
+
+    int intersection_protect = 0;
+
+    command drive()
+    {
+        return processImage(*Autodrive::SensorData::image,Autodrive::SensorData::image->step );
+    }
+
     // You should start your work in this method.
-    command processImage(cv::Mat mat, int widthStep) {
-        //draw a line
+    command processImage(cv::Mat& mat, int widthStep) {
         int width = mat.size().width;
         int height = mat.size().height;
         int step = widthStep;
@@ -32,31 +40,12 @@ namespace Autodrive {
         int max_right = 24;// max turning steering
         //cout << " width:"<< width<<endl;
         //cout << " height:"<< height<<endl;
-        CvScalar red = CV_RGB(250, 0, 0);
-        CvScalar green = CV_RGB(0, 250, 0);
-        CvScalar blue = CV_RGB(0, 0, 250);
-        int thickness = 1;
-        int connectivity = 8;
         bool near_lost = 0;// near vision lost
         bool far_lost = 0;//  far vision lost
         bool left_lost = 0; // left vision lost (left)
 
 
         double left_range = 0.4; // (0,0.5)
-
-        CvPoint ver_centr_start = cvPoint(width / 2, height);
-        CvPoint ver_centr_end = cvPoint(width / 2, 0);
-        CvPoint near_sample_start = cvPoint(width / 2, height - sample_near);
-        CvPoint mid_sample_start = cvPoint(width / 2, height - sample_mid);
-        CvPoint mid2_sample_start = cvPoint(width / 2, height - sample_mid2);
-        CvPoint mid3_sample_start = cvPoint(width / 2, height - sample_mid3);
-        CvPoint near_sample_end;
-        CvPoint mid_sample_left_end;
-        CvPoint mid2_sample_left_end;
-        CvPoint mid3_sample_left_end;
-        CvPoint near_sample_left_end;
-        CvPoint far_sample_start = cvPoint(width / 2, height - sample_far);
-        CvPoint far_sample_end;
 
         //TODO: Start here.
         int right_near = 0;
@@ -81,17 +70,6 @@ namespace Autodrive {
         while ((image + step * (height - sample_mid))[(width / 2 - left_mid) * 3] < threshold && left_mid < width / 2){ left_mid++; }
         while ((image + step * (height - sample_mid2))[(width / 2 - left_mid2) * 3] < threshold && left_mid2 < width / 2){ left_mid2++; }
         while ((image + step * (height - sample_mid3))[(width / 2 - left_mid3) * 3] < threshold && left_mid3 < width / 2){ left_mid3++; }
-        /*
-        while(isBlackPix(mat,width/2+right_near1,height- sample_near -2) && right_near1 < width/2 ){ right_near1 ++;}
-
-        while(isBlackPix(mat,width/2+right_near2,height- sample_near +2)&& right_near2 < width/2 ){ right_near2 ++;}
-        while(isBlackPix(mat,width/2+right_far,height- sample_far) && right_far < width/2 ){ right_far ++;}
-        while(isBlackPix(mat,width/2+left_near,height- sample_near) && left_near < width/2 ){ left_near ++;}
-        while(isBlackPix(mat,width/2+left_mid,height- sample_mid)&& left_mid < width/2 ){ left_mid ++;}
-        while(isBlackPix(mat,width/2+left_mid2,height- sample_mid2) && left_mid2 < width/2 ){ left_mid2 ++;}
-        while(isBlackPix(mat,width/2+left_mid3,height- sample_mid3) && left_mid3 < width/2 ){ left_mid3 ++;}
-        */
-
 
 
         if (right_near1 == 0 || right_near2 == 0){ // this case happens only when running into the stop line when entering the intersection
@@ -149,13 +127,27 @@ namespace Autodrive {
 #endif
 
 #ifdef _DEBUG
-        near_sample_end = cvPoint(width / 2 + right_near, height - sample_near);
-        far_sample_end = cvPoint(width / 2 + right_far, height - sample_far);
-        near_sample_left_end = cvPoint(width / 2 - left_near, height - sample_near);
-        mid_sample_left_end = cvPoint(width / 2 - left_mid, height - sample_mid);
-        mid2_sample_left_end = cvPoint(width / 2 - left_mid2, height - sample_mid2);
-        mid3_sample_left_end = cvPoint(width / 2 - left_mid3, height - sample_mid3);
         if (mat.data != NULL) {
+            CvScalar red = CV_RGB(250, 0, 0);
+            CvScalar green = CV_RGB(0, 250, 0);
+            CvScalar blue = CV_RGB(0, 0, 250);
+            
+            int thickness = 1;
+            int connectivity = 8;
+            
+            CvPoint ver_centr_start = cvPoint(width / 2, height);
+            CvPoint ver_centr_end = cvPoint(width / 2, 0);
+            CvPoint near_sample_start = cvPoint(width / 2, height - sample_near);
+            CvPoint mid_sample_start = cvPoint(width / 2, height - sample_mid);
+            CvPoint mid2_sample_start = cvPoint(width / 2, height - sample_mid2);
+            CvPoint mid3_sample_start = cvPoint(width / 2, height - sample_mid3);
+            CvPoint far_sample_start = cvPoint(width / 2, height - sample_far);
+            CvPoint near_sample_end = cvPoint(width / 2 + right_near, height - sample_near);
+            CvPoint far_sample_end = cvPoint(width / 2 + right_far, height - sample_far);
+            CvPoint near_sample_left_end = cvPoint(width / 2 - left_near, height - sample_near);
+            CvPoint mid_sample_left_end = cvPoint(width / 2 - left_mid, height - sample_mid);
+            CvPoint mid2_sample_left_end = cvPoint(width / 2 - left_mid2, height - sample_mid2);
+            CvPoint mid3_sample_left_end = cvPoint(width / 2 - left_mid3, height - sample_mid3);
             cv::line(mat, ver_centr_start, ver_centr_end, red, thickness, connectivity);
             cv::line(mat, near_sample_start, near_sample_end, green, thickness, connectivity);
             cv::line(mat, far_sample_start, far_sample_end, green, thickness, connectivity);
