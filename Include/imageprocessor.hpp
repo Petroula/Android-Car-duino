@@ -1,186 +1,94 @@
-#include <iostream>
-#include <opencv/highgui.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
 
 #include "command.hpp"
-#include "sensordata.h"
+#include "util.hpp"
+#include "roadfinder.hpp"
+#include "lightnormalizer.hpp"
 
 using namespace std;
 
+int intersection_protect = 0;
 
-namespace Autodrive {
+#define _AUTODRIVE_DILATE
 
-    command processImage(cv::Mat& mat, int widthStep);
+#define _DEBUG
 
-    int intersection_protect = 0;
+#include "birdseyetransformer.hpp"
 
-    command drive()
+namespace Autodrive
+{
+    cv::Mat birds_eye_transform(cv::Mat& mat, cv::Mat birdseye_matrix)
     {
-        return processImage(*Autodrive::SensorData::image,Autodrive::SensorData::image->step );
+        cv::Mat warped_image;
+        cv::warpPerspective(mat, warped_image, birdseye_matrix, mat.size(), cv::INTER_LINEAR);
+        return warped_image;
     }
 
-    // You should start your work in this method.
-    command processImage(cv::Mat& mat, int widthStep) {
-        int width = mat.size().width;
-        int height = mat.size().height;
-        int step = widthStep;
-        unsigned char* image = mat.data;
+    roadfinder road;
 
-        int sample_near = 60; // define near vision
-        int sample_mid = 150; //define mid vision
-        int sample_mid2 = 90; //define mid vision
-        int sample_mid3 = 120; //define mid vision
-        int sample_far = 240; // define further vision
-        int desired_right_near = 241; //243
-        int desired_right_far = 75; // 73
-        double k = 0.12; //portion control 0.2
-        int max_left = -24;
-        int max_right = 24;// max turning steering
-        //cout << " width:"<< width<<endl;
-        //cout << " height:"<< height<<endl;
-        bool near_lost = 0;// near vision lost
-        bool far_lost = 0;//  far vision lost
-        bool left_lost = 0; // left vision lost (left)
+    cv::Mat perspective;
 
+    int thresh1 = 181;
+    int thresh2 = 71;
+    int intensity = 110;
+    int blur_i = 11;
 
-        double left_range = 0.4; // (0,0.5)
+    cv::Point2f start_center;
+    cv::Mat prev_mat;
 
-        //TODO: Start here.
-        int right_near = 0;
-        int right_near1 = 0;
-        int right_near2 = 0;
-        int right_far = 0;
-        int left_near = 0;
-        int left_mid = 0;
-        int left_mid2 = 0;
-        int left_mid3 = 0;
-        // 1. Do something with the image m_image here, for example: find lane marking features, optimize quality, ...
-        // find right distance
-        //  I (x, y) ~ ((unsigned char*) (img-> imageData + img-> widthStep * y)) [x]       for 3 chanel Iplimage
-        // I.at<uchar>(i,j) get value for Mat
+    bool init_processing(cv::Mat mat)
+    {
+        cv::namedWindow("cannied_mat", 1);
+        cv::createTrackbar("Thresh1:", "cannied_mat", &thresh1, 400);
+        cv::createTrackbar("Thresh2:", "cannied_mat", &thresh2, 400);
+        cv::createTrackbar("intensity:", "cannied_mat", &intensity, 300);
+        cv::createTrackbar("blur_i:", "cannied_mat", &blur_i, 200);
 
-        const float threshold = 200;
+        start_center = cv::Point2f(mat.size().width / 2.f , mat.size().height - 30.f);
 
-        while ((image + step * (height - sample_near - 2))[(width / 2 + right_near1) * 3] < threshold && right_near1 < width / 2){ right_near1++; }
-        while ((image + step * (height - sample_near + 2))[(width / 2 + right_near2) * 3] < threshold && right_near2 < width / 2){ right_near2++; }
-        while ((image + step * (height - sample_far))[(width / 2 + right_far) * 3] < threshold && right_far < width / 2) { right_far++; }
-        while ((image + step * (height - sample_near))[(width / 2 - left_near) * 3] < threshold && left_near < width / 2){ left_near++; }
-        while ((image + step * (height - sample_mid))[(width / 2 - left_mid) * 3] < threshold && left_mid < width / 2){ left_mid++; }
-        while ((image + step * (height - sample_mid2))[(width / 2 - left_mid2) * 3] < threshold && left_mid2 < width / 2){ left_mid2++; }
-        while ((image + step * (height - sample_mid3))[(width / 2 - left_mid3) * 3] < threshold && left_mid3 < width / 2){ left_mid3++; }
+        auto found_pespective = find_perspective(mat);
+        if (found_pespective)
+        {
+            perspective = *found_pespective;
+            cv::Mat warped_image = birds_eye_transform(mat, perspective);
+            cv::Mat normalized_mat = normalizeLightning(warped_image, blur_i, intensity / 100.f);
+            cv::Mat cannied_mat;
+            cv::Canny(normalized_mat, cannied_mat, thresh1, thresh2, 3);
+            prev_mat = normalized_mat;
+            road.build(cannied_mat, start_center, 1);
+            return true;
+        } else
+            return false;
+    }
 
 
-        if (right_near1 == 0 || right_near2 == 0){ // this case happens only when running into the stop line when entering the intersection
-            right_near = desired_right_near;
-        }
 
-        if (right_near1 >= width / 2 && right_near2 >= width / 2){ // near vision lost
-            near_lost = 1;
+    command continue_processing(cv::Mat mat)
+    {
+        //while (true) {
+        cv::Mat warped_image = birds_eye_transform(mat, perspective);
+        cv::Mat normalized_mat = normalizeLightning(warped_image, blur_i, intensity / 100.f);
 
-        }
-        else { 		// near vision not lost , decide right_near
-            if (right_near1 >= width / 2){
-                right_near = right_near2;
-            }
-            else if (right_near2 >= width / 2){
-                right_near = right_near1;
-            }
-            else{
-                right_near = (right_near1 + right_near2) / 2;
-            }
-            near_lost = 0;
-        }
+        //cv::Mat transform = cv::estimateRigidTransform(prev_mat, normalized_mat, true);
 
-        if (right_far >= width / 4){ // far vision lost
-            far_lost = 1;
-        }
-        else {
-            far_lost = 0;
-        }
+        //cv::perspectiveTransform(normalized_mat,normalized_mat, transform);
+        
+        cv::Mat cannied_mat;
 
-        if (left_near >= width*left_range && left_mid >= width*left_range && left_mid2 >= width*left_range && left_mid3 >= width*left_range){ // left lost left
-            left_lost = 1;
-        }
-        else {
-            left_lost = 0;
-        }
+        cv::Canny(normalized_mat, cannied_mat, thresh1, thresh2, 3);
 
-#ifdef _DEBUGIMAGEPROCESSING
+        //auto testmatrix = cv::getPerspectiveTransform(prev_mat, cannied_mat);
 
-        // state machine
+        prev_mat = cannied_mat;
 
-        if (near_lost){
-            cout << "near lost" << endl;
-        }
-        else{
-            cout << "right_near:" << right_near << endl;
-        }
+        road.update(cannied_mat,true,4.f);
 
-        if (far_lost){
-            cout << "far lost" << endl;
-        }
-        else{
-            cout << "right_far:" << right_far << endl;
-        }
-#endif
+        //cv::waitKey(10);} // waits to display frame
 
-#ifdef _DEBUG
-        if (mat.data != NULL) {
-            CvScalar red = CV_RGB(250, 0, 0);
-            CvScalar green = CV_RGB(0, 250, 0);
-            CvScalar blue = CV_RGB(0, 0, 250);
-            
-            int thickness = 1;
-            int connectivity = 8;
-            
-            CvPoint ver_centr_start = cvPoint(width / 2, height);
-            CvPoint ver_centr_end = cvPoint(width / 2, 0);
-            CvPoint near_sample_start = cvPoint(width / 2, height - sample_near);
-            CvPoint mid_sample_start = cvPoint(width / 2, height - sample_mid);
-            CvPoint mid2_sample_start = cvPoint(width / 2, height - sample_mid2);
-            CvPoint mid3_sample_start = cvPoint(width / 2, height - sample_mid3);
-            CvPoint far_sample_start = cvPoint(width / 2, height - sample_far);
-            CvPoint near_sample_end = cvPoint(width / 2 + right_near, height - sample_near);
-            CvPoint far_sample_end = cvPoint(width / 2 + right_far, height - sample_far);
-            CvPoint near_sample_left_end = cvPoint(width / 2 - left_near, height - sample_near);
-            CvPoint mid_sample_left_end = cvPoint(width / 2 - left_mid, height - sample_mid);
-            CvPoint mid2_sample_left_end = cvPoint(width / 2 - left_mid2, height - sample_mid2);
-            CvPoint mid3_sample_left_end = cvPoint(width / 2 - left_mid3, height - sample_mid3);
-            cv::line(mat, ver_centr_start, ver_centr_end, red, thickness, connectivity);
-            cv::line(mat, near_sample_start, near_sample_end, green, thickness, connectivity);
-            cv::line(mat, far_sample_start, far_sample_end, green, thickness, connectivity);
-            cv::line(mat, near_sample_start, near_sample_left_end, blue, thickness, connectivity);
-            cv::line(mat, mid_sample_start, mid_sample_left_end, blue, thickness, connectivity);
-            cv::line(mat, mid2_sample_start, mid2_sample_left_end, blue, thickness, connectivity);
-            cv::line(mat, mid3_sample_start, mid3_sample_left_end, blue, thickness, connectivity);
-        }
-#endif
-
-        // 2. Calculate desired steering commands from your image features to be processed by driver.
-        double difference = 0;
-        if (!near_lost){
-            difference = (right_near - desired_right_near) *k;
-            intersection_protect = 0; // unflag intersection protects
-
-        }
-        else{   	 // near lost
-            if (!left_lost && !intersection_protect){
-                difference = max_right;
-
-            }
-            else if (!far_lost){ //intersection mode
-                difference = (right_far - desired_right_far) *k;
-                intersection_protect = 1;//
-            }
-        }
-
-        if (difference < max_left) difference = max_left;
-        if (difference > max_right) difference = max_right;
-
-        command carCommand;
-        carCommand.setAngle(difference);
-        return carCommand;
+        //road.update(warped_image, 1);
+        command cmd;
+        cmd.setAngle(road.getAngle());
+        return cmd;
     }
 }

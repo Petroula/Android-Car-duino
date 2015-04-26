@@ -1,26 +1,51 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
-#include "../Include/imageprocessor.hpp"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#define _AUTODRIVE_SHOWCANNY
+#define _AUTODRIVE_SHOWHOUGH
+
+#undef _DEBUG
+#include "../Include/imageprocessor.hpp"
 
 using namespace cv;
 using namespace std;
 
 int main()
 {
-    string filename = "testdrive.mp4";
+    //string filename = "testreal_small_portrait.mp4";
+    string filename = "testreal_small.mp4";
+    //string filename = "Test4-1.m4v";
     VideoCapture capture(filename);
     Mat frame;
-    double angle = 0;
-    double speed = 5;
+    float angle = 0;
+    float speed = 5;
 
     if (!capture.isOpened())
     throw "Error when opening test4.avi";
+    string window = "w";
+    namedWindow(window, 1);
+    int birds_angle = 34;
+    int crop = 0;//20
+    int thresh1 = 23;
+    int thresh2 = 38;
+    /*createTrackbar("Birds Eye angle:", window, &birds_angle, 100);
+    createTrackbar("Crop:", window, &crop, 50);
+    createTrackbar("Thresh1:", window, &thresh1, 50);
+    createTrackbar("Thresh2:", window, &thresh2, 50);
+    */
+    capture >> frame;
+    while (!Autodrive::init_processing(frame)){
 
-    namedWindow("w", 1);
+        capture >> frame;
+        /*cv::Mat resized;
+        cv::resize(frame, resized, frame.size() * 3);//resize image
+        cv::putText(resized, "SEARCHING FOR STRAIGHT LANES...", cv::Point2f(50.f, resized.size().height / 2.f),FONT_HERSHEY_PLAIN,3,cv::Scalar(0,255,0),2);
+        cv::imshow("mainwindow", resized);
+        cv::waitKey(5); // waits to display frame*/
+    }
     for (;;)
     {
         capture >> frame;
@@ -29,29 +54,23 @@ int main()
             continue;
         }
 
-        Autodrive::command cmnd = Autodrive::processImage(frame, frame.step);
+        Autodrive::command cmnd = Autodrive::continue_processing(frame);
+
 
         if (cmnd.changedAngle){
-            angle = cmnd.angle + 17;
+            angle = cmnd.angle;
         }
 
         if (cmnd.changedSpeed){
             speed = cmnd.speed;
         }
 
-        int x1 = frame.size().width / 2;
-        int y1 = frame.size().height;
-
+        Point2f center(frame.size().width / 2.f, (float) frame.size().height);
         
-        int x2 = x1 + cos(-M_PI_2 + (angle / 10.)*M_PI_2)*speed*20;
-        int y2 = y1 + sin(-M_PI_2 + (angle / 10.)*M_PI_2)*speed*20;
-
-        std::cout << "Angle: " << angle << std::endl;
-
-        cv::line(frame, cv::Point2f(x1, y1), cv::Point2f(x2, y2), CV_RGB(0, 250, 0));
+        Autodrive::linef(center, center + Point2f(cos(angle) * 200, -sin(angle) * 200)).draw(frame, CV_RGB(0, 250, 0));
 
         imshow("w", frame);
-        waitKey(20); // waits to display frame
+        waitKey(10000); // waits to display frame
     }
     return 0;
 }
