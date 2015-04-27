@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         
-        <activity android:name="pegasus.bluetootharduino.CameraActivity"></activity>
+        <activity android:screenOrientation="landscape" android:name="pegasus.bluetootharduino.CameraActivity"></activity>
     </application>
 
 </manifest>
