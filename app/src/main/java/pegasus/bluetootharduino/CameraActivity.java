@@ -149,9 +149,9 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         if(e1.getX()<e2.getX()) {
 
             // safely disconnect
-//            if(bt.socket.isConnected()) {
-//                bt.disconnect();
-//            }
+            if(bt.socket.isConnected()) {
+                bt.disconnect();
+            }
             /** Changes to Main screen */
             Intent changeToMain= new Intent(getApplicationContext(), MainActivity.class);
             startActivity(changeToMain);
