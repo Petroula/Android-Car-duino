@@ -1,6 +1,7 @@
 package pegasus.bluetootharduino;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
+
 public class CameraActivity extends Activity implements CvCameraViewListener2, OnGestureListener {
 
     private CameraBridgeViewBase mOpenCvCameraView;
@@ -26,6 +28,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
 
     GestureDetector detector;
     AutomaticCarDriver driver = new AutomaticCarDriver();
+
+    Bluetooth bt = new Bluetooth();
 
 
     @SuppressWarnings("deprecation")
@@ -40,10 +44,26 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-
         detector = new GestureDetector(this);
 
-        Toast.makeText(getApplicationContext(), "Swipe to Bluetooth", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Swipe to go back", Toast.LENGTH_SHORT).show();
+
+        bt.checkBT();
+
+        //if device does not support bluetooth (not really needed)
+        if(bt.adapter == null) {
+            Intent enable = new Intent(String.valueOf(BluetoothAdapter.ERROR));
+            startActivityForResult(enable,  0);
+        }
+
+        if(!bt.btEnabled) {
+            Intent enable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enable,  1);
+        }
+        bt.connect();
+        bt.send();
+
+//      Toast.makeText(getApplicationContext(), bt.returnResult, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -100,7 +120,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
     }
 
 
-    /** Uses swipe to change to the bluetooth activity*/
+    /** Uses swipe to change to the main activity*/
 
     @Override
     public boolean onDown(MotionEvent e) {
@@ -127,9 +147,14 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,	float velocityY) {
 
         if(e1.getX()<e2.getX()) {
-            /** Changes to Bluetooth screen */
-            Intent changeToBluetooth= new Intent(getApplicationContext(), BluetoothActivity.class);
-            startActivity(changeToBluetooth);
+
+            // safely disconnect
+//            if(bt.socket.isConnected()) {
+//                bt.disconnect();
+//            }
+            /** Changes to Main screen */
+            Intent changeToMain= new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(changeToMain);
             return true;
         }
 
