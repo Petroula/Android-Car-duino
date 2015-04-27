@@ -9,10 +9,10 @@ namespace Autodrive
             static const numeric_t PI_2;
         };
 
-        const float Math<float>::PI = acosf(-1);
-        const float Math<float>::PI_2 = PI/2.f;
-        const double Math<double>::PI = acos(-1);
-        const double Math<double>::PI_2 = PI / 2.0;
+        template<>const float Math<float>::PI = acosf(-1);
+        template<> const float Math<float>::PI_2 = PI/2.f;
+        template<> const double Math<double>::PI = acos(-1);
+        template<> const double Math<double>::PI_2 = PI / 2.0;
 
 
         void show_image(cv::Mat mat,int resize,char* wName)
@@ -31,7 +31,7 @@ namespace Autodrive
             optional() : valid(false){
 
             }
-            optional(nullptr_t null) : valid(false)
+            optional(std::nullptr_t null) : valid(false)
             {
 
             }

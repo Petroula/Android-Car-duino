@@ -14,8 +14,10 @@ namespace Autodrive
         pointT begin;
         pointT end;
 
-        line(vecT line) : line(pointT(line[0], line[1]), pointT(line[2], line[3]))
-        {}
+        line(vecT line) : begin(pointT(line[0], line[1])), end(pointT(line[2], line[3]))
+        {
+            compute();
+        }
 
         line(pointT begin, pointT end) : begin(begin), end(end)
         {

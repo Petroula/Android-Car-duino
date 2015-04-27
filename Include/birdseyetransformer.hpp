@@ -35,7 +35,7 @@ namespace Autodrive
 
         static linef lastLML;
         static linef lastRML;
-        for each(cv::Vec4i line in lines){
+        for(cv::Vec4i line : lines){
             int leftx = line[0];
             int rightx = line[2];
             int boty = line[1];
@@ -116,7 +116,7 @@ namespace Autodrive
 
         auto lines = getLaneMarkings(cannied);
         if (!lines.found)
-            return false;
+            return nullptr;
 
         linef leftLine = lines.left;
         linef rightLine = lines.right;

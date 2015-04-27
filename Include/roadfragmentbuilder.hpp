@@ -1,5 +1,6 @@
 #pragma once
 #include "util.hpp"
+#include "line.hpp"
 
 namespace Autodrive
 {
@@ -54,6 +55,8 @@ namespace Autodrive
         typedef std::vector<roadfragment> roadfragments;
 
     public:
+        
+
 
         static roadfragment getFirstFragment(const cv::Mat& cannied, POINT start_point)
         {
@@ -71,7 +74,7 @@ namespace Autodrive
 
             POINT recalibrated_center = recalibrate_center(right.point, targetdir);
             right.distance = distanceToRoad();
-
+/*
             // SEARCH DOWNWARDS IF HIT ON FIRST Y AXIS
             SearchResult new_right;
             new_right = right;
@@ -85,44 +88,56 @@ namespace Autodrive
                 } else
                     break;
             }
-
-
-            right.distance = 20;
+*/
 
             return roadfragment(recalibrated_center, right.point, Math<float>::PI_2, right.distance); // M_PI_2 = FORWARD
         }
 
+        static optional<roadfragment> findFragment(const cv::Mat& cannied, POINT start_point, const roadfragment& prevSegment)
+        {
+            SearchResult right = firstnonzero_direction(cannied, start_point, prevSegment.angle - Math<float>::PI_2);
+            //new_direction = last_dir - (right.distance - prevSegment.distance) / 1.5f;
+            float new_direction = linef(prevSegment.right, right.point).direction();
+            roadfragment newfragment(start_point,right.point,new_direction,right.distance);    
+            return newfragment;
+        }
+        
         static optional<roadfragment> getNextFragment(const cv::Mat& cannied, const roadfragment& prevSegment)
         {
             int tries = 0;
             float last_dir = prevSegment.angle;
             POINT center = prevSegment.center;
-            float new_direction;
-            SearchResult right;
+            roadfragment nextFragment;
             while (true)
             {
+                
                 center += POINT(std::cos(last_dir), -std::sin(last_dir));
-                right = firstnonzero_direction(cannied, center, last_dir - Math<float>::PI_2);
-                new_direction = linef(prevSegment.right, right.point).direction();
-
+                optional<roadfragment> fragment = findFragment(cannied,center,prevSegment);
+                
                 // Safely keep looking
-                if (right.found && abs(new_direction - last_dir) < 0.01f)
-                    continue;
-
-                if (right.found && abs(right.distance - prevSegment.distance) < 8 && abs(new_direction - last_dir) < 0.3f)
+                /*if (right.found && abs(new_direction - last_dir) < 1.f)// && right.distance == prevSegment.distance)
                 {
+                    last_dir = new_direction;
+                    continue;
+                }*/
+                    
+                if (fragment.valid && abs(fragment->distance - prevSegment.distance) < 2
+                        //&& linef(right.point,prevSegment.right).length2() < 4
+                        && abs(fragment->angle - last_dir) < 0.3f)
+                {
+                    nextFragment = *fragment;
                     break;
                 } else
                 {
                     tries++;
-                    if (tries > 3)
+                    if (tries > 30)
                         return nullptr;
                 }
             }
 
-            new_direction = weighted_average<float>(last_dir, new_direction, 2.);
-            POINT recalibrated_center = recalibrate_center(right.point, new_direction);
-            return roadfragment(recalibrated_center, right.point, new_direction, right.distance);
+            nextFragment.angle = weighted_average<float>(last_dir, nextFragment.angle, 2.);
+            nextFragment.center = recalibrate_center(nextFragment.right, nextFragment.angle);
+            return nextFragment;
         }
 
 
@@ -142,7 +157,8 @@ namespace Autodrive
 
             cv::Mat colorCopy;
             cv::cvtColor(cannied, colorCopy, CV_GRAY2RGB);
-
+            
+            std::cout<<fragments.size()<<std::endl;
 
             for (roadfragment& frag : fragments)
             {
