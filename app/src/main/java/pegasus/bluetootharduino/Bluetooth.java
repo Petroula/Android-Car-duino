@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import android.bluetooth.*;
 import android.os.Handler;
+import android.util.Log;
 
 public class Bluetooth {
 
@@ -30,6 +31,8 @@ public class Bluetooth {
     int position;
     byte read[];
     Netstrings nt = new Netstrings();
+
+    Data data = new Data();
 
 
     //connect
@@ -92,13 +95,13 @@ public class Bluetooth {
                                 if(b == delimiter) {
                                     byte[] encodedBytes = new byte[position];
                                     System.arraycopy(read, 0, encodedBytes, 0, encodedBytes.length);
-                                    // final String result = new String(encodedBytes, "US-ASCII");
-                                    final String result = "hi";
+                                    final String result = new String(encodedBytes, "US-ASCII");
                                     position = 0;
 
                                     handler.post(new Runnable() {
                                         public void run() {
                                             returnResult = nt.decodedNetstring(result);
+                                            Log.i("result", returnResult);
                                         }
                                     });
 
@@ -119,24 +122,14 @@ public class Bluetooth {
 
     }
 
-    public void connect() {
-        try {
-            runBT();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public void send() {
 
         try {
-//			String text = nt.encodedNetstring(input.getText().toString());
-            String text = nt.encodedNetstring("hello".toString());
+            String text = nt.encodedNetstring(data.getData().toString());
             if(socket.isConnected()) {
                 out.write(text.getBytes());
             }
-//			data.setText("message sent");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -149,7 +142,6 @@ public class Bluetooth {
             out.close();
             in.close();
             socket.close();
-//		    data.setText("Connection Closed");
         } catch (IOException e) {
             e.printStackTrace();
         }
