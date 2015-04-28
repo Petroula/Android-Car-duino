@@ -17,6 +17,7 @@ int main()
 {
     //string filename = "testreal_small_portrait.mp4";
     string filename = "testreal_small.mp4";
+    //string filename = "vid1.mp4";
     //string filename = "Test4-1.m4v";
     VideoCapture capture(filename);
     Mat frame;
@@ -38,7 +39,6 @@ int main()
     */
     capture >> frame;
     while (!Autodrive::init_processing(frame)){
-
         capture >> frame;
         /*cv::Mat resized;
         cv::resize(frame, resized, frame.size() * 3);//resize image
@@ -69,8 +69,9 @@ int main()
         
         Autodrive::linef(center, center + Point2f(cos(angle) * 200, -sin(angle) * 200)).draw(frame, CV_RGB(0, 250, 0));
 
+        
         imshow("w", frame);
-        waitKey(10000); // waits to display frame
+        waitKey(10); // waits to display frame
     }
     return 0;
 }

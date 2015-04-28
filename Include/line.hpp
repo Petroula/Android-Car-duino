@@ -13,6 +13,14 @@ namespace Autodrive
 
         pointT begin;
         pointT end;
+        numeric_t leftMost_x()
+        {
+            return std::min(begin.x, end.x);
+        }
+        numeric_t rightMost_x()
+        {
+            return std::max(begin.x, end.x);
+        }
 
         line(vecT line) : begin(pointT(line[0], line[1])), end(pointT(line[2], line[3]))
         {
@@ -74,12 +82,12 @@ namespace Autodrive
             float dirr = direction();
             if (dirr < 0.f)
             {
-                dirr = Math<float>::PI + dirr;
+                dirr = Mathf::PI + dirr;
             }
 
-            if (dirr > Math<float>::PI)
+            if (dirr > Mathf::PI)
             {
-                dirr = dirr - Math<float>::PI;
+                dirr = dirr - Mathf::PI;
             }
 
             return dirr;

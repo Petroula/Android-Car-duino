@@ -4,7 +4,7 @@
 
 namespace Autodrive
 {
-    cv::Mat normalizeLightning(cv::Mat bgr_image,int blur = 20,float intensity = 0.5f)
+    cv::Mat normalizeLightning(const cv::Mat& bgr_image,int blur = 20,float intensity = 0.5f)
     {
         cv::Mat light_mat;
         cv::blur(bgr_image, light_mat, cv::Size(blur, blur));

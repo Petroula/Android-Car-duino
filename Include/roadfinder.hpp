@@ -1,21 +1,24 @@
 #include "line.hpp"
 #include <queue>
 #include "roadfragmentbuilder.hpp"
+#include "roadfragmentbuilder2.hpp"
 #include <numeric>
 #include "lightnormalizer.hpp"
 #include "roadpiece.hpp"
+#include <memory>
 
 namespace Autodrive
 {
     class roadfinder
     {
         typedef cv::Point_ < float > POINT;
-        const float PI = Math<float>::PI;
-        const float PI_2 = Math<float>::PI_2;
+        const float PI = Mathf::PI;
+        const float PI_2 = Mathf::PI_2;
         typedef ::std::vector<roadfragment> FRAGMENTS;
         typedef ::std::vector<roadpiece> roadparts_t;
 
         roadparts_t roadParts;
+        roadfragmentbuilder2::Road road2;
 
         int canny_thresh1;
         int canny_thresh2;
@@ -39,6 +42,8 @@ namespace Autodrive
         POINT start_center;
 
         piece_type previes_type = STRAIGHT;
+
+        std::unique_ptr<roadfragmentbuilder2> roadbuilder2 = nullptr;
 
         roadparts_t findRoadParts(const cv::Mat& cannied)
         {
@@ -155,7 +160,7 @@ namespace Autodrive
 
         float getAngle()
         {
-            float angle = roadParts[0].end.angle;
+            float angle = roadParts[0].begin.angle;
             return angle;
         }
 
@@ -221,7 +226,26 @@ namespace Autodrive
             cv::imshow("mainwindow", colorCopy);
         }
 
-        void update(cv::Mat& cannied, bool draw_road, float estimated_speed)
+        void draw2(const cv::Mat& cannied)
+        {
+            cv::Mat colorCopy;
+            cv::cvtColor(cannied, colorCopy, CV_GRAY2RGB);
+
+            for (int i = 0; i < road2.points.size() -1; i++)
+            {
+                linef(road2.points[i], road2.points[i + 1]).draw(colorCopy);
+            }
+
+            linef(roadbuilder2->last_start, roadbuilder2->last_start + POINT(8,-15)).draw(colorCopy,cv::Scalar(0,255,255),1);
+            linef(start_center, POINT(start_center.x, 0)).draw(colorCopy);
+
+            cv::resize(colorCopy, colorCopy, colorCopy.size() * 3);//resize image
+            cv::namedWindow("mainwindow", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
+            cv::imshow("mainwindow", colorCopy);
+            cv::waitKey(10); // waits to display frame
+        }
+
+        void update(cv::Mat& cannied, bool draw_road, float estimated_speed = 4.f)
         {
             /*if (updateCounter++ >= updateFrequency)
             {
@@ -250,6 +274,32 @@ namespace Autodrive
             {
                 draw(cannied);
             }
+        }
+
+        void build2(const cv::Mat& cannied, POINT start_point, int _updateFrequency)
+        {
+            updateFrequency = _updateFrequency;
+            roadbuilder2 = std::make_unique<roadfragmentbuilder2>(cannied, start_point);
+        }
+
+        command update2(cv::Mat& cannied)
+        {
+            road2 = roadbuilder2->build2(cannied, 50);
+            
+            draw2(cannied);
+            command cmd;
+
+            int mid = road2.points.size() / 2.5;
+
+
+            if (road2.points.size() < 5 || abs(road2.getMeanAngle() - Mathf::PI_2) > Mathf::PI_2)
+                cmd.setSpeed(0.5f);
+            else
+            {
+                cmd.setAngle(road2.getMeanAngle());
+            }
+
+            return cmd;
         }
 
     };
