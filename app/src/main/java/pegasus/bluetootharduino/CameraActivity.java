@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -19,6 +19,11 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
+
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class CameraActivity extends Activity implements CvCameraViewListener2, OnGestureListener {
@@ -30,7 +35,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
     AutomaticCarDriver driver = new AutomaticCarDriver();
 
     Bluetooth bt = new Bluetooth();
-
 
     @SuppressWarnings("deprecation")
     @Override
@@ -46,8 +50,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
 
         detector = new GestureDetector(this);
 
-        Toast.makeText(getApplicationContext(), "Swipe to go back", Toast.LENGTH_SHORT).show();
-
         bt.checkBT();
 
         //if device does not support bluetooth (not really needed)
@@ -60,11 +62,21 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
             Intent enable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enable,  1);
         }
-        bt.connect();
-        bt.send();
+        try {
+            bt.runBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-//      Toast.makeText(getApplicationContext(), bt.returnResult, Toast.LENGTH_SHORT).show();
 
+        Runnable get = new Runnable() {
+            public void run() {
+               bt.send();
+            }
+        };
+
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(get, 0, 50, TimeUnit.MILLISECONDS);
     }
 
 
@@ -120,6 +132,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
     }
 
 
+
     /** Uses swipe to change to the main activity*/
 
     @Override
@@ -148,7 +161,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
 
         if(e1.getX()<e2.getX()) {
 
-            // safely disconnect
+            // disconnect safely
             if(bt.socket.isConnected()) {
                 bt.disconnect();
             }
