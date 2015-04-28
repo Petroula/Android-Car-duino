@@ -1,3 +1,8 @@
+/*
+
+THIS FILE IS DEPRECATED AND ONLY CHECKED IN FOR HISTORICAL PURPOSES
+
+*/
 #pragma once
 #include "util.hpp"
 #include "line.hpp"

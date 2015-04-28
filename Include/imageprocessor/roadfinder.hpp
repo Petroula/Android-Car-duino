@@ -231,7 +231,7 @@ namespace Autodrive
             cv::Mat colorCopy;
             cv::cvtColor(cannied, colorCopy, CV_GRAY2RGB);
 
-            for (int i = 0; i < road2.points.size() -1; i++)
+            for (unsigned int i = 0; i < road2.points.size() -1; i++)
             {
                 linef(road2.points[i], road2.points[i + 1]).draw(colorCopy);
             }
@@ -282,6 +282,8 @@ namespace Autodrive
             roadbuilder2 = std::make_unique<roadfragmentbuilder2>(cannied, start_point);
         }
 
+
+
         command update2(cv::Mat& cannied)
         {
             road2 = roadbuilder2->build2(cannied, 50);
@@ -289,14 +291,21 @@ namespace Autodrive
             draw2(cannied);
             command cmd;
 
-            int mid = road2.points.size() / 2.5;
+            int mid = int(road2.points.size() / 2.5);
 
 
             if (road2.points.size() < 5 || abs(road2.getMeanAngle() - Mathf::PI_2) > Mathf::PI_2)
-                cmd.setSpeed(0.5f);
+                cmd.setSpeed(10);
             else
             {
-                cmd.setAngle(road2.getMeanAngle());
+                int degrees = Mathf::toDegrees(road2.getMeanAngle()) - 90;
+                degrees = int((degrees / 50.f) * 25);
+
+                degrees = std::min(degrees, 25);
+                degrees = std::max(degrees, -25);
+
+
+                cmd.setAngle(degrees*-1);
             }
 
             return cmd;

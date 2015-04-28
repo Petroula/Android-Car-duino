@@ -8,14 +8,13 @@
 #define _AUTODRIVE_SHOWHOUGH
 
 #undef _DEBUG
-#include "../Include/imageprocessor.hpp"
+#include "../Include/imageprocessor/imageprocessor.hpp"
 
 using namespace cv;
 using namespace std;
 
 int main()
 {
-    //string filename = "testreal_small_portrait.mp4";
     string filename = "testreal_small.mp4";
     //string filename = "vid1.mp4";
     //string filename = "Test4-1.m4v";
@@ -32,19 +31,10 @@ int main()
     int crop = 0;//20
     int thresh1 = 23;
     int thresh2 = 38;
-    /*createTrackbar("Birds Eye angle:", window, &birds_angle, 100);
-    createTrackbar("Crop:", window, &crop, 50);
-    createTrackbar("Thresh1:", window, &thresh1, 50);
-    createTrackbar("Thresh2:", window, &thresh2, 50);
-    */
+
     capture >> frame;
-    while (!Autodrive::init_processing(frame)){
+    while (!Autodrive::imageProcessor::init_processing(frame)){
         capture >> frame;
-        /*cv::Mat resized;
-        cv::resize(frame, resized, frame.size() * 3);//resize image
-        cv::putText(resized, "SEARCHING FOR STRAIGHT LANES...", cv::Point2f(50.f, resized.size().height / 2.f),FONT_HERSHEY_PLAIN,3,cv::Scalar(0,255,0),2);
-        cv::imshow("mainwindow", resized);
-        cv::waitKey(5); // waits to display frame*/
     }
     for (;;)
     {
@@ -54,11 +44,10 @@ int main()
             continue;
         }
 
-        Autodrive::command cmnd = Autodrive::continue_processing(frame);
-
+        Autodrive::command cmnd = Autodrive::imageProcessor::continue_processing(frame);
 
         if (cmnd.changedAngle){
-            angle = cmnd.angle;
+            angle = ((90 - cmnd.angle)* Autodrive::Mathf::PI) / 180.f ;
         }
 
         if (cmnd.changedSpeed){

@@ -7,6 +7,10 @@ namespace Autodrive
     {
         static const float PI;
         static const float PI_2;
+        static int toDegrees(float radians)
+        {
+            return int(radians * 180.f / PI);
+        }
     };
 
     const float Mathf::PI = acosf(-1);

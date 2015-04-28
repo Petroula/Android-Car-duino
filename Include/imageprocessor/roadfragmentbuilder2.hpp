@@ -9,9 +9,7 @@ namespace Autodrive
 
     class roadfragmentbuilder2
     {
-
         const int distanceToRoad = 20;
-
 
         POINT getFirstHit(const cv::Mat& cannied, POINT start_point)
         {
