@@ -32,9 +32,6 @@ public class Bluetooth {
     byte read[];
     Netstrings nt = new Netstrings();
 
-    Data data = new Data();
-
-
     //connect
     public void checkBT() {
 
@@ -49,7 +46,7 @@ public class Bluetooth {
         Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
         if(pairedDevices.size() > 0) {
             for(BluetoothDevice device : pairedDevices) {
-                if(device.getName().equals("HC-06")) {
+                if(device.getName().equals("carduino")) {
                     MiDevice = device;
                     // data.setText("device paired");
                     break;
@@ -126,7 +123,8 @@ public class Bluetooth {
     public void send() {
 
         try {
-            String text = nt.encodedNetstring(data.getData().toString());
+            String text = nt.encodedNetstring("m" + String.valueOf(Autodrive.getTargetSpeed()));
+            text += nt.encodedNetstring("t" + String.valueOf(Autodrive.getTargetAngle()));
             if(socket.isConnected()) {
                 out.write(text.getBytes());
             }
