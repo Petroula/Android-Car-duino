@@ -59,7 +59,7 @@ namespace Autodrive
         void build2(const cv::Mat& cannied, POINT start_point, int _updateFrequency)
         {
             updateFrequency = _updateFrequency;
-            roadbuilder2 = std::make_unique<roadfragmentbuilder2>(cannied, start_point);
+            roadbuilder2 = make_unique<roadfragmentbuilder2>(cannied, start_point);
         }
 
         command update2(cv::Mat& cannied)

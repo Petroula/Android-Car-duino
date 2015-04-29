@@ -1,5 +1,6 @@
 #pragma once
 #include <opencv2/core/core.hpp>
+#include <memory>
 
 namespace Autodrive
 {
@@ -21,6 +22,12 @@ namespace Autodrive
     {
         cv::resize(mat, mat, mat.size() * 3);//resize image
         cv::imshow(wName, mat);
+    }
+    
+    template<typename T, typename... Args>
+    std::unique_ptr<T> make_unique(Args&&... args) 
+    {
+        return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
 
     template<class TYPE>
