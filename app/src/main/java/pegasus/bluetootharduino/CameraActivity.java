@@ -50,7 +50,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
 
         detector = new GestureDetector(this);
 
-        bt.checkBT();
+        /*bt.checkBT();
 
         //if device does not support bluetooth (not really needed)
         if(bt.adapter == null) {
@@ -76,7 +76,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         };
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(get, 0, 50, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(get, 0, 50, TimeUnit.MILLISECONDS);*/
     }
 
 

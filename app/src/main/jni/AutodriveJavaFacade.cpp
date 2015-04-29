@@ -3,11 +3,10 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/features2d/features2d.hpp>
 
-
 //TODO: Only enable when debugging emulator
 #define _DEBUG
-#include "Autodrive/Include/imageprocessor.hpp"
-#include "Autodrive/Include/sensordata.h"
+#include "Autodrive/Include/autodrive.hpp"
+#include "Autodrive/Include/sensordata.hpp"
 
 using namespace std;
 using namespace cv;
@@ -16,11 +15,11 @@ using namespace cv;
 #define NAME(x) Java_pegasus_bluetootharduino_Autodrive_##x
 #define PARAMS(...) (JNIEnv*,jobject , __VA_ARGS__)
 
-extern "C" {
-
-    TYPE(jfloat) NAME (drive) (){
-        Autodrive::command cmnd = Autodrive::drive();
-        return cmnd.angle;
+extern "C" 
+{
+    TYPE(void) NAME (drive) ()
+    {
+        Autodrive::drive();
     }
 
     TYPE(void) NAME(setImage) PARAMS(long newMat){
@@ -50,6 +49,26 @@ extern "C" {
     
     TYPE(jdouble) NAME(getEncoderDistance) (){
         return Autodrive::SensorData::encoderDistance();
+    }
+    
+    TYPE(jboolean) NAME(speedChanged)() 
+    {
+        return Autodrive::speedChanged();
+    }
+
+    TYPE(jboolean) NAME(angleChanged)()
+    {
+        return Autodrive::angleChanged();
+    }
+
+    TYPE(jint) NAME(getTargetSpeed)()
+    {
+        return Autodrive::getSpeed();
+    }
+
+    TYPE(jint) NAME(getTargetAngle)()
+    {
+        return Autodrive::getAngle();
     }
 }
 

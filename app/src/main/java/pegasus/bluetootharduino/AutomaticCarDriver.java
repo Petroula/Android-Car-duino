@@ -12,7 +12,7 @@ public class AutomaticCarDriver{
 
     public Mat processImage(Mat image) {
         Autodrive.setImage(image.getNativeObjAddr());
-        float diff = Autodrive.drive();
+        Autodrive.drive();
         return image;
     }
 }
