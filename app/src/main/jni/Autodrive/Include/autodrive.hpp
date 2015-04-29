@@ -42,7 +42,10 @@ namespace Autodrive
         {
             case Autodrive::SEARCHING_FOR_LANES:
                 if (Autodrive::imageProcessor::init_processing(*Autodrive::SensorData::image))
+                {
+                    lastCommand.setSpeed(60);
                     status = FOLLOWING_LANES;
+                }
                 break;
             case Autodrive::FOLLOWING_LANES:
                 lastCommand = Autodrive::imageProcessor::continue_processing(*Autodrive::SensorData::image);

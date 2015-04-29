@@ -1,3 +1,8 @@
+#vim temp
+*~
+*.swp
+*.swo
+
 # Gradle files
 .gradle/
 build/

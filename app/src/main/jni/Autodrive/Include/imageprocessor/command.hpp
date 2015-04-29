@@ -8,7 +8,7 @@ namespace Autodrive {
         bool changedAngle = false;
         bool changedSpeed = false;
         int angle = 0;
-        int speed = 10;
+        int speed = 0;
         inline void setSpeed(int speed)
         {
             changedSpeed = true;

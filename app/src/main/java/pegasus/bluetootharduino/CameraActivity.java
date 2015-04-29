@@ -25,6 +25,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.opencv.android.NativeCameraView;
+
 
 public class CameraActivity extends Activity implements CvCameraViewListener2, OnGestureListener {
 
@@ -43,8 +45,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.camera_activity);
-
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.CameraView);
+        //mOpenCvCameraView.setMaxFrameSize(320,180);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 

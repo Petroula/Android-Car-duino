@@ -13,7 +13,7 @@ namespace Autodrive
         bool found = false;
     };
 
-    lanes getLaneMarkings(cv::Mat canniedMat, bool reset = false){
+    lanes getLaneMarkings(const cv::Mat& canniedMat,cv::Mat& drawMat, bool reset = false){
         lanes lanes;
         ::std::vector<cv::Vec4i> lines;
         linef leftMostLine;
@@ -50,7 +50,7 @@ namespace Autodrive
 
             if (abs(dir_diff) < 0.f || abs(dir_diff) > 1.f)
                 continue;
-
+                
             if (leftx - vector.length() < leftmost && leftx > center + 40)
             {
                 if (first || vector.differs_less_than_from(lastLML, 500, 0.6f)){
@@ -61,7 +61,6 @@ namespace Autodrive
                     }
                 }
             }
-
             if (rightx + vector.length() > rightmost && rightx < center - 40)
             {
                 if (first || vector.differs_less_than_from(lastRML, 1600 * 100, 5.f)){
@@ -71,13 +70,9 @@ namespace Autodrive
             }
         }
 
-
 #ifdef DEBUG_LANE_MARKINGS
-        linef lineleft(cv::Point2f(center, 40), cv::Point2f(center, canniedMat.size().height));
         lineleft.draw(colorCopy);
         float dir = lineleft.direction();
-        leftMostLine.draw(colorCopy, cv::Scalar(0, 0, 255), 5);
-        rightMostline.draw(colorCopy,cv::Scalar(0,0,255),5);
         cv::resize(colorCopy, colorCopy, colorCopy.size() * 2);//resize image
         cv::namedWindow("Lane_Markings", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
         cv::imshow("Lane_Markings", colorCopy);
@@ -86,7 +81,6 @@ namespace Autodrive
 
         lastLML = leftMostLine;
         lastRML = rightMostline;
-
         if (foundRight && foundLeft) {
             if ( abs((-rightMostline.k) - leftMostLine.k) < 0.8f)
             {
@@ -95,6 +89,8 @@ namespace Autodrive
 
                 if ((leftMostLine.leftMost_x() >rightMostline.rightMost_x()))
                 {
+                    leftMostLine.draw(drawMat, cv::Scalar(0, 0, 255), 5);
+                    rightMostline.draw(drawMat,cv::Scalar(0,0,255),5);
                     lanes.left = rightMostline;
                     lanes.right = leftMostLine;
                     float dirLeft = lanes.left.k;
@@ -112,37 +108,33 @@ namespace Autodrive
     linef rightImageBorder;
     float centerDiff;
 
-    optional<cv::Mat> find_perspective(cv::Mat matIn, double thresh1 = 300, double thresh2 = 150, int crop = 5){
+    optional<cv::Mat> find_perspective(cv::Mat* matIn, double thresh1 = 300, double thresh2 = 150, int crop = 5){
         optional<cv::Mat> birdseye_matrix;
-        cv::Mat mat = matIn.clone();
-        cv::erode(mat, mat, cv::Mat(), cv::Point(-1, -1), 1);
-        //cv::Mat cannied = canny(mat);
-        cv::Mat cannied;
-        cv::Canny(mat, cannied, thresh1, thresh2, 3);
+        cv::Mat matCopy = matIn->clone();
+        cv::erode(matCopy, matCopy, cv::Mat(), cv::Point(-1, -1), 1);
+        cv::Canny(matCopy, matCopy, thresh1, thresh2, 3);
 
-        auto lines = getLaneMarkings(cannied);
+        auto lines = getLaneMarkings(matCopy,*matIn);
         if (!lines.found)
             return nullptr;
-
+            
         linef leftLine = lines.left;
         linef rightLine = lines.right;
 
         float icrop = 0.f;
         float xdiff;
+        float height = (float) matCopy.size().height;
+        float width = (float) matCopy.size().width;
         do
         {
             xdiff = rightLine.leftMost_x() - leftLine.rightMost_x();
-            rightLine.stretchY(icrop, (float) mat.size().height);
-            leftLine.stretchY(icrop, (float) mat.size().height);
+            rightLine.stretchY(icrop, height);
+            leftLine.stretchY(icrop, height);
             icrop+=2.f;
-        } while (xdiff < mat.size().width/5.f);
+        } while (xdiff < width/5.f);
 
-        rightLine.draw(mat, cv::Scalar(0, 255, 0), 4);
-        leftLine.draw(mat, cv::Scalar(0, 255, 0), 4);
-
-        float right = (float)mat.size().width;
-        float bottom = (float)mat.size().height;
-
+        float right = width;
+        float bottom = height;
         float xleft = leftLine.end.x;
         float xright = rightLine.end.x;
         bool warping = true;
@@ -166,7 +158,7 @@ namespace Autodrive
                 xleft = leftLine.begin.x;
             }
             
-            centerDiff = abs(xleft + xright) / 2.f - mat.size().width /2.f;
+            centerDiff = abs(xleft + xright) / 2.f - width /2.f;
 
             //Crop moves the two upper cordinates farther appart, both from each other and from the lower cordinates (Outside the image)
             cv::Point2f pts1[] = { leftLine.begin, rightLine.begin, cv::Point2f(leftLine.end.x, bottom), cv::Point2f(rightLine.end.x, bottom) };
@@ -177,11 +169,11 @@ namespace Autodrive
             birdseye_matrix = cv::getPerspectiveTransform(pts1, pts2);
 
             leftImageBorder = linef(cv::Point2f(leftLine.begin.x - centerDiff, leftLine.end.y -4), cv::Point2f(0, leftLine.begin.y -4));
-            rightImageBorder = linef(cv::Point2f(rightLine.begin.x - centerDiff, rightLine.end.y-4), cv::Point2f(mat.size().width, rightLine.begin.y-4));
-
+            rightImageBorder = linef(cv::Point2f(rightLine.begin.x - centerDiff, rightLine.end.y-4), cv::Point2f(width, rightLine.begin.y-4));
+            
 #ifdef _VISUAL_WARP
             cv::Mat warped_image;
-            cv::warpPerspective(mat, warped_image, *birdseye_matrix, mat.size(), cv::INTER_LINEAR);
+            cv::warpPerspective(matCopy, warped_image, *birdseye_matrix, matCopy.size(), cv::INTER_LINEAR);
 
             cv::resize(warped_image, warped_image, warped_image.size() * 3);//resize image
             cv::imshow("mainwindow", warped_image);
@@ -191,10 +183,8 @@ namespace Autodrive
         return birdseye_matrix;
     }
 
-    cv::Mat birds_eye_transform(cv::Mat& mat, cv::Mat birdseye_matrix)
+    void birds_eye_transform(cv::Mat* mat, cv::Mat birdseye_matrix)
     {
-        cv::Mat warped_image;
-        cv::warpPerspective(mat, warped_image, birdseye_matrix, mat.size(), cv::INTER_LINEAR);
-        return warped_image;
+        cv::warpPerspective(*mat, *mat, birdseye_matrix, mat->size(), cv::INTER_LINEAR);
     }
 }
