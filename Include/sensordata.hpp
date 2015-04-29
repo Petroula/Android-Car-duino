@@ -5,18 +5,20 @@ namespace Autodrive
 {
     namespace SensorData
     {
-        enum UltrasoundSensor{
+        enum UltrasoundSensor
+        {
             FRONT = 0,
             FRONT_RIGHT = 1,
             REAR = 2
         };
 
         double PULSES_PER_CM = 0.5; //to be determined experimentally
-        int ultrasound[] = {0,0,0};
-        int infrared[] = {0,0};
+        int ultrasound[] = { 0, 0, 0 };
+        int infrared[] = { 0, 0 };
         long encoderPulses = 0;
-        double encoderDistance(){
-            return encoderPulses/PULSES_PER_CM;
+        double encoderDistance()
+        {
+            return encoderPulses / PULSES_PER_CM;
         }
         cv::Mat* image = 0;
     };
