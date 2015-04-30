@@ -20,4 +20,6 @@ public class Autodrive
     public static native boolean angleChanged();
     public static native int getTargetSpeed();
     public static native int getTargetAngle();
+
+    public static native void reset();
 }

@@ -13,6 +13,10 @@ public class AutomaticCarDriver{
         System.loadLibrary("autodrive");
     }
 
+    AutomaticCarDriver(){
+        Autodrive.reset();
+    }
+
     public Mat processImage(Mat image) {
         Mat resized = new Mat();
         Size prevSize = image.size();

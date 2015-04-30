@@ -65,6 +65,12 @@ extern "C"
     {
         return Autodrive::getSpeed();
     }
+    
+    
+    TYPE(void) NAME(reset)()
+    {
+        return Autodrive::reset();
+    }
 
     TYPE(jint) NAME(getTargetAngle)()
     {

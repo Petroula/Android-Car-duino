@@ -103,6 +103,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
     @Override
     public void onResume()
     {
+        driver = new AutomaticCarDriver();
         super.onResume();
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_6, this, mLoaderCallback);
     }
