@@ -13,8 +13,7 @@ namespace Autodrive
         roadbuilder::Road road;
 
     public:
-
-        POINT start_center;
+        float targetRoadDistance = 0;
         std::unique_ptr<roadbuilder> roadBuilder = nullptr;
 
         cv::Mat draw2(const cv::Mat& cannied)
@@ -24,11 +23,11 @@ namespace Autodrive
 
             for (unsigned int i = 0; i < road.points.size() -1; i++)
             {
-                linef(road.points[i], road.points[i + 1]).draw(colorCopy,cv::Scalar(255,0,0),1);
+                linef(road.points[i], road.points[i + 1]).draw(colorCopy,cv::Scalar(255,0,0),4);
             }
 
-            linef(roadBuilder->last_start, roadBuilder->last_start + POINT(8, -15)).draw(colorCopy, cv::Scalar(0, 255, 255), 1);
-            linef(start_center, POINT(start_center.x, 0)).draw(colorCopy);
+            linef(roadBuilder->last_start, roadBuilder->last_start + POINT(8, -20)).draw(colorCopy, cv::Scalar(0, 255, 255), 1);
+            //linef(start_center, POINT(start_center.x, 0)).draw(colorCopy);
             
             return colorCopy;
         }
@@ -37,29 +36,30 @@ namespace Autodrive
         {
             roadBuilder = make_unique<roadbuilder>(cannied, start_point);
             road = roadBuilder->build2(cannied, 25);
+            targetRoadDistance = road.getMeanStartDistance(5);
         }
 
         command update2(cv::Mat& cannied,cv::Mat& drawMat)
         {
-            road = roadBuilder->build2(cannied, 25);
+            road = roadBuilder->build2(cannied, 17);
             
             drawMat = draw2(cannied);
             command cmd;
 
             int mid = int(road.points.size() / 2.5);
             
-            if (road.points.size() < 5 || abs(road.getMeanAngle() - Mathf::PI_2) > Mathf::PI_2)
-                cmd.setSpeed(60);
-            else
+            if (road.points.size() > 5 && abs(road.getMeanAngle() - Mathf::PI_2) < Mathf::PI_2)
             {
-                int degrees = Mathf::toDegrees(road.getMeanAngle()) - 90;
-                degrees = int((degrees / 50.f) * 25);
-
+                /* Start by setting the target angle to the mean road angle*/
+                int degrees = Mathf::toDegrees(road.getMeanAngle(4)) - 90;
+                degrees = int((degrees / 46.f) * 25);
+                degrees*= -1;
+                /* Add the difference of the distance to the parallel road and the targetDistance*/
+                degrees += std::pow((targetRoadDistance - road.getMeanStartDistance(5))*5.f,1.8f);
                 degrees = std::min(degrees, 25);
                 degrees = std::max(degrees, -25);
 
-
-                cmd.setAngle(degrees*-1);
+                cmd.setAngle(degrees);
             }
 
             return cmd;
