@@ -6,7 +6,8 @@ import org.opencv.imgproc.Imgproc;
 
 public class AutomaticCarDriver{
 
-    static {
+    static
+    {
         System.loadLibrary("gnustl_shared");
         System.loadLibrary("opencv_java");
         System.loadLibrary("autodrive");
@@ -15,7 +16,7 @@ public class AutomaticCarDriver{
     public Mat processImage(Mat image) {
         Mat resized = new Mat();
         Size prevSize = image.size();
-        Size size = new Size(320,180);
+        Size size = new Size(240,135);
         Imgproc.resize(image,resized,size);
         Autodrive.setImage(resized.getNativeObjAddr());
         Autodrive.drive();

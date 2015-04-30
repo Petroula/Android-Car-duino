@@ -121,14 +121,19 @@ public class Bluetooth {
 
 
     public void send() {
-
         try {
-            String text = nt.encodedNetstring("m" + String.valueOf(Autodrive.getTargetSpeed()));
-            text += nt.encodedNetstring("t" + String.valueOf(Autodrive.getTargetAngle()));
-            if(socket.isConnected()) {
-                out.write(text.getBytes());
-            }
-        } catch (IOException e) {
+                String text = "";
+                if(Autodrive.speedChanged())
+                    text +=nt.encodedNetstring("m" + String.valueOf(Autodrive.getTargetSpeed()));
+                if(Autodrive.angleChanged())
+                    text += nt.encodedNetstring("t" + String.valueOf(Autodrive.getTargetAngle()));
+
+                if(!text.isEmpty()) {
+                    if (socket.isConnected()) {
+                        out.write(text.getBytes());
+                    }
+                }
+            } catch (IOException e) {
             e.printStackTrace();
         }
     }
