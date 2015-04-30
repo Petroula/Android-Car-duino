@@ -58,8 +58,7 @@ int main()
         
         Autodrive::linef(center, center + Point2f(cos(angle) * 200, -sin(angle) * 200)).draw(frame, CV_RGB(0, 250, 0));
 
-        
-        imshow("w", frame);
+        Autodrive::show_image(frame, 3, "w");
         waitKey(10); // waits to display frame
     }
     return 0;

@@ -27,11 +27,6 @@ namespace Autodrive
         int center = canniedMat.size().width / 2;
 
         if (reset) first = true;
-//#define DEBUG_LANE_MARKINGS
-#ifdef DEBUG_LANE_MARKINGS
-        cv::Mat colorCopy;
-        cv::cvtColor(canniedMat, colorCopy, CV_GRAY2RGB);
-#endif 
 
         static linef lastLML;
         static linef lastRML;
@@ -53,30 +48,18 @@ namespace Autodrive
                 
             if (leftx - vector.length() < leftmost && leftx > center + 40)
             {
-                if (first || vector.differs_less_than_from(lastLML, 500, 0.6f)){
-                    if (rightx > leftx && topy > boty && vector.length() > 110)
-                    {
-                        leftMostLine = linef(line);
-                        foundLeft = true;
-                    }
+                if (rightx > leftx && topy > boty && vector.length() > 110)
+                {
+                    leftMostLine = linef(line);
+                    foundLeft = true;
                 }
             }
             if (rightx + vector.length() > rightmost && rightx < center - 40)
             {
-                if (first || vector.differs_less_than_from(lastRML, 1600 * 100, 5.f)){
-                    rightMostline = linef(line);
-                    foundRight = true;
-                }
+                rightMostline = linef(line);
+                foundRight = true;
             }
         }
-
-#ifdef DEBUG_LANE_MARKINGS
-        lineleft.draw(colorCopy);
-        float dir = lineleft.direction();
-        cv::resize(colorCopy, colorCopy, colorCopy.size() * 2);//resize image
-        cv::namedWindow("Lane_Markings", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
-        cv::imshow("Lane_Markings", colorCopy);
-#endif
 
 
         lastLML = leftMostLine;
@@ -86,8 +69,8 @@ namespace Autodrive
             {
                 rightMostline.stretchY(0.f, (float) canniedMat.size().height);
                 leftMostLine.stretchY(0.f, (float) canniedMat.size().height );
-
-                if ((leftMostLine.leftMost_x() >rightMostline.rightMost_x()))
+                //TODO: Deprecated line
+                //if ((leftMostLine.leftMost_x() >rightMostline.rightMost_x()))
                 {
                     leftMostLine.draw(drawMat, cv::Scalar(0, 0, 255), 5);
                     rightMostline.draw(drawMat,cv::Scalar(0,0,255),5);
