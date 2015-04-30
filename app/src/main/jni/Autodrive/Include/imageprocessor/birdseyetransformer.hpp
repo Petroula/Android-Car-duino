@@ -13,7 +13,7 @@ namespace Autodrive
         bool found = false;
     };
 
-    lanes getLaneMarkings(const cv::Mat& canniedMat,cv::Mat& drawMat, bool reset = false){
+    lanes getLaneMarkings(const cv::Mat& canniedMat,cv::Mat* drawMat){
         lanes lanes;
         ::std::vector<cv::Vec4i> lines;
         linef leftMostLine;
@@ -21,12 +21,9 @@ namespace Autodrive
         cv::HoughLinesP(canniedMat, lines, 1, CV_PI / 180, 20, 10, 50);
         int leftmost = canniedMat.size().width;
         int rightmost = 0;
-        static bool first = true;
         bool foundLeft = false;
         bool foundRight = false;
         int center = canniedMat.size().width / 2;
-
-        if (reset) first = true;
 
         static linef lastLML;
         static linef lastRML;
@@ -39,25 +36,28 @@ namespace Autodrive
             int thresh = 1;
             bool yes = false;
 
+
             float dirr = vector.direction_fixed_half();
 
             float dir_diff = dirr - PI_2;
 
             if (abs(dir_diff) < 0.f || abs(dir_diff) > 1.f)
                 continue;
-                
-            if (leftx - vector.length() < leftmost && leftx > center + 40)
-            {
-                if (rightx > leftx && topy > boty && vector.length() > 110)
-                {
-                    leftMostLine = linef(line);
-                    foundLeft = true;
-                }
+
+
+            if (leftx - vector.length() < leftmost && leftx > center + 20) {
+                    if (rightx > leftx && topy > boty && vector.length() > 110) {
+                        leftMostLine = linef(line);
+                        foundLeft = true;
+                    }
             }
-            if (rightx + vector.length() > rightmost && rightx < center - 40)
+            if (rightx + vector.length() > rightmost && rightx < center - 20)
             {
-                rightMostline = linef(line);
-                foundRight = true;
+                if (rightx + vector.length() > rightmost && rightx < center - 20)
+                {
+                    rightMostline = linef(line);
+                    foundRight = true;
+                }
             }
         }
 
@@ -65,21 +65,22 @@ namespace Autodrive
         lastLML = leftMostLine;
         lastRML = rightMostline;
         if (foundRight && foundLeft) {
-            if ( abs((-rightMostline.k) - leftMostLine.k) < 0.8f)
+            leftMostLine.draw(*drawMat,cv::Scalar(255,0,0),2);
+            rightMostline.draw(*drawMat,cv::Scalar(255,0,0),2);
+            if ( abs((-rightMostline.k) - leftMostLine.k) < 0.9f)
             {
                 rightMostline.stretchY(0.f, (float) canniedMat.size().height);
                 leftMostLine.stretchY(0.f, (float) canniedMat.size().height );
                 //TODO: Deprecated line
                 //if ((leftMostLine.leftMost_x() >rightMostline.rightMost_x()))
                 {
-                    leftMostLine.draw(drawMat, cv::Scalar(0, 0, 255), 5);
-                    rightMostline.draw(drawMat,cv::Scalar(0,0,255),5);
+                    leftMostLine.draw(*drawMat, cv::Scalar(0, 0, 255), 5);
+                    rightMostline.draw(*drawMat,cv::Scalar(0,0,255),5);
                     lanes.left = rightMostline;
                     lanes.right = leftMostLine;
                     float dirLeft = lanes.left.k;
                     float dirRight = lanes.right.k;
                     lanes.found = true;
-                    first = false;
                 }
             }
         }
@@ -94,10 +95,12 @@ namespace Autodrive
     optional<cv::Mat> find_perspective(cv::Mat* matIn, double thresh1 = 300, double thresh2 = 150, int crop = 5){
         optional<cv::Mat> birdseye_matrix;
         cv::Mat matCopy = matIn->clone();
-        cv::erode(matCopy, matCopy, cv::Mat(), cv::Point(-1, -1), 1);
-        cv::Canny(matCopy, matCopy, thresh1, thresh2, 3);
 
-        auto lines = getLaneMarkings(matCopy,*matIn);
+        cv::erode(matCopy, matCopy, cv::Mat(), cv::Point(-1, -1), 1);
+        cv::Mat cannied;
+        cv::Canny(matCopy, cannied, thresh1, thresh2, 3);
+        matCopy = cannied;
+        auto lines = getLaneMarkings(matCopy,matIn);
         if (!lines.found)
             return nullptr;
             
@@ -113,8 +116,8 @@ namespace Autodrive
             xdiff = rightLine.leftMost_x() - leftLine.rightMost_x();
             rightLine.stretchY(icrop, height);
             leftLine.stretchY(icrop, height);
-            icrop+=2.f;
-        } while (xdiff < width/5.f);
+            icrop+=3.f;
+        } while (xdiff < width/3.0f);
 
         float right = width;
         float bottom = height;
@@ -151,8 +154,8 @@ namespace Autodrive
 
             birdseye_matrix = cv::getPerspectiveTransform(pts1, pts2);
 
-            leftImageBorder = linef(cv::Point2f(leftLine.begin.x - centerDiff, leftLine.end.y -4), cv::Point2f(0, leftLine.begin.y -4));
-            rightImageBorder = linef(cv::Point2f(rightLine.begin.x - centerDiff, rightLine.end.y-4), cv::Point2f(width, rightLine.begin.y-4));
+            leftImageBorder = linef(cv::Point2f(xleft - leftLine.end.x / 2, leftLine.end.y +2), cv::Point2f(0, leftLine.begin.y+2));
+            rightImageBorder = linef(cv::Point2f(xright - (rightLine.end.x - width)/2, rightLine.end.y+2), cv::Point2f(width, rightLine.begin.y+2));
             
 #ifdef _VISUAL_WARP
             cv::Mat warped_image;

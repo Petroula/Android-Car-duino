@@ -15,6 +15,7 @@ using namespace std;
 
 int main()
 {
+std::cout<<"main";
     string filename = "testreal_small.mp4";
     //string filename = "vid1.mp4";
     //string filename = "Test4-1.m4v";
@@ -33,7 +34,7 @@ int main()
     int thresh2 = 38;
 
     capture >> frame;
-    while (!Autodrive::imageProcessor::init_processing(frame)){
+    while (!Autodrive::imageProcessor::init_processing(&frame)){
         capture >> frame;
     }
     for (;;)

@@ -9,14 +9,34 @@ namespace Autodrive
 
     class roadbuilder
     {
-        const int distanceToRoad = 20;
+        static const int pointDist = 4;
+        static const int leftIterationLength = 6;
+        static const int rightIterationLength = 7;
+        static const int maxDistFromStart = 27;
+        static const int firstFragmentMaxDist = 30;
+        static const int maxUpwardsIteration = 12;
+        int carY = 0;
 
         POINT getFirstHit(const cv::Mat& cannied, POINT start_point)
         {
             SearchResult right;
             int unfound = 0;
 
-            //SEARCH UPWARDS UNTIL HIT
+            start_point.y = cannied.size().height - 5;
+            //SEARCH UPWARDS UNTIL NOT HIT ON THE CENTER
+            bool hit = true;
+            while (hit)
+            {
+                hit  = firstnonzero_direction(cannied, start_point, 0, 10).found
+                        || firstnonzero_direction(cannied, start_point, Mathf::PI, 10).found;
+                if (hit)
+                    start_point.y--;
+            }
+
+            start_point.y--;
+            carY = start_point.y;
+
+            //SEARCH UPWARDS UNTIL HIT ON THE RIGHT
             while (!right.found && unfound++ < 9)
             {
                 right = firstnonzero_direction(cannied, start_point, 0, 360);// 0 = RIGHT
@@ -30,8 +50,8 @@ namespace Autodrive
 
         static SearchResult findFragment2(const cv::Mat& cannied, POINT start, float leftAngle, float rightAngle)
         {
-            SearchResult rightSearch = firstnonzero_direction(cannied, start, rightAngle, 10);
-            SearchResult leftSearch = firstnonzero_direction(cannied, start, leftAngle, 9);
+            SearchResult rightSearch = firstnonzero_direction(cannied, start, rightAngle, rightIterationLength);
+            SearchResult leftSearch = firstnonzero_direction(cannied, start, leftAngle, leftIterationLength);
             bool left = false;
             bool right = false;
             if (leftSearch.found && rightSearch.found)
@@ -67,7 +87,7 @@ namespace Autodrive
             POINT start_point = last_start;
 
             //SEARCH UPWARDS UNTIL HIT
-            while (!searchRes.found && unfound++ < 20)
+            while (!searchRes.found && unfound++ < firstFragmentMaxDist)
             {
                 searchRes = findFragment2(cannied, start_point, left, right);
                 if (!searchRes.found)
@@ -78,7 +98,7 @@ namespace Autodrive
             SearchResult new_hit;
             new_hit = searchRes;
             int yStart = 0;
-            while (new_hit.found && unfound == 1 && yStart++ < 5 && searchRes.point.y < cannied.size().height - 10)
+            while (new_hit.found && unfound == 1 && yStart++ < 5 && searchRes.point.y < carY)
             {
                 new_hit.point.y++;
                 new_hit = findFragment2(cannied, new_hit.point, left, right);
@@ -89,7 +109,7 @@ namespace Autodrive
                     break;
             }
 
-            if (linef(first_start, searchRes.point).length2() <= 50*50)
+            if (linef(first_start, searchRes.point).length2() <= maxDistFromStart*maxDistFromStart)
                 last_start = searchRes.point;
 
             return searchRes.point;
@@ -105,7 +125,7 @@ namespace Autodrive
             float right_dir = 0;
             SearchResult searchResult;
             int unfound = 0;
-            while (!searchResult.found && unfound < 10)
+            while (!searchResult.found && unfound < maxUpwardsIteration)
             {
                 it.y-=delta;
                 it.x += cosf(est_angle)*delta;
@@ -146,13 +166,13 @@ namespace Autodrive
                 float prevAngle = angles.back();
                 float newAngle = linef(points.back(), p).direction_fixed_half();
 
-                float mean = getMeanAngle(20);
+                float mean = getMeanAngle(0);
                 //Almost never happens - ?
-                if (abs(newAngle - mean) > Mathf::PI_2 / 1.4f)
+                if (fabs(newAngle - mean) > 0.9f)//Mathf::PI_2 / 2.0f)
                     return false;
 
                 angles.push_back(newAngle);
-                angleDiffs.push_back(prevAngle - newAngle);
+                angleDiffs.push_back(newAngle - prevAngle);
                 points.push_back(p);
                 distances.push_back(p.x - centerX);
 
@@ -190,13 +210,19 @@ namespace Autodrive
             {
                 return angles.back() + getMeanAngleDiffs(n);
             }
+
+            float getMeanStartDistance(int nDistancesFromBegin){
+                if(nDistancesFromBegin >= distances.size())
+                    nDistancesFromBegin =  std::max(int(distances.size()) -1,0);
+                return std::accumulate(distances.begin() , distances.begin(), 0.f) / (std::max(nDistancesFromBegin,1));
+            }
         };
 
         Road build2(const cv::Mat& cannied, size_t maxsize)
         {
             Road road(center.x, getFirstFragment2(cannied));
             optional<POINT> newPoint;
-            while ((newPoint = getNextPoint(cannied, road.getEstimatedAngle(), road.points.back(),2)).valid && road.points.size() < maxsize)
+            while ((newPoint = getNextPoint(cannied, road.getEstimatedAngle(), road.points.back(),4)).valid && road.points.size() < maxsize)
             {
                 if (!road.addPoint(*newPoint))
                     break;
