@@ -33,6 +33,13 @@ namespace Autodrive
 
     carstatus status;
 
+
+    void reset()
+    {
+        status = SEARCHING_FOR_LANES;
+    }
+
+
     void drive()
     {
         /* Reset command */
