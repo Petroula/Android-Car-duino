@@ -18,9 +18,9 @@ namespace Autodrive
     const float Mathf::PI_2 = PI / 2.f;
     
     #ifndef __ANDROID__
-        void show_image(cv::Mat mat, int resize, char* wName)
+        void show_image(cv::Mat mat, int resize, std::string wName)
         {
-            cv::resize(mat, mat, mat.size() * 3);//resize image
+            cv::resize(mat, mat, mat.size() * resize);//resize image
             cv::imshow(wName, mat);
         }
     #endif
@@ -42,7 +42,7 @@ namespace Autodrive
         {
 
         }
-        optional(::std::nullptr_t null) : valid(false)
+        optional(::std::nullptr_t) : valid(false)
         {
 
         }

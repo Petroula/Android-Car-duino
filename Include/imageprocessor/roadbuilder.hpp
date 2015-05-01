@@ -52,8 +52,6 @@ namespace Autodrive
         {
             SearchResult rightSearch = firstnonzero_direction(cannied, start, rightAngle, rightIterationLength);
             SearchResult leftSearch = firstnonzero_direction(cannied, start, leftAngle, leftIterationLength);
-            bool left = false;
-            bool right = false;
             if (leftSearch.found && rightSearch.found)
             {
                 if (leftSearch.distance <= rightSearch.distance + 3)
@@ -80,9 +78,7 @@ namespace Autodrive
             int unfound = 0;
 
             float right = 0.f;
-            float up = Mathf::PI_2;
             float left = Mathf::PI;
-            float down = Mathf::PI + Mathf::PI_2;
 
             POINT start_point = last_start;
 
@@ -102,7 +98,7 @@ namespace Autodrive
             {
                 new_hit.point.y++;
                 new_hit = findFragment2(cannied, new_hit.point, left, right);
-                if (new_hit.found && new_hit.point.x == searchRes.point.x)
+                if (new_hit.found && int(new_hit.point.x) == int(searchRes.point.x))
                 {
                     searchRes = new_hit;
                 } else
@@ -120,7 +116,6 @@ namespace Autodrive
         {
 
             POINT it = prevPoint;
-            bool vertical_search = false;
             float left_dir = Mathf::PI;
             float right_dir = 0;
             SearchResult searchResult;
@@ -190,17 +185,17 @@ namespace Autodrive
             {
             }
 
-            float getMeanAngle(int lastSize = 0)
+            float getMeanAngle(unsigned int lastSize = 0)
             {
-                int offset = 0;
+                unsigned int offset = 0;
                 if (lastSize > 0 && angles.size() > lastSize)
                     offset = angles.size() - lastSize;
                 return std::accumulate(angles.begin() + offset, angles.end(), 0.f) / (float) (angles.size() - offset);
             }
 
-            float getMeanAngleDiffs(int lastSize = 0)
+            float getMeanAngleDiffs(unsigned int lastSize = 0)
             {
-                int offset = 0;
+                unsigned int offset = 0;
                 if (lastSize > 0 && angles.size() > lastSize)
                     offset = angles.size() - lastSize;
                 return std::accumulate(angleDiffs.begin() + offset, angleDiffs.end(), 0.f) / ((float)angleDiffs.size() - offset);
@@ -211,10 +206,13 @@ namespace Autodrive
                 return angles.back() + getMeanAngleDiffs(n);
             }
 
-            float getMeanStartDistance(int nDistancesFromBegin){
+            float getMeanStartDistance(unsigned int nDistancesFromBegin){
+                if(distances.size() == 0)
+                    return 0;
+
                 if(nDistancesFromBegin >= distances.size())
-                    nDistancesFromBegin =  std::max(int(distances.size()) -1,0);
-                return std::accumulate(distances.begin() , distances.begin(), 0.f) / (std::max(nDistancesFromBegin,1));
+                    nDistancesFromBegin =  int(distances.size());
+                return std::accumulate(distances.begin() , distances.begin() + nDistancesFromBegin, 0.f) / float(nDistancesFromBegin);
             }
         };
 

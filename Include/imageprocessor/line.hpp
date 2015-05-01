@@ -22,12 +22,13 @@ namespace Autodrive
             return std::max(begin.x, end.x);
         }
 
-        line(vecT line) : begin(pointT(line[0], line[1])), end(pointT(line[2], line[3]))
+        line(vecT pointVector) : begin(pointT(pointVector[0], pointVector[1])),
+                                 end(pointT(pointVector[2], pointVector[3]))
         {
             compute();
         }
 
-        line(pointT begin, pointT end) : begin(begin), end(end)
+        line(pointT pointBegin, pointT pointEnd) : begin(pointBegin), end(pointEnd)
         {
             compute();
         }
@@ -39,7 +40,7 @@ namespace Autodrive
 
         void compute()
         {
-            if (begin.x == end.x)
+            if (int(begin.x) == int(end.x))
             {
                 k = limitsT::has_infinity ? limitsT::infinity() : limitsT::max();
             } else

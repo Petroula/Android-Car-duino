@@ -43,7 +43,7 @@ namespace Autodrive
                 normalizeLightning(mat, blur_i, intensity / 100.f);
                 cv::Mat cannied_mat;
                 cv::Canny(*mat, cannied_mat, thresh1, thresh2, 3);
-                road.build2(cannied_mat, start_center, 1);
+                road.build2(cannied_mat, start_center);
                 return true;
             } else{
                 cv::putText(*mat, "SEARCHING FOR STRAIGHT LANES...", cv::Point2f(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 2, cv::Scalar(0, 255, 0), 2);

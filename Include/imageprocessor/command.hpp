@@ -9,16 +9,16 @@ namespace Autodrive {
         bool changedSpeed = false;
         int angle = 0;
         int speed = 0;
-        inline void setSpeed(int speed)
+        inline void setSpeed(int newSpeed)
         {
             changedSpeed = true;
-            this->speed = speed;
+            speed = newSpeed;
         }
-        inline void setAngle(int angle)
+        inline void setAngle(int newAngle)
         {
             assert(angle >= -25 && angle <= 25);
             changedAngle = true;
-            this->angle = angle;
+            angle = newAngle;
         }
     };
 
