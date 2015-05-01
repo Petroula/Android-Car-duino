@@ -33,8 +33,6 @@ namespace Autodrive
             int boty = line[1];
             int topy = line[3];
             linef vector(line);
-            int thresh = 1;
-            bool yes = false;
 
 
             float dirr = vector.direction_fixed_half();
@@ -78,8 +76,6 @@ namespace Autodrive
                     rightMostline.draw(*drawMat,cv::Scalar(0,0,255),5);
                     lanes.left = rightMostline;
                     lanes.right = leftMostLine;
-                    float dirLeft = lanes.left.k;
-                    float dirRight = lanes.right.k;
                     lanes.found = true;
                 }
             }
@@ -92,7 +88,7 @@ namespace Autodrive
     linef rightImageBorder;
     float centerDiff;
 
-    optional<cv::Mat> find_perspective(cv::Mat* matIn, double thresh1 = 300, double thresh2 = 150, int crop = 5){
+    optional<cv::Mat> find_perspective(cv::Mat* matIn, double thresh1 = 300, double thresh2 = 150){
         optional<cv::Mat> birdseye_matrix;
         cv::Mat matCopy = matIn->clone();
 
@@ -119,11 +115,9 @@ namespace Autodrive
             icrop+=3.f;
         } while (xdiff < width/3.0f);
 
-        float right = width;
         float bottom = height;
         float xleft = leftLine.end.x;
         float xright = rightLine.end.x;
-        bool warping = true;
 //#define _VISUAL_WARP
 #ifdef _VISUAL_WARP
         while (warping){
@@ -139,7 +133,6 @@ namespace Autodrive
             else
 #endif
             {
-                warping = false;
                 xright = rightLine.begin.x;
                 xleft = leftLine.begin.x;
             }

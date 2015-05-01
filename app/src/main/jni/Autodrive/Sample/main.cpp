@@ -22,16 +22,11 @@ std::cout<<"main";
     VideoCapture capture(filename);
     Mat frame;
     float angle = 0;
-    float speed = 5;
 
     if (!capture.isOpened())
     throw "Error when opening test4.avi";
     string window = "w";
     namedWindow(window, 1);
-    int birds_angle = 34;
-    int crop = 0;//20
-    int thresh1 = 23;
-    int thresh2 = 38;
 
     capture >> frame;
     while (!Autodrive::imageProcessor::init_processing(&frame)){
@@ -49,10 +44,6 @@ std::cout<<"main";
 
         if (cmnd.changedAngle){
             angle = ((90 - cmnd.angle)* Autodrive::Mathf::PI) / 180.f ;
-        }
-
-        if (cmnd.changedSpeed){
-            speed = cmnd.speed;
         }
 
         Point2f center(frame.size().width / 2.f, (float) frame.size().height);

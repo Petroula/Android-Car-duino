@@ -32,7 +32,7 @@ namespace Autodrive
             return colorCopy;
         }
 
-        void build2(const cv::Mat& cannied, POINT start_point, int _updateFrequency) 
+        void build2(const cv::Mat& cannied, POINT start_point)
         {
             roadBuilder = make_unique<roadbuilder>(cannied, start_point);
             road = roadBuilder->build2(cannied, 25);
@@ -46,8 +46,6 @@ namespace Autodrive
             drawMat = draw2(cannied);
             command cmd;
 
-            int mid = int(road.points.size() / 2.5);
-            
             if (road.points.size() > 5 && abs(road.getMeanAngle() - Mathf::PI_2) < Mathf::PI_2)
             {
                 /* Start by setting the target angle to the mean road angle*/
