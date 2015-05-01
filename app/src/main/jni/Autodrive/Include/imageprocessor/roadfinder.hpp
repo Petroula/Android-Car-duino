@@ -53,7 +53,8 @@ namespace Autodrive
                 degrees = int((degrees / 46.f) * 25);
                 degrees*= -1;
                 /* Add the difference of the distance to the parallel road and the targetDistance*/
-                degrees += std::pow((targetRoadDistance - road.getMeanStartDistance(5))*5.f,1.8f);
+                float distanceDeviation = targetRoadDistance - road.getMeanStartDistance(5);
+                degrees += distanceDeviation;
                 degrees = std::min(degrees, 25);
                 degrees = std::max(degrees, -25);
 
