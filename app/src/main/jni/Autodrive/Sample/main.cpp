@@ -21,7 +21,6 @@ std::cout<<"main";
     //string filename = "Test4-1.m4v";
     VideoCapture capture(filename);
     Mat frame;
-    float angle = 0;
 
     if (!capture.isOpened())
     throw "Error when opening test4.avi";
@@ -40,15 +39,7 @@ std::cout<<"main";
             continue;
         }
 
-        Autodrive::command cmnd = Autodrive::imageProcessor::continue_processing(frame);
-
-        if (cmnd.changedAngle){
-            angle = ((90 - cmnd.angle)* Autodrive::Mathf::PI) / 180.f ;
-        }
-
-        Point2f center(frame.size().width / 2.f, (float) frame.size().height);
-        
-        Autodrive::linef(center, center + Point2f(cos(angle) * 200, -sin(angle) * 200)).draw(frame, CV_RGB(0, 250, 0));
+        Autodrive::imageProcessor::continue_processing(frame);
 
         Autodrive::show_image(frame, 3, "w");
         waitKey(10); // waits to display frame
