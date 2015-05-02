@@ -16,7 +16,7 @@ namespace Autodrive
         float targetRoadDistance = 0;
         std::unique_ptr<roadbuilder> roadBuilder = nullptr;
 
-        cv::Mat draw2(const cv::Mat& cannied,float startDist)
+        cv::Mat draw(const cv::Mat& cannied,float startDist)
         {
             cv::Mat colorCopy;
             cv::cvtColor(cannied, colorCopy, CV_GRAY2RGB);
@@ -26,7 +26,13 @@ namespace Autodrive
                 linef(road.points[i], road.points[i + 1]).draw(colorCopy,cv::Scalar(255,0,0),4);
             }
 
-            linef(roadBuilder->last_start, roadBuilder->last_start + POINT(8, -20)).draw(colorCopy, cv::Scalar(0, 255, 255), 1);
+           
+            /* DRAW RECTANGLE FOR POSSIBLE FIRST HITS*/
+            POINT upperLeft = roadBuilder->last_start + POINT(-Settings::leftIterationLength, -Settings::firstFragmentMaxDist);
+            POINT lowerRight = roadBuilder->last_start + POINT(Settings::rightIterationLength, 0);
+            cv::rectangle(colorCopy,upperLeft , lowerRight,cv::Scalar(255,0,255));
+            
+            //linef(roadBuilder->last_start, roadBuilder->last_start + POINT(8, -20)).draw(colorCopy, cv::Scalar(0, 255, 255), 1);
 
 
             /* DRAW VERTICAL LINE DISPLAYING DISTANCE TO ROAD AND TARGETED DISTANCE TO ROAD*/
@@ -38,7 +44,7 @@ namespace Autodrive
             return colorCopy;
         }
 
-        void build2(const cv::Mat& cannied, POINT start_point)
+        void build(const cv::Mat& cannied, POINT start_point)
         {
             roadBuilder = make_unique<roadbuilder>(cannied, start_point);
             road = roadBuilder->build2(cannied, 25);
@@ -52,13 +58,13 @@ namespace Autodrive
             command cmd;
             float startDistance = targetRoadDistance;
 
-            if (road.points.size() > 5 && abs(road.getMeanAngle() - Mathf::PI_2) < Mathf::PI_2)
+            if (road.points.size() > 5 && fabs(road.getMeanAngle() - Mathf::PI_2) < Mathf::PI_2)
             {
                 /* Start by setting the target angle to the mean road angle*/
                 int degrees = Mathf::toDegrees(road.getMeanAngle(4)) - 90;
                 degrees = int((degrees / 46.f) * 25);
                 degrees*= -1;
-                // If the current distance is larger than, target distance, turn right more right, vice versa
+                // If the current distance is larger than, target distance, turn more right, vice versa
                 startDistance = road.getMeanStartDistance(5);
                 float distanceDeviation = startDistance  - targetRoadDistance ;
                 degrees += distanceDeviation;
@@ -68,7 +74,7 @@ namespace Autodrive
                 cmd.setAngle(degrees);
             }
 
-            drawMat = draw2(cannied,startDistance);
+            drawMat = draw(cannied,startDistance);
 
             return cmd;
         }

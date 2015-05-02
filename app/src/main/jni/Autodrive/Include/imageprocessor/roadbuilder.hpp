@@ -1,6 +1,7 @@
 #pragma once
 #include "line.hpp"
 #include "util.hpp"
+#include "..\settings.hpp"
 #include <numeric>
 
 namespace Autodrive
@@ -10,10 +11,7 @@ namespace Autodrive
     class roadbuilder
     {
         static const int pointDist = 4;
-        static const int leftIterationLength = 6;
-        static const int rightIterationLength = 7;
         static const int maxDistFromStart = 27;
-        static const int firstFragmentMaxDist = 30;
         static const int maxUpwardsIteration = 12;
         int carY = 0;
 
@@ -23,7 +21,7 @@ namespace Autodrive
             int unfound = 0;
 
             start_point.y = cannied.size().height - 5;
-            //SEARCH UPWARDS UNTIL NOT HIT ON THE CENTER
+            //SEARCH UPWARDS UNTIL _NOT_ HIT ON THE CENTER
             bool hit = true;
             while (hit)
             {
@@ -50,8 +48,8 @@ namespace Autodrive
 
         static SearchResult findFragment2(const cv::Mat& cannied, POINT start, float leftAngle, float rightAngle)
         {
-            SearchResult rightSearch = firstnonzero_direction(cannied, start, rightAngle, rightIterationLength);
-            SearchResult leftSearch = firstnonzero_direction(cannied, start, leftAngle, leftIterationLength);
+            SearchResult rightSearch = firstnonzero_direction(cannied, start, rightAngle, Settings::rightIterationLength);
+            SearchResult leftSearch = firstnonzero_direction(cannied, start, leftAngle, Settings::leftIterationLength);
             if (leftSearch.found && rightSearch.found)
             {
                 if (leftSearch.distance <= rightSearch.distance + 3)
@@ -83,7 +81,7 @@ namespace Autodrive
             POINT start_point = last_start;
 
             //SEARCH UPWARDS UNTIL HIT
-            while (!searchRes.found && unfound++ < firstFragmentMaxDist)
+            while (!searchRes.found && unfound++ < Settings::firstFragmentMaxDist)
             {
                 searchRes = findFragment2(cannied, start_point, left, right);
                 if (!searchRes.found)
@@ -163,7 +161,7 @@ namespace Autodrive
 
                 float mean = getMeanAngle(0);
                 //Almost never happens - ?
-                if (fabs(newAngle - mean) > 0.9f)//Mathf::PI_2 / 2.0f)
+                if (fabs(newAngle - mean) > 0.8f)//Mathf::PI_2 / 2.0f)
                     return false;
 
                 angles.push_back(newAngle);
