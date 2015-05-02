@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,34 +8,75 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="pegasus.bluetootharduino.MainActivity" >
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:layout_weight="1"
+            android:paddingRight="20dp">
 
-    <Button
-        android:id="@+id/auto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/auto"
-        android:layout_alignLeft="@+id/auto"
-        android:layout_below="@+id/auto"
-        android:text="Auto" />
+            <Button
+                android:id="@+id/auto"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:text="Auto Drive"
+                android:layout_above="@+id/manual"
+                android:textSize="30dp"
+                android:layout_weight="1"
+                android:textColor="#ff00b9ff"
+                android:enabled="false"
+                android:textStyle="bold"
+                android:clickable="true"
+                style="@style/AppTheme" />
 
-    <Button
-        android:id="@+id/parking"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="48dp"
-        android:text="Parking" />
+            <Button
+                android:id="@+id/parking"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Parking"
+                android:layout_weight="1"
+                android:elevation="0dp"
+                android:elegantTextHeight="false" />
 
-    <Button
-        android:id="@+id/manual"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/parking"
-        android:layout_alignLeft="@+id/parking"
-        android:layout_below="@+id/parking"
-        android:text="Manual" />
+            <Button
+                android:id="@+id/manual"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Manual"
+                android:layout_weight="1" />
 
+        </LinearLayout>
 
-</RelativeLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:paddingLeft="20dp"
+            android:layout_weight="0.3">
+
+            <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Light normalization"
+                android:id="@+id/LightNormalizationSwitch"
+                android:checked="true" />
+
+            <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Debug information"
+                android:id="@+id/DisplayDebugSwitch"
+                android:checked="true"
+                android:layout_below="@+id/LightNormalizationSwitch"
+                android:layout_marginTop="31dp" />
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/MaxHorIteration"
+                android:indeterminate="false"
+                android:paddingTop="20dp" />
+        </LinearLayout>
+    </LinearLayout>

@@ -21,6 +21,13 @@ extern "C"
     {
         Autodrive::drive();
     }
+	
+    TYPE(void) NAME(reset)()
+    {
+        return Autodrive::reset();
+    }
+	
+	/*----- SENSORDATA -----*/
 
     TYPE(void) NAME(setImage) PARAMS(long newMat){
         Autodrive::SensorData::image = (cv::Mat*)newMat;
@@ -51,6 +58,9 @@ extern "C"
         return Autodrive::SensorData::encoderDistance();
     }
     
+	
+	/*----- RESULTING AUTODRIVE DATA -----*/
+	
     TYPE(jboolean) NAME(speedChanged)() 
     {
         return Autodrive::speedChanged();
@@ -65,16 +75,17 @@ extern "C"
     {
         return Autodrive::getSpeed();
     }
-    
-    
-    TYPE(void) NAME(reset)()
-    {
-        return Autodrive::reset();
-    }
 
     TYPE(jint) NAME(getTargetAngle)()
     {
         return Autodrive::getAngle();
+    }
+	
+	/* SETTINGS */
+	
+    TYPE(void) NAME(setSettingLightNormalization)(bool on)
+    {
+        Autodrive::Settings::normalizeLightning = on;
     }
 }
 

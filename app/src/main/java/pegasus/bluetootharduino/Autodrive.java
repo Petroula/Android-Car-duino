@@ -7,6 +7,13 @@ import org.opencv.core.Mat;
  */
 public class Autodrive
 {
+    static
+    {
+        System.loadLibrary("gnustl_shared");
+        System.loadLibrary("opencv_java");
+        System.loadLibrary("autodrive");
+    }
+
     public static native void drive();
     public static native void setImage(long matAddrRgba);
     public static native void setUltrasound(int sensor, int value);
@@ -22,4 +29,6 @@ public class Autodrive
     public static native int getTargetAngle();
 
     public static native void reset();
+
+    public static native void setSettingLightNormalization(boolean on);
 }

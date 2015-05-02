@@ -6,13 +6,6 @@ import org.opencv.imgproc.Imgproc;
 
 public class AutomaticCarDriver{
 
-    static
-    {
-        System.loadLibrary("gnustl_shared");
-        System.loadLibrary("opencv_java");
-        System.loadLibrary("autodrive");
-    }
-
     AutomaticCarDriver(){
         Autodrive.reset();
     }
@@ -21,10 +14,11 @@ public class AutomaticCarDriver{
         Mat resized = new Mat();
         Size prevSize = image.size();
         Size size = new Size(240,135);
-        Imgproc.resize(image,resized,size);
+        Imgproc.resize(image, resized, size);
         Autodrive.setImage(resized.getNativeObjAddr());
         Autodrive.drive();
-        Imgproc.resize(resized,image,prevSize);
+        if(Settings.DisplayDebugInformation)
+            Imgproc.resize(resized,image,prevSize);
         return image;
     }
 }

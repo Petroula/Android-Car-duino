@@ -94,3 +94,40 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
+
+### Intellij ###
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
+*.iml
+
+
+### Visual studio ###
+
+# Visual studio project files
+*.sln
+*.vcxproj
+*.vcxproj.*
+
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.vsps
+
+# NuGet Packages
+*.nupkg
+**/packages.config
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
