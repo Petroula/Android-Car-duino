@@ -6,6 +6,7 @@
 #include "util.hpp"
 #include "roadfinder.hpp"
 #include "lightnormalizer.hpp"
+#include "../settings.hpp"
 
 using namespace std;
 
@@ -40,10 +41,11 @@ namespace Autodrive
                 perspective = *found_pespective;
                 birds_eye_transform(mat, perspective);
                 start_center = cv::Point2f(mat->size().width / 2.f + centerDiff, mat->size().height - 35.f);
-                normalizeLightning(mat, blur_i, intensity / 100.f);
+                if (Settings::normalizeLightning)
+                    normalizeLightning(mat, blur_i, intensity / 100.f);
                 cv::Mat cannied_mat;
                 cv::Canny(*mat, cannied_mat, thresh1, thresh2, 3);
-                road.build2(cannied_mat, start_center);
+                road.build(cannied_mat, start_center);
                 return true;
             } else{
                 cv::putText(*mat, "SEARCHING FOR STRAIGHT LANES...", cv::Point2f(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 2, cv::Scalar(0, 255, 0), 2);
@@ -54,7 +56,9 @@ namespace Autodrive
         command continue_processing(cv::Mat& mat)
         {
             birds_eye_transform(&mat, perspective);
-            normalizeLightning(&mat, blur_i, intensity / 100.f);
+
+            if (Settings::normalizeLightning)
+                normalizeLightning(&mat, blur_i, intensity / 100.f);
 
             cv::Mat cannied_mat;
             cv::Canny(mat, cannied_mat, thresh1, thresh2, 3);
