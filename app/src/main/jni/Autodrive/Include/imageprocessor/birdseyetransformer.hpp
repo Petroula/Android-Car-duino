@@ -4,9 +4,6 @@
 
 namespace Autodrive
 {
-    const float PI = Mathf::PI;
-    const float PI_2 = Mathf::PI_2;
-
     struct lanes{
         linef left;
         linef right;
@@ -37,7 +34,7 @@ namespace Autodrive
 
             float dirr = vector.direction_fixed_half();
 
-            float dir_diff = dirr - PI_2;
+            float dir_diff = dirr - Direction::FORWARD;
 
             if (abs(dir_diff) < 0.f || abs(dir_diff) > 1.f)
                 continue;
@@ -140,15 +137,15 @@ namespace Autodrive
             centerDiff = abs(xleft + xright) / 2.f - width /2.f;
 
             //Crop moves the two upper cordinates farther appart, both from each other and from the lower cordinates (Outside the image)
-            cv::Point2f pts1[] = { leftLine.begin, rightLine.begin, cv::Point2f(leftLine.end.x, bottom), cv::Point2f(rightLine.end.x, bottom) };
+            POINT pts1[] = { leftLine.begin, rightLine.begin, POINT(leftLine.end.x, bottom), POINT(rightLine.end.x, bottom) };
 
             //Warp compresses the bottom two cordinates together
-            cv::Point2f pts2[] = { leftLine.begin, rightLine.begin, cv::Point2f(xleft, bottom), cv::Point2f(xright, bottom) };
+            POINT pts2[] = { leftLine.begin, rightLine.begin, POINT(xleft, bottom), POINT(xright, bottom) };
 
             birdseye_matrix = cv::getPerspectiveTransform(pts1, pts2);
 
-            leftImageBorder = linef(cv::Point2f(xleft - leftLine.end.x / 2, leftLine.end.y +2), cv::Point2f(0, leftLine.begin.y+2));
-            rightImageBorder = linef(cv::Point2f(xright - (rightLine.end.x - width)/2, rightLine.end.y+2), cv::Point2f(width, rightLine.begin.y+2));
+            leftImageBorder = linef(POINT(xleft - leftLine.end.x / 2, leftLine.end.y +2), POINT(0, leftLine.begin.y+2));
+            rightImageBorder = linef(POINT(xright - (rightLine.end.x - width)/2, rightLine.end.y+2), POINT(width, rightLine.begin.y+2));
             
 #ifdef _VISUAL_WARP
             cv::Mat warped_image;

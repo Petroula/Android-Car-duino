@@ -69,7 +69,7 @@ namespace Autodrive
 
         float direction()
         {
-            cv::Point2f diff = end - begin;
+            POINT diff = end - begin;
             return atan2(-diff.y, diff.x);
         }
 
