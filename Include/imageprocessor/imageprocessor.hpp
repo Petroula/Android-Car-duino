@@ -4,8 +4,9 @@
 
 #include "command.hpp"
 #include "util.hpp"
-#include "roadfinder.hpp"
 #include "lightnormalizer.hpp"
+#include "../settings.hpp"
+#include "roadfollower.hpp"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ namespace Autodrive
 {
     namespace imageProcessor
     {
-        roadfinder road;
+        unique_ptr<roadfollower> roadFollower = nullptr;
 
         cv::Mat perspective;
 
@@ -30,7 +31,7 @@ namespace Autodrive
         int intensity = 110;
         int blur_i = 11;
 
-        cv::Point2f start_center;
+        POINT start_center;
 
         bool init_processing(cv::Mat* mat)
         {
@@ -39,14 +40,14 @@ namespace Autodrive
             {
                 perspective = *found_pespective;
                 birds_eye_transform(mat, perspective);
-                start_center = cv::Point2f(mat->size().width / 2.f + centerDiff, mat->size().height - 35.f);
-                normalizeLightning(mat, blur_i, intensity / 100.f);
+                if (Settings::normalizeLightning)
+                    normalizeLightning(mat, blur_i, intensity / 100.f);
                 cv::Mat cannied_mat;
                 cv::Canny(*mat, cannied_mat, thresh1, thresh2, 3);
-                road.build2(cannied_mat, start_center);
+                roadFollower = make_unique<roadfollower>(cannied_mat, mat->size().width / 2.f + centerDiff);
                 return true;
             } else{
-                cv::putText(*mat, "SEARCHING FOR STRAIGHT LANES...", cv::Point2f(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 2, cv::Scalar(0, 255, 0), 2);
+                cv::putText(*mat, "SEARCHING FOR STRAIGHT LANES...", POINT(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
                 return false;
             }
         }
@@ -54,7 +55,9 @@ namespace Autodrive
         command continue_processing(cv::Mat& mat)
         {
             birds_eye_transform(&mat, perspective);
-            normalizeLightning(&mat, blur_i, intensity / 100.f);
+
+            if (Settings::normalizeLightning)
+                normalizeLightning(&mat, blur_i, intensity / 100.f);
 
             cv::Mat cannied_mat;
             cv::Canny(mat, cannied_mat, thresh1, thresh2, 3);
@@ -63,8 +66,8 @@ namespace Autodrive
             leftImageBorder.draw(cannied_mat, cv::Scalar(0, 0, 0), 10);
             rightImageBorder.draw(cannied_mat, cv::Scalar(0, 0, 0), 10);
             
-            command cmnd = road.update2(cannied_mat,mat);
-            float angle = Autodrive::Mathf::PI_2;
+            command cmnd = roadFollower->update(cannied_mat, mat);
+            float angle =  Direction::FORWARD;
 
             if (cmnd.changedAngle)
             {
@@ -74,8 +77,8 @@ namespace Autodrive
             //leftImageBorder.draw(mat, cv::Scalar(0, 255, 255), 8);
             //rightImageBorder.draw(mat, cv::Scalar(0, 255, 255), 8);
             
-            cv::Point2f center(mat.size().width / 2.f, (float) mat.size().height);
-            Autodrive::linef(center, center + cv::Point2f(std::cos(angle) * 200, -sin(angle) * 200)).draw(mat, CV_RGB(0, 250, 0));
+            POINT center(mat.size().width / 2.f, (float) mat.size().height);
+            Autodrive::linef(center, center + POINT(std::cos(angle) * 200, -sin(angle) * 200)).draw(mat, CV_RGB(0, 250, 0));
             return cmnd;
         }
     }
