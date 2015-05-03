@@ -25,7 +25,7 @@
                 android:textSize="30dp"
                 android:layout_weight="1"
                 android:textColor="#ff00b9ff"
-                android:enabled="false"
+                android:enabled="true"
                 android:textStyle="bold"
                 android:clickable="true"
                 style="@style/AppTheme" />
