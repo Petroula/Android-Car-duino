@@ -4,6 +4,8 @@
 
 namespace Autodrive
 {
+    using POINT = cv::Point2f;
+
     struct Mathf
     {
         static const float PI;
@@ -16,6 +18,18 @@ namespace Autodrive
 
     const float Mathf::PI = acosf(-1);
     const float Mathf::PI_2 = PI / 2.f;
+
+    struct Direction
+    {
+        static const float RIGHT;
+        static const float LEFT;
+        static const float FORWARD;
+    };
+
+    const float Direction::RIGHT = 0.f;
+    const float Direction::LEFT = Mathf::PI;
+    const float Direction::FORWARD = Mathf::PI_2;
+
     
     #ifndef __ANDROID__
         void show_image(cv::Mat mat, int resize, std::string wName)
@@ -65,14 +79,13 @@ namespace Autodrive
 
     struct SearchResult
     {
-        cv::Point2f point;
+        POINT point;
         int distance;
         bool found = false;
     };
 
     SearchResult firstnonzero_direction(const cv::Mat& mat, cv::Point_ < float > start, float direction, int maxDist)
     {
-        typedef cv::Point_ < float > POINT;
         SearchResult res;
         POINT new_pos = start + POINT(::std::cos(direction) * maxDist, -::std::sin(direction) * maxDist);
         cv::LineIterator it(mat, start, new_pos);
