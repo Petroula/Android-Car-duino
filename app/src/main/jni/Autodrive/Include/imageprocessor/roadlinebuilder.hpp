@@ -1,7 +1,7 @@
 #pragma once
 #include "line.hpp"
 #include "util.hpp"
-#include "..\settings.hpp"
+#include "../settings.hpp"
 #include "roadline.hpp"
 
 namespace Autodrive

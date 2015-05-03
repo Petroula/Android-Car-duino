@@ -2,7 +2,8 @@
 #include "line.hpp"
 #include "util.hpp"
 #include <numeric>
-#include "..\settings.hpp"
+#include "../settings.hpp"
+
 namespace Autodrive
 {
     struct RoadLine
