@@ -96,8 +96,8 @@ namespace Autodrive
         }
 
     public:
-        POINT last_start;
         POINT first_start;
+        POINT last_start;
         float centerX;
 
         roadlinebuilder(POINT startPoint, float center_x) :
