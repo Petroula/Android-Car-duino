@@ -8,9 +8,12 @@ def ndkDir = properties.getProperty('ndk.dir')
 def openCvDir = properties.getProperty('opencv.dir')
 def sources = "AutodriveJavaFacade.cpp"
 android {
+    signingConfigs {
+        config {
+        }
+    }
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
@@ -18,32 +21,28 @@ android {
         versionName "1.0.1"
         applicationId "pegasus.bluetootharduino"
     }
-
     dependencies {
         testCompile 'junit:junit:4.12'
     }
-
     preBuild.doFirst {
-        if (sdkDir == null){
+        if (sdkDir == null) {
             throw new GradleException('"sdk.dir" not setup in local.properties')
         }
 
-        if (ndkDir == null){
+        if (ndkDir == null) {
             throw new GradleException('"ndk.dir" not setup in local.properties')
         }
 
-        if (openCvDir == null){
+        if (openCvDir == null) {
             throw new GradleException('"opencv.dir" not setup in local.properties')
         }
     }
-
     splits {
         abi {
             enable true // enable ABI split feature to create one APK per ABI
             universalApk true //generate an additional APK that targets all the ABIs
         }
     }
-
     /*   project.ext.versionCodes = ['armeabi': 1, 'armeabi-v7a': 2, 'arm64-v8a': 3, 'mips': 5, 'mips64': 6, 'x86': 8, 'x86_64': 9]
        //versionCode digit for each supported ABI, with 64bit>32bit and x86>armeabi-*
 
@@ -54,16 +53,15 @@ android {
                        project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) * 1000000 + defaultConfig.versionCode
            }
        }*/
-
     sourceSets.main {
         jniLibs.srcDir 'src/main/libs'
         jni.srcDirs = [] //disable automatic ndk-build call
     }
-
     // call regular ndk-build(.cmd) script from app directory, with generated makefile using $sources and $openCvDir variable
     task ndkBuild(type: Exec) {
         String ANDROIDMK = "" +
                 "LOCAL_PATH := \$(call my-dir)\n" +
+                "LOCAL_ARM_NEON := true\n" +
                 "include \$(CLEAR_VARS)\n" +
                 "OPENCV_INSTALL_MODULES:=on\n" +
                 "OPENCV_LIB_TYPE:=SHARED\n" +
@@ -80,6 +78,21 @@ android {
             commandLine ndkDir + '/ndk-build', '-C', file('src/main').absolutePath
         }
     }
+
+    signingConfigs {
+        release {
+            storeFile file("releasekey.jks")
+            storePassword "password"
+            keyAlias "releasekey"
+            keyPassword "password"
+        }
+    }
+
+        buildTypes {
+            release {
+                signingConfig signingConfigs.release
+            }
+        }
 
     tasks.withType(JavaCompile) {
         compileTask -> compileTask.dependsOn ndkBuild

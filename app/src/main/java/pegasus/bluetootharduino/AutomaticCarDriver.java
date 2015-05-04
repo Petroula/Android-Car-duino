@@ -14,11 +14,12 @@ public class AutomaticCarDriver{
         Mat resized = new Mat();
         Size prevSize = image.size();
         Size size = new Size(240,135);
-        Imgproc.resize(image, resized, size);
+        Imgproc.resize(image, resized, size,0,0,Imgproc.INTER_NEAREST);
         Autodrive.setImage(resized.getNativeObjAddr());
         Autodrive.drive();
         if(Settings.DisplayDebugInformation)
-            Imgproc.resize(resized,image,prevSize);
+            Imgproc.resize(resized, image, prevSize,0,0,Imgproc.INTER_NEAREST);
+
         return image;
     }
 }

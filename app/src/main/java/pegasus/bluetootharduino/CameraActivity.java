@@ -46,7 +46,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.camera_activity);
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.CameraView);
-        //mOpenCvCameraView.setMaxFrameSize(320,180);
+        //mOpenCvCameraView.setMaxFrameSize(240,135);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
@@ -163,7 +163,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,	float velocityY) {
 
         if(e1.getX()<e2.getX()) {
-
             // disconnect safely
             if(bt.socket.isConnected()) {
                 bt.disconnect();
