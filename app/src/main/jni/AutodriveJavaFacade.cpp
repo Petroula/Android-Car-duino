@@ -97,6 +97,27 @@ extern "C"
     {
         Autodrive::Settings::smoothening = value;
     }
+
+    TYPE(void) NAME(setSettingFirstFragmentMaxDist)(int value)
+    {
+        Autodrive::Settings::firstFragmentMaxDist = value;
+    }
+
+    TYPE(void) NAME(setSettingLeftIterationLength)(int value)
+    {
+        Autodrive::Settings::leftIterationLength = value;
+    }
+
+    TYPE(void) NAME(setSettingRightIterationLength)(int value)
+    {
+        Autodrive::Settings::rightIterationLength = value;
+    }
+
+    TYPE(void) NAME(setSettingMaxAngleDiff)(float value)
+    {
+        Autodrive::Settings::maxAngleDiff = value;
+    }
+
 }
 
 #undef TYPE
