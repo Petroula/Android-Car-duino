@@ -7,9 +7,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.Switch;
 
-public class MainActivity extends Activity implements OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class MainActivity extends Activity implements OnClickListener, CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,12 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
         ((Switch)findViewById(R.id.DisplayDebugSwitch)).setOnCheckedChangeListener(this);
         //USE LIGHT NORMALIZATION SWITCH
         ((Switch)findViewById(R.id.LightNormalizationSwitch)).setOnCheckedChangeListener(this);
+        //USE LEFT LINE SWITCH
+        ((Switch)findViewById(R.id.LeftLineSwitch)).setOnCheckedChangeListener(this);
+
+        //MAXIMUM HORIZONTAL ITERATION SEEK BAR
+        ((SeekBar)findViewById(R.id.MaxHorIteration)).setMax(8);
+        ((SeekBar)findViewById(R.id.MaxHorIteration)).setOnSeekBarChangeListener(this);
     }
 
     /* BUTTONS */
@@ -52,6 +59,21 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
             case R.id.DisplayDebugSwitch:
                 Settings.DisplayDebugInformation = isChecked;
                 break;
+            case R.id.LeftLineSwitch:
+                Autodrive.setSettingUseLeftLine(isChecked);
+                break;
         }
     }
+
+    /* SEEK BAR */
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        Autodrive.setSettingSmoothening(progress);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {}
 }
