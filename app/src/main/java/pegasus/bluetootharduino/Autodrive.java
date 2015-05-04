@@ -38,4 +38,18 @@ public class Autodrive
 
     // N Frames to take the mean value from, value should be between 0 - 8
     public static native void setSettingSmoothening(int value);
+
+    // Maximum vertical distance to the first pixel from carY, value should be between 15-60
+    public static native void setSettingFirstFragmentMaxDist(int value);
+
+    // How many pixels to iterate to the left, for each pixel, value should be between 1-15
+    public static native void setSettingLeftIterationLength(int value);
+
+    // How many pixels to iterate to the right, for each pixel, value should be between 1-15
+    public static native void setSettingRightIterationLength(int value);
+
+    // Every pixel in a line can not have an angle from the previous pixel that deviates more than this,
+    // value should be between 0.4-1.4
+    public static native void setSettingMaxAngleDiff(float value);
+
 }
