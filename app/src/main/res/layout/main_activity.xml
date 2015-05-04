@@ -21,7 +21,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:text="Auto Drive"
-                android:layout_above="@+id/manual"
                 android:textSize="30dp"
                 android:layout_weight="1"
                 android:textColor="#ff00b9ff"
@@ -74,8 +73,9 @@
             <Switch
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Switch"
-                android:id="@+id/switch1" />
+                android:text="Use Left Line"
+                android:id="@+id/LeftLineSwitch"
+                android:checked="true" />
 
             <SeekBar
                 android:layout_width="match_parent"
