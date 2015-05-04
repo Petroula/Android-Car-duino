@@ -17,7 +17,7 @@ namespace Autodrive
             roadLine.draw(colorCopy);
            
             /* DRAW RECTANGLE FOR POSSIBLE FIRST HITS*/
-            POINT upperLeft = roadBuilder->last_start + POINT(-Settings::leftIterationLength, -Settings::firstFragmentMaxDist);
+            POINT upperLeft = roadBuilder->last_start + POINT(-Settings::leftIterationLength, Settings::firstFragmentMaxDist);
             POINT lowerRight = roadBuilder->last_start + POINT(Settings::rightIterationLength, 0);
             cv::rectangle(*colorCopy,upperLeft , lowerRight,cv::Scalar(255,0,255));
             
