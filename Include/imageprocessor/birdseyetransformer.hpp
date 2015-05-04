@@ -16,8 +16,6 @@ namespace Autodrive
         linef leftMostLine;
         linef rightMostline;
         cv::HoughLinesP(canniedMat, lines, 1, CV_PI / 180, 20, 10, 50);
-        int leftmost = canniedMat.size().width;
-        int rightmost = 0;
         bool foundLeft = false;
         bool foundRight = false;
         int center = canniedMat.size().width / 2;
@@ -40,22 +38,20 @@ namespace Autodrive
                 continue;
 
 
-            if (leftx - vector.length() < leftmost && leftx > center + 20) {
-                    if (rightx > leftx && topy > boty && vector.length() > 110) {
+            if ( leftx > center + 20) 
+            {
+                    if (rightx > leftx && topy > boty && vector.length() > 80) 
+                    {
                         leftMostLine = linef(line);
                         foundLeft = true;
                     }
             }
-            if (rightx + vector.length() > rightmost && rightx < center - 20)
+            if ( rightx < center - 20)
             {
-                if (rightx + vector.length() > rightmost && rightx < center - 20)
-                {
                     rightMostline = linef(line);
                     foundRight = true;
-                }
             }
         }
-
 
         lastLML = leftMostLine;
         lastRML = rightMostline;

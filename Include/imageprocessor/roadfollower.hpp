@@ -8,6 +8,8 @@ namespace Autodrive
         int centerX = 0;
         std::unique_ptr<linefollower> leftLineFollower = nullptr;
         std::unique_ptr<linefollower> rightLineFollower = nullptr;
+        
+        std::vector<int> prevDirs;
 
         int FindCarEnd(const cv::Mat& cannied)
         {
@@ -73,22 +75,34 @@ namespace Autodrive
 
             drawMat = draw(cannied);
 
-            auto leftTargetAngle = leftLineFollower->getPreferedAngle();
+            optional<int> leftTargetAngle = leftLineFollower->getPreferedAngle();
             optional<int> rightTargetAngle = rightLineFollower->getPreferedAngle();
+            optional<int> targetAngle = nullptr;
 
-            if (leftTargetAngle && rightTargetAngle)
+            if (leftTargetAngle && rightTargetAngle && Settings::useLeftLine)
             {
                 // Give the right line just a bit more priority since it seems more reliable
-                int targetAngle = weighted_average(*rightTargetAngle, *leftTargetAngle, 3);
-                cmd.setAngle(targetAngle);
-            } else if (leftTargetAngle)
+                targetAngle = weighted_average(*rightTargetAngle, *leftTargetAngle, 3);
+            } else if (leftTargetAngle && Settings::useLeftLine)
             {
-                cmd.setAngle(*leftTargetAngle);
+                targetAngle = *leftTargetAngle;
             } else if (rightTargetAngle)
             {
-                cmd.setAngle(*rightTargetAngle);
+                targetAngle = *rightTargetAngle;
             }
+            
+            if(targetAngle)
+            {
 
+                int sum = (std::accumulate(prevDirs.begin(), prevDirs.end(), 0) + *targetAngle);
+                int newAngle = sum / float(prevDirs.size() + 1);
+                prevDirs.push_back(newAngle);
+                if(prevDirs.size() > Settings::smoothening)
+                    prevDirs.erase(prevDirs.begin());
+
+                cmd.setAngle(newAngle);
+            }
+            
 
             return cmd;
         }
