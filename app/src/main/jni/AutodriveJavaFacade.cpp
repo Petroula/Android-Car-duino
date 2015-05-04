@@ -87,6 +87,16 @@ extern "C"
     {
         Autodrive::Settings::normalizeLightning = on;
     }
+    
+    TYPE(void) NAME(setSettingUseLeftLine)(bool on)
+    {
+        Autodrive::Settings::useLeftLine = on;
+    }
+    
+    TYPE(void) NAME(setSettingSmoothening)(int value)
+    {
+        Autodrive::Settings::smoothening = value;
+    }
 }
 
 #undef TYPE

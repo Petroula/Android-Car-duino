@@ -25,7 +25,7 @@
                 android:textSize="30dp"
                 android:layout_weight="1"
                 android:textColor="#ff00b9ff"
-                android:enabled="false"
+                android:enabled="true"
                 android:textStyle="bold"
                 android:clickable="true"
                 style="@style/AppTheme" />
@@ -69,8 +69,13 @@
                 android:text="Debug information"
                 android:id="@+id/DisplayDebugSwitch"
                 android:checked="true"
-                android:layout_below="@+id/LightNormalizationSwitch"
-                android:layout_marginTop="31dp" />
+                android:layout_below="@+id/LightNormalizationSwitch"/>
+
+            <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Switch"
+                android:id="@+id/switch1" />
 
             <SeekBar
                 android:layout_width="match_parent"
