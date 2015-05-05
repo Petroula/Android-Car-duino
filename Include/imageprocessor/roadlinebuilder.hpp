@@ -9,14 +9,14 @@ namespace Autodrive
     class roadlinebuilder
     {
         static const int pointDist = 4;
-        static const int maxDistFromStart = 27;
-        static const int maxUpwardsIteration = 12;
+        static const int maxDistFromStart = 22;
+        static const int maxUpwardsIteration = 13;
         int carY = 0;
 
-        static SearchResult FindPoint(const cv::Mat& cannied, POINT start, float leftAngle, float rightAngle)
+        static SearchResult FindPoint(const cv::Mat& cannied, POINT start, float leftAngle, float rightAngle,float iterationReduction = 0)
         {
-            SearchResult rightSearch = firstnonzero_direction(cannied, start, rightAngle, Settings::rightIterationLength);
-            SearchResult leftSearch = firstnonzero_direction(cannied, start, leftAngle, Settings::leftIterationLength);
+            SearchResult rightSearch = firstnonzero_direction(cannied, start, rightAngle, Settings::rightIterationLength - iterationReduction);
+            SearchResult leftSearch = firstnonzero_direction(cannied, start, leftAngle, Settings::leftIterationLength -iterationReduction);
             if (leftSearch.found && rightSearch.found)
             {
                 if (leftSearch.distance <= rightSearch.distance + 3)
@@ -47,7 +47,7 @@ namespace Autodrive
             //SEARCH UPWARDS UNTIL HIT
             while (!searchRes.found && unfound++ < Settings::firstFragmentMaxDist)
             {
-                searchRes = FindPoint(cannied, start_point, Direction::LEFT, Direction::RIGHT);
+                searchRes = FindPoint(cannied, start_point, Direction::LEFT, Direction::RIGHT,Settings::iterateReduceOnStart);
                 if (!searchRes.found)
                     start_point.y--;
             }
