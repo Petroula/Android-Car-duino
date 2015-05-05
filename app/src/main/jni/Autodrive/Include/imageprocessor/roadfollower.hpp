@@ -75,18 +75,18 @@ namespace Autodrive
 
             drawMat = draw(cannied);
 
-            optional<int> leftTargetAngle = leftLineFollower->getPreferedAngle();
+            //optional<int> leftTargetAngle = leftLineFollower->getPreferedAngle();
             optional<int> rightTargetAngle = rightLineFollower->getPreferedAngle();
             optional<int> targetAngle = nullptr;
 
-            if (leftTargetAngle && rightTargetAngle && Settings::useLeftLine)
+            /*if (leftTargetAngle && rightTargetAngle && Settings::useLeftLine)
             {
                 // Give the right line just a bit more priority since it seems more reliable
                 targetAngle = weighted_average(*rightTargetAngle, *leftTargetAngle, 3);
             } else if (leftTargetAngle && Settings::useLeftLine)
             {
                 targetAngle = *leftTargetAngle;
-            } else if (rightTargetAngle)
+            } else*/ if (rightTargetAngle)
             {
                 targetAngle = *rightTargetAngle;
             }
