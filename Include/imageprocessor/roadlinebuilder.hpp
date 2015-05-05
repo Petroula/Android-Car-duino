@@ -110,7 +110,7 @@ namespace Autodrive
         {
             RoadLine road(centerX, GetFirstPoint(cannied));
             optional<POINT> newPoint;
-            while ((newPoint = GetNextPoint(cannied, road.getEstimatedAngle(), road.points.back(),4)).valid && road.points.size() < maxsize)
+            while ((newPoint = GetNextPoint(cannied, road.getEstimatedAngle(), road.points.back(),pointDist)).valid && road.points.size() < maxsize)
             {
                 if (!road.addPoint(*newPoint))
                     break;
