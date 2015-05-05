@@ -76,7 +76,7 @@ namespace Autodrive
         {
             if (distances.size() == 0)
                 return 0;
-
+                
             if (nDistancesFromBegin >= distances.size())
                 nDistancesFromBegin = int(distances.size());
             return std::accumulate(distances.begin(), distances.begin() + nDistancesFromBegin, 0.f) / float(nDistancesFromBegin);
