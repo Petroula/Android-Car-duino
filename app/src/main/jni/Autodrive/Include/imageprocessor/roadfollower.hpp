@@ -94,13 +94,20 @@ namespace Autodrive
             if(targetAngle)
             {
 
-                int sum = (std::accumulate(prevDirs.begin(), prevDirs.end(), 0) + *targetAngle);
-                int newAngle = sum / float(prevDirs.size() + 1);
-                prevDirs.push_back(newAngle);
-                if(prevDirs.size() > Settings::smoothening)
-                    prevDirs.erase(prevDirs.begin());
-
-                cmd.setAngle(newAngle);
+                if(Settings::smoothening == 0)
+                {
+                    cmd.setAngle(*targetAngle);
+                }
+                else
+                {
+                    int sum = (std::accumulate(prevDirs.begin(), prevDirs.end(), 0) + *targetAngle);
+                    int newAngle = sum / float(prevDirs.size() + 1);
+                    prevDirs.push_back(newAngle);
+                    if(prevDirs.size() > Settings::smoothening)
+                        prevDirs.erase(prevDirs.begin());
+                    
+                    cmd.setAngle(newAngle);
+                }
             }
             
 

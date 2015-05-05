@@ -49,11 +49,11 @@ namespace Autodrive
             {
                 /* Start by setting the target angle to the mean road angle*/
                 int degrees = Mathf::toDegrees(roadLine.getMeanAngle(4)) - 90;
-                degrees = int((degrees / 46.f) * 25);
+                degrees = int((degrees / 48.f) * 25);
                 degrees *= -1;
                 // If the current distance is larger than, target distance, turn more right, vice versa
                 startDistance = roadLine.getMeanStartDistance(5);
-                float distanceDeviation = startDistance - targetRoadDistance;
+                float distanceDeviation = (startDistance - targetRoadDistance) * 1.1f;
                 degrees += distanceDeviation;
                 degrees = std::min(degrees, 25);
                 degrees = std::max(degrees, -25);
