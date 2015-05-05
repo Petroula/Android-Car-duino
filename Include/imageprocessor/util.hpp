@@ -5,6 +5,7 @@
 namespace Autodrive
 {
     using POINT = cv::Point2f;
+    using UINT = unsigned int;
 
     struct Mathf
     {

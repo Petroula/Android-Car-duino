@@ -63,8 +63,8 @@ namespace Autodrive
             cv::Canny(mat, cannied_mat, thresh1, thresh2, 3);
 
             /* PAINT OVER BORDER ARTEFACTS FROM TRANSFORM*/
-            leftImageBorder.draw(cannied_mat, cv::Scalar(0, 0, 0), 10);
-            rightImageBorder.draw(cannied_mat, cv::Scalar(0, 0, 0), 10);
+            leftImageBorder.draw(cannied_mat, cv::Scalar(0, 0, 0), Settings::transformLineRemovalThreshold);
+            rightImageBorder.draw(cannied_mat, cv::Scalar(0, 0, 0), Settings::transformLineRemovalThreshold);
             
             command cmnd = roadFollower->update(cannied_mat, mat);
             float angle =  Direction::FORWARD;
