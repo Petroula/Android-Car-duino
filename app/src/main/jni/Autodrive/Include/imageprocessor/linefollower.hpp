@@ -59,7 +59,6 @@ namespace Autodrive
 
         }
 
-
         float outMax=25;
         float outMin=-25;
         float error;
@@ -71,12 +70,6 @@ namespace Autodrive
         float kd = Settings::kd;
         float Output;
         int degrees ;
-        std::chrono::high_resolution_clock::time_point lastTime;
-        bool first;
-
-        template <typename T> int sgn(T val) {
-    return (T(0) < val) - (val < T(0));
-}
 
         optional<int> getPreferedAngle()
         {
@@ -87,42 +80,14 @@ namespace Autodrive
                 //degrees = int((degrees / 48.f) * 25);
                 //degrees *= -1;
                 // If the current distance is larger than, target distance, turn more right, vice versa
-        
-                //if(ITerm > outMax) {ITerm= outMax;}
-                //else if(ITerm < outMin){ITerm = outMin;}
-
-                auto newTime = std::chrono::high_resolution_clock::now();
-
-
-                /*double timeDelta;
-
-                if(first){
-                    timeDelta = 1;
-                    first = false;
-                } else
-                    timeDelta = std::chrono::duration_cast<std::chrono::nanoseconds >(newTime - lastTime).count() / 1000000000;
-*/
-
-                lastTime = newTime;
 
                 error =  roadLine.getMeanStartDistance(5) - targetRoadDistance;
                 integral = integral + error;
                 derivate = (error - previous_error);
                 Output = (kp * error) + (ki*integral) + (kd * derivate);
                 previous_error = error;
-        
-                //if(Output > outMax) { Output = outMax;}
-                //else if(Output < outMin) {Output= outMin;}
 
-                //if(ITerm > outMax) {ITerm= outMax;}
-                //else if(ITerm < outMin) {ITerm= outMin;}
-    
                 degrees=int(Output)*0.25;
-                //std::cout << "setpoint: " <<SetPoint << std::endl;
-                //std::cout << "Input: " << Input << std::endl;
-                std::cout << "Output: " << Output<< std::endl;
-                std::cout << "Degrees: " << degrees<<std::endl;
-
                 usleep(1000);
 
                 degrees = std::min(degrees, 25);
