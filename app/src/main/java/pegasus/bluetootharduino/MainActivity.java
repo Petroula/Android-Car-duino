@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener, CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener {
 
@@ -32,6 +33,9 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
         //MAXIMUM HORIZONTAL ITERATION SEEK BAR
         ((SeekBar)findViewById(R.id.MaxHorIteration)).setMax(8);
         ((SeekBar)findViewById(R.id.MaxHorIteration)).setOnSeekBarChangeListener(this);
+
+        //INITIAL MAX HORIZONTAL ITERATION SET TO 0
+        ((TextView)findViewById(R.id.progress)).setText("Maximum Horizontal Iteration set to: 0");
     }
 
     /* BUTTONS */
@@ -69,6 +73,7 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         Autodrive.setSettingSmoothening(progress);
+        ((TextView)findViewById(R.id.progress)).setText("Maximum Horizontal Iteration set to: " + progress);
     }
 
     @Override
