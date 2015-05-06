@@ -19,9 +19,9 @@ public class Bluetooth {
 
     BluetoothAdapter adapter;
     BluetoothDevice MiDevice;
-    BluetoothSocket socket;
+    static BluetoothSocket socket;
     InputStream in;
-    OutputStream out;
+    static OutputStream out;
 
     boolean btEnabled = true;
     String returnResult;
@@ -30,7 +30,7 @@ public class Bluetooth {
     boolean stop = false;
     int position;
     byte read[];
-    Netstrings nt = new Netstrings();
+    static Netstrings nt = new Netstrings();
 
     //connect
     public void checkBT() {
@@ -120,7 +120,7 @@ public class Bluetooth {
     }
 
 
-    public void send() {
+    public static void send() {
         try {
                 String text = "";
                 if(Autodrive.speedChanged())
