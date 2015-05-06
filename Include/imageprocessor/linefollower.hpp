@@ -1,6 +1,8 @@
 #include "line.hpp"
 #include "roadlinebuilder.hpp"
 #include "lightnormalizer.hpp"
+#include <unistd.h>
+#include <chrono>
 
 namespace Autodrive
 {
@@ -58,21 +60,21 @@ namespace Autodrive
         }
 
 
-        float outMax=100;
-        float outMin=-100;
-        float Error;
-        float ITerm;
-        float lastInput=0;
-        float dInput;
-        float SetPoint;
-        float Input;
-        float Kp=0.1;
-        float Ki=0.5;
-        float Kd=0.2;
+        float outMax=25;
+        float outMin=-25;
+        float error;
+        float integral = 0;
+        float previous_error=0;
+        float derivate;
+        float kp = Settings::kp;
+        float ki = Settings::ki;
+        float kd = Settings::kd;
         float Output;
         int degrees ;
+        std::chrono::high_resolution_clock::time_point lastTime;
+        bool first;
 
-template <typename T> int sgn(T val) {
+        template <typename T> int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
 
@@ -85,30 +87,43 @@ template <typename T> int sgn(T val) {
                 //degrees = int((degrees / 48.f) * 25);
                 //degrees *= -1;
                 // If the current distance is larger than, target distance, turn more right, vice versa
-                SetPoint = targetRoadDistance;
-                Input = roadLine.getMeanStartDistance(10);
-                Error=Input-SetPoint;
-                ITerm=(Ki * Error);
+        
+                //if(ITerm > outMax) {ITerm= outMax;}
+                //else if(ITerm < outMin){ITerm = outMin;}
 
-                if(ITerm > outMax) {ITerm= outMax;}
-                else if(ITerm < outMin){ITerm = outMin;}
+                auto newTime = std::chrono::high_resolution_clock::now();
 
-                dInput=(Input - lastInput);
-                Output = (Kp * Error) + (Kp*ITerm)- (Kp*Kd * dInput);
 
-                if(Output > outMax) { Output = outMax;}
-                else if(Output < outMin) {Output= outMin;}
+                /*double timeDelta;
 
-                lastInput= Input;
-                if(ITerm > outMax) {ITerm= outMax;}
-                else if(ITerm < outMin) {ITerm= outMin;}
+                if(first){
+                    timeDelta = 1;
+                    first = false;
+                } else
+                    timeDelta = std::chrono::duration_cast<std::chrono::nanoseconds >(newTime - lastTime).count() / 1000000000;
+*/
 
-                lastInput=Input;
-                degrees=int(Output*0.25);
-                std::cout << "setpoint: " <<SetPoint << std::endl;
-                std::cout << "Input: " << Input << std::endl;
+                lastTime = newTime;
+
+                error =  roadLine.getMeanStartDistance(5) - targetRoadDistance;
+                integral = integral + error;
+                derivate = (error - previous_error);
+                Output = (kp * error) + (ki*integral) + (kd * derivate);
+                previous_error = error;
+        
+                //if(Output > outMax) { Output = outMax;}
+                //else if(Output < outMin) {Output= outMin;}
+
+                //if(ITerm > outMax) {ITerm= outMax;}
+                //else if(ITerm < outMin) {ITerm= outMin;}
+    
+                degrees=int(Output)*0.25;
+                //std::cout << "setpoint: " <<SetPoint << std::endl;
+                //std::cout << "Input: " << Input << std::endl;
                 std::cout << "Output: " << Output<< std::endl;
                 std::cout << "Degrees: " << degrees<<std::endl;
+
+                usleep(1000);
 
                 degrees = std::min(degrees, 25);
                 degrees = std::max(degrees, -25);
@@ -126,3 +141,4 @@ template <typename T> int sgn(T val) {
     };
 
 }
+

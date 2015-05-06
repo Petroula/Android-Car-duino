@@ -20,5 +20,11 @@ namespace Autodrive
         float maxAngleDiff = 0.8f; // 0.4 - 1.4
         // N Frames to take the mean value from
         uint smoothening = 0; // 0 - 8v
+
+        // PID SETTINGS
+        float kp = 0.5;
+        float ki = 0.0;
+        float kd = 0.0;
     }
 }
+
