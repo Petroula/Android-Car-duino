@@ -69,16 +69,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        Runnable get = new Runnable() {
-            public void run() {
-               bt.send();
-            }
-        };
-
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(get, 0, 50, TimeUnit.MILLISECONDS);
     }
 
 
