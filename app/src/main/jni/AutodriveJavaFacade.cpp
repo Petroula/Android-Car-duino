@@ -118,6 +118,20 @@ extern "C"
         Autodrive::Settings::maxAngleDiff = value;
     }
 
+    TYPE(void) NAME(setPIDkp)(float value)
+    {
+        Autodrive::Settings::kp = value;
+    }
+
+    TYPE(void) NAME(setPIDki)(float value)
+    {
+        Autodrive::Settings::ki = value;
+    }
+
+    TYPE(void) NAME(setPIDkd)(float value)
+    {
+        Autodrive::Settings::kd = value;
+    }
 }
 
 #undef TYPE

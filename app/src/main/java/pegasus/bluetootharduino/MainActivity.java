@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener, CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener {
 
+
+    SeekBar kp, ki, kd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,12 +33,25 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
         //USE LEFT LINE SWITCH
         ((Switch)findViewById(R.id.LeftLineSwitch)).setOnCheckedChangeListener(this);
 
-        //MAXIMUM HORIZONTAL ITERATION SEEK BAR
-        ((SeekBar)findViewById(R.id.MaxHorIteration)).setMax(8);
-        ((SeekBar)findViewById(R.id.MaxHorIteration)).setOnSeekBarChangeListener(this);
+        //PID SEEK BARS
+        kp = (SeekBar)findViewById(R.id.kp);
+        kp.setMax(50);
+        kp.setOnSeekBarChangeListener(this);
 
-        //INITIAL MAX HORIZONTAL ITERATION SET TO 0
-        ((TextView)findViewById(R.id.progress)).setText("Maximum Horizontal Iteration set to: 0");
+        ki = (SeekBar)findViewById(R.id.ki);
+        ki.setMax(50);
+        ki.setOnSeekBarChangeListener(this);
+
+        kd = (SeekBar)findViewById(R.id.kd);
+        kd.setMax(50);
+        kd.setOnSeekBarChangeListener(this);
+
+
+        //PID DESCRIPTIONS
+        ((TextView)findViewById(R.id.progress1)).setText("kp default value set to 0.5");
+        ((TextView)findViewById(R.id.progress2)).setText("ki default value set to 0.0");
+        ((TextView)findViewById(R.id.progress3)).setText("kd default value set to 0.0");
+
     }
 
     /* BUTTONS */
@@ -73,7 +89,29 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         Autodrive.setSettingSmoothening(progress);
-        ((TextView)findViewById(R.id.progress)).setText("Maximum Horizontal Iteration set to: " + progress);
+        switch (seekBar.getId()) {
+            case R.id.kp:
+                if(fromUser) {
+                    float progressValue = (float) (progress / 10.0);
+                    ((TextView)findViewById(R.id.progress1)).setText("kp value set to " + progressValue);
+                    Autodrive.setPIDkp(progressValue);
+                }
+                break;
+            case R.id.ki:
+                if(fromUser) {
+                    float progressValue = (float) (progress / 10.0);
+                    ((TextView)findViewById(R.id.progress2)).setText("ki value set to " + progressValue);
+                    Autodrive.setPIDki(progressValue);
+                }
+                break;
+            case R.id.kd:
+                if(fromUser) {
+                    float progressValue = (float) (progress / 10.0);
+                    ((TextView)findViewById(R.id.progress3)).setText("kd value set to " + progressValue);
+                    Autodrive.setPIDkd(progressValue);
+                }
+                break;
+        }
     }
 
     @Override

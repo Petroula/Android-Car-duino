@@ -80,15 +80,45 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/progress"
-                android:textSize="10sp" />
+                android:id="@+id/progress1"
+                android:textSize="12sp"
+                android:text="kp default value set to 0.5"
+                android:gravity="center" />
 
             <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/MaxHorIteration"
+                android:id="@+id/kp"
                 android:indeterminate="false"
-                android:paddingTop="20dp" />
+                android:paddingTop="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress2"
+                android:textSize="12sp"
+                android:gravity="center" />
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ki"
+                android:indeterminate="false"
+                android:paddingTop="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress3"
+                android:textSize="12sp"
+                android:gravity="center" />
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/kd"
+                android:indeterminate="false"
+                android:paddingTop="5dp" />
 
         </LinearLayout>
     </LinearLayout>
