@@ -75,7 +75,7 @@ namespace Autodrive
         // Prerequicite for wheter a road is found or not
         bool isFound()
         {
-            return points.size() > 4; //&& fabs(getMeanAngle() - Direction::FORWARD) < Mathf::PI_2 - 0.1f;
+            return points.size() > 4 && fabs(getMeanAngle() - Direction::FORWARD) < Mathf::PI_2 - 0.1f;
         }
 
         float getMeanStartDistance(unsigned int nDistancesFromBegin)
