@@ -23,12 +23,11 @@ namespace Autodrive
         static linef lastLML;
         static linef lastRML;
         for(cv::Vec4i line : lines){
-            int leftx = line[0];
-            int rightx = line[2];
             int boty = line[1];
             int topy = line[3];
             linef vector(line);
-
+            int leftx = vector.leftMost_x();
+            int rightx = vector.rightMost_x();
 
             float dirr = vector.direction_fixed_half();
 
@@ -38,7 +37,7 @@ namespace Autodrive
                 continue;
 
 
-            if ( leftx > center + 20) 
+            if ( leftx > center + 20)
             {
                     if (rightx > leftx && topy > boty && vector.length() > 80) 
                     {
