@@ -57,4 +57,6 @@ public class Autodrive
     public static native void setPIDki(float value);
 
     public static native void setPIDkd(float value);
+
+    public static native void setForwardWhenLost(int frames);
 }

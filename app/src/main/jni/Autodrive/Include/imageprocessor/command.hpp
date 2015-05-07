@@ -9,6 +9,11 @@ namespace Autodrive {
         bool changedSpeed = false;
         int angle = 0;
         int speed = 0;
+        /*command(int newSpeed,int newAngle) :
+        {
+
+        }*/
+
         inline void setSpeed(int newSpeed)
         {
             changedSpeed = true;

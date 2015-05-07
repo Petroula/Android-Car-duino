@@ -83,54 +83,59 @@ extern "C"
 	
 	/* SETTINGS */
 	
-    TYPE(void) NAME(setSettingLightNormalization)(bool on)
+    TYPE(void) NAME(setSettingLightNormalization) PARAMS(bool on)
     {
         Autodrive::Settings::normalizeLightning = on;
     }
     
-    TYPE(void) NAME(setSettingUseLeftLine)(bool on)
+    TYPE(void) NAME(setSettingUseLeftLine) PARAMS(bool on)
     {
         Autodrive::Settings::useLeftLine = on;
     }
     
-    TYPE(void) NAME(setSettingSmoothening)(int value)
+    TYPE(void) NAME(setSettingSmoothening) PARAMS(int value)
     {
         Autodrive::Settings::smoothening = value;
     }
 
-    TYPE(void) NAME(setSettingFirstFragmentMaxDist)(int value)
+    TYPE(void) NAME(setSettingFirstFragmentMaxDist) PARAMS(int value)
     {
         Autodrive::Settings::firstFragmentMaxDist = value;
     }
 
-    TYPE(void) NAME(setSettingLeftIterationLength)(int value)
+    TYPE(void) NAME(setSettingLeftIterationLength) PARAMS(int value)
     {
         Autodrive::Settings::leftIterationLength = value;
     }
 
-    TYPE(void) NAME(setSettingRightIterationLength)(int value)
+    TYPE(void) NAME(setSettingRightIterationLength) PARAMS(int value)
     {
         Autodrive::Settings::rightIterationLength = value;
     }
 
-    TYPE(void) NAME(setSettingMaxAngleDiff)(float value)
+    TYPE(void) NAME(setSettingMaxAngleDiff) PARAMS(float value)
     {
         Autodrive::Settings::maxAngleDiff = value;
     }
 
-    TYPE(void) NAME(setPIDkp)(float value)
+    TYPE(void) NAME(setPIDkp) PARAMS(float value)
     {
         Autodrive::Settings::kp = value;
     }
 
-    TYPE(void) NAME(setPIDki)(float value)
+    TYPE(void) NAME(setPIDki) PARAMS(float value)
     {
         Autodrive::Settings::ki = value;
     }
 
-    TYPE(void) NAME(setPIDkd)(float value)
+    TYPE(void) NAME(setPIDkd) PARAMS(float value)
     {
         Autodrive::Settings::kd = value;
+    }
+
+    TYPE(void) NAME(setForwardWhenLost) PARAMS(int frames)
+    {
+        Autodrive::Settings::goForwardWhenLost = frames;
     }
 }
 

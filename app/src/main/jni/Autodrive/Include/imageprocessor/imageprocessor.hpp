@@ -72,13 +72,12 @@ namespace Autodrive
             if (cmnd.changedAngle)
             {
                 angle = ((90 - cmnd.angle*1.5)* Autodrive::Mathf::PI) / 180.f ;
+                POINT center(mat.size().width / 2.f, (float) mat.size().height);
+                Autodrive::linef(center, center + POINT(std::cos(angle) * 200, -sin(angle) * 200)).draw(mat, CV_RGB(0, 250, 0));
             }
 
             //leftImageBorder.draw(mat, cv::Scalar(0, 255, 255), 8);
             //rightImageBorder.draw(mat, cv::Scalar(0, 255, 255), 8);
-            
-            POINT center(mat.size().width / 2.f, (float) mat.size().height);
-            Autodrive::linef(center, center + POINT(std::cos(angle) * 200, -sin(angle) * 200)).draw(mat, CV_RGB(0, 250, 0));
             return cmnd;
         }
     }

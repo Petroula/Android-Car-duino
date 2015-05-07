@@ -140,8 +140,9 @@ namespace Autodrive
 
             birdseye_matrix = cv::getPerspectiveTransform(pts1, pts2);
 
-            leftImageBorder = linef(POINT(xleft - leftLine.end.x / 2, leftLine.end.y +2), POINT(0, leftLine.begin.y+2));
-            rightImageBorder = linef(POINT(xright - (rightLine.end.x - width)/2, rightLine.end.y+2), POINT(width, rightLine.begin.y+2));
+            POINT offset(0,10);
+            leftImageBorder = linef(POINT(xleft - leftLine.end.x / 2, leftLine.end.y)  + offset, POINT(0, leftLine.begin.y) + offset);
+            rightImageBorder = linef(POINT(xright - (rightLine.end.x - width)/2, rightLine.end.y) + offset, POINT(width, rightLine.begin.y) + offset);
             
 #ifdef _VISUAL_WARP
             cv::Mat warped_image;

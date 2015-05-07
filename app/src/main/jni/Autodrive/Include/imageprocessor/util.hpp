@@ -73,6 +73,14 @@ namespace Autodrive
         {
             return val;
         }
+        bool operator==(std::nullptr_t)
+        {
+            return !valid;
+        }
+        bool operator!=(std::nullptr_t)
+        {
+            return valid;
+        }
         bool valid;
     private:
         TYPE val;

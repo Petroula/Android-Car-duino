@@ -8,32 +8,36 @@ namespace Autodrive
 {
     class roadlinebuilder
     {
-        static const int pointDist = 4;
+        static const int pointDist = 2;
         static const int maxDistFromStart = 22;
-        static const int maxUpwardsIteration = 13;
+        static const int maxUpwardsIteration = 15;//15
+        int nTries = 0;
         int carY = 0;
+        float angleIn = 0.f;
+        float angleOut = 0.f;
 
-        static SearchResult FindPoint(const cv::Mat& cannied, POINT start, float leftAngle, float rightAngle,float iterationReduction = 0)
+        SearchResult FindPoint(const cv::Mat& cannied, POINT start,float iterationReduction = 0)
         {
-            SearchResult rightSearch = firstnonzero_direction(cannied, start, rightAngle, Settings::rightIterationLength - iterationReduction);
-            SearchResult leftSearch = firstnonzero_direction(cannied, start, leftAngle, Settings::leftIterationLength -iterationReduction);
-            if (leftSearch.found && rightSearch.found)
+            SearchResult outSearch = firstnonzero_direction(cannied, start, angleOut, Settings::rightIterationLength - iterationReduction
+            + nTries);
+            SearchResult inSearch = firstnonzero_direction(cannied, start, angleIn, Settings::leftIterationLength -iterationReduction + nTries*2);
+            if (inSearch.found && outSearch.found)
             {
-                if (leftSearch.distance <= rightSearch.distance + 3)
+                if (inSearch.distance <= outSearch.distance + 20)
                 {
                     {
-                        return leftSearch;
+                        return inSearch;
                     }
                 } else
                 {
-                    return rightSearch;
+                    return outSearch;
                 }
-            } else if (leftSearch.found)
+            } else if (inSearch.found)
             {
-                return leftSearch;
+                return inSearch;
             }
 
-            return rightSearch;
+            return outSearch;
         }
 
 
@@ -47,9 +51,9 @@ namespace Autodrive
             //SEARCH UPWARDS UNTIL HIT
             while (!searchRes.found && unfound++ < Settings::firstFragmentMaxDist)
             {
-                searchRes = FindPoint(cannied, start_point, Direction::LEFT, Direction::RIGHT,Settings::iterateReduceOnStart);
+                searchRes = FindPoint(cannied, start_point,Settings::iterateReduceOnStart);
                 if (!searchRes.found)
-                    start_point.y--;
+                    start_point.y-= 1 + nTries;
             }
 
             // SEARCH DOWNWARDS IF HIT ON FIRST Y AXIS
@@ -59,7 +63,7 @@ namespace Autodrive
             while (new_hit.found && unfound == 1 && yStart++ < 5 && searchRes.point.y < carY)
             {
                 new_hit.point.y++;
-                new_hit = FindPoint(cannied, new_hit.point, Direction::LEFT, Direction::RIGHT);
+                new_hit = FindPoint(cannied, new_hit.point);
                 if (new_hit.found && int(new_hit.point.x) == int(searchRes.point.x))
                 {
                     searchRes = new_hit;
@@ -74,18 +78,55 @@ namespace Autodrive
         }
 
 
-        static optional<POINT> GetNextPoint(const cv::Mat& cannied, float est_angle, const POINT& prevPoint,int delta = 2)
+        optional<POINT> GetNextPoint(const cv::Mat& cannied, float est_angle,float angle_derivate, const POINT& prevPoint,int delta = 2)
         {
 
             POINT it = prevPoint;
+            SearchResult bestChoice;
+            bestChoice.found = false;
+            bestChoice.distance = 1000;
+            int unfound = 0;
+
+            while(unfound < maxUpwardsIteration * nTries)
+            {
+                it.y-=delta;
+                it.x += cosf(est_angle)*delta;
+                est_angle+=angle_derivate;
+                SearchResult result = FindPoint(cannied, it);
+                unfound++;
+
+                if(result.found)
+                {
+                    if(result.distance == 0)
+                    {
+                        return result.point;
+                    }else if(result.distance < bestChoice.distance)
+                    {
+                        bestChoice = result;
+                    }
+                }
+            }
+            if(bestChoice.found)
+                return bestChoice.point;
+            else
+                return nullptr;
+        }
+
+        optional<POINT> GetNextPoint2(const cv::Mat& cannied, float est_angle,float angle_derivate, const POINT& prevPoint,int delta = 2)
+        {
+            POINT it = prevPoint;
             SearchResult searchResult;
+            //untrigger unused warning
+            angle_derivate++;
             int unfound = 0;
             while (!searchResult.found && unfound < maxUpwardsIteration)
             {
                 it.y-=delta;
                 it.x += cosf(est_angle)*delta;
-                searchResult = FindPoint(cannied, it, Direction::LEFT, Direction::RIGHT);
-                
+                if(it.x > cannied.size().width/2 + 80)
+                    it.x = cannied.size().width/2 + 80;
+                searchResult = FindPoint(cannied, it);
+
                 unfound++;
             }
 
@@ -100,20 +141,29 @@ namespace Autodrive
         POINT last_start;
         float centerX;
 
-        roadlinebuilder(POINT startPoint, float center_x) :
-            first_start(startPoint), last_start(startPoint), centerX(center_x)
+        roadlinebuilder(POINT startPoint, float center_x,float angle_in,float angle_out) :
+                angleIn(angle_in),angleOut(angle_out),first_start(startPoint), last_start(startPoint), centerX(center_x)
         {
 
         }
 
-        RoadLine build(const cv::Mat& cannied, size_t maxsize)
+        optional<RoadLine> build(const cv::Mat& cannied, size_t maxsize)
         {
-            RoadLine road(centerX, GetFirstPoint(cannied));
-            optional<POINT> newPoint;
-            while ((newPoint = GetNextPoint(cannied, road.getEstimatedAngle(), road.points.back(),pointDist)).valid && road.points.size() < maxsize)
+            optional<RoadLine> road = nullptr;
+            for(nTries = 0; nTries < 3 && !road.valid; nTries++)
             {
-                if (!road.addPoint(*newPoint))
-                    break;
+                road = RoadLine(centerX, GetFirstPoint(cannied));
+                optional<POINT> newPoint;
+                while (road->points.size() < maxsize)
+                {
+                    newPoint = GetNextPoint(cannied, road->getEstimatedAngle(),road->getMeanAngleDiffs(), road->points.back(),pointDist);
+                    if(!newPoint)
+                        break;
+                    if (!road->addPoint(*newPoint))
+                        break;
+                }
+                if(!road->isFound())
+                    road = nullptr;
             }
 
             return road;

@@ -65,60 +65,69 @@
             <Switch
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Debug information"
+                android:text="DisplayDebugInformation"
                 android:id="@+id/DisplayDebugSwitch"
-                android:checked="true"
-                android:layout_below="@+id/LightNormalizationSwitch"/>
+                android:checked="false"/>
 
-            <Switch
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Use Left Line"
-                android:id="@+id/LeftLineSwitch"
-                android:checked="true" />
+                android:id="@+id/outerIterationLengthText"
+                android:textSize="12sp"
+                android:gravity="center" />
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/outerIterationLength"
+                android:indeterminate="false"
+                android:paddingTop="5dp"
+                android:max="15" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/progress1"
                 android:textSize="12sp"
-                android:text="kp default value set to 0.5"
                 android:gravity="center" />
 
             <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/kp"
+                android:id="@+id/InnerIterationLength"
                 android:indeterminate="false"
-                android:paddingTop="5dp" />
+                android:paddingTop="5dp"
+                android:max="40" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/progress2"
+                android:id="@+id/lostThresholdText"
                 android:textSize="12sp"
                 android:gravity="center" />
 
             <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/ki"
+                android:id="@+id/ForwardWhenLostNFrames"
                 android:indeterminate="false"
-                android:paddingTop="5dp" />
+                android:paddingTop="5dp"
+                android:max="8" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/progress3"
+                android:id="@+id/smootheningText"
                 android:textSize="12sp"
                 android:gravity="center" />
 
             <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/kd"
+                android:id="@+id/smoothening"
                 android:indeterminate="false"
-                android:paddingTop="5dp" />
+                android:paddingTop="5dp"
+                android:max="5" />
 
         </LinearLayout>
     </LinearLayout>

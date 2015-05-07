@@ -30,27 +30,18 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
         ((Switch)findViewById(R.id.DisplayDebugSwitch)).setOnCheckedChangeListener(this);
         //USE LIGHT NORMALIZATION SWITCH
         ((Switch)findViewById(R.id.LightNormalizationSwitch)).setOnCheckedChangeListener(this);
-        //USE LEFT LINE SWITCH
-        ((Switch)findViewById(R.id.LeftLineSwitch)).setOnCheckedChangeListener(this);
 
         //PID SEEK BARS
-        kp = (SeekBar)findViewById(R.id.kp);
-        kp.setMax(50);
-        kp.setOnSeekBarChangeListener(this);
-
-        ki = (SeekBar)findViewById(R.id.ki);
-        ki.setMax(50);
-        ki.setOnSeekBarChangeListener(this);
-
-        kd = (SeekBar)findViewById(R.id.kd);
-        kd.setMax(50);
-        kd.setOnSeekBarChangeListener(this);
-
+        ((SeekBar)findViewById(R.id.InnerIterationLength)).setOnSeekBarChangeListener(this);
+        ((SeekBar)findViewById(R.id.outerIterationLength)).setOnSeekBarChangeListener(this);
+        ((SeekBar)findViewById(R.id.smoothening)).setOnSeekBarChangeListener(this);
+        ((SeekBar)findViewById(R.id.ForwardWhenLostNFrames)).setOnSeekBarChangeListener(this);
 
         //PID DESCRIPTIONS
-        ((TextView)findViewById(R.id.progress1)).setText("kp default value set to 0.5");
-        ((TextView)findViewById(R.id.progress2)).setText("ki default value set to 0.0");
-        ((TextView)findViewById(R.id.progress3)).setText("kd default value set to 0.0");
+        ((TextView)findViewById(R.id.progress1)).setText("InnerIterationLength value set to 10");
+        ((TextView)findViewById(R.id.outerIterationLengthText)).setText("outerIterationLength value set to 6");
+        ((TextView)findViewById(R.id.lostThresholdText)).setText("lostThreshold value set to 0");
+        ((TextView)findViewById(R.id.smootheningText)).setText("smoothing value set to 2");
 
     }
 
@@ -79,36 +70,38 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
             case R.id.DisplayDebugSwitch:
                 Settings.DisplayDebugInformation = isChecked;
                 break;
-            case R.id.LeftLineSwitch:
-                Autodrive.setSettingUseLeftLine(isChecked);
-                break;
         }
     }
 
     /* SEEK BAR */
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        Autodrive.setSettingSmoothening(progress);
         switch (seekBar.getId()) {
-            case R.id.kp:
+            case R.id.outerIterationLength:
                 if(fromUser) {
-                    float progressValue = (float) (progress / 10.0);
-                    ((TextView)findViewById(R.id.progress1)).setText("kp value set to " + progressValue);
-                    Autodrive.setPIDkp(progressValue);
+                    ((TextView)findViewById(R.id.outerIterationLengthText)).setText("outerIterationLength set to " + progress);
+                    Autodrive.setSettingRightIterationLength(progress);
                 }
                 break;
-            case R.id.ki:
+
+            case R.id.InnerIterationLength:
                 if(fromUser) {
-                    float progressValue = (float) (progress / 10.0);
-                    ((TextView)findViewById(R.id.progress2)).setText("ki value set to " + progressValue);
-                    Autodrive.setPIDki(progressValue);
+                    ((TextView)findViewById(R.id.progress1)).setText("InnerIterationLength set to " + progress);
+                    Autodrive.setSettingLeftIterationLength(progress);
                 }
                 break;
-            case R.id.kd:
+            case R.id.ForwardWhenLostNFrames:
+                    if(progress > 0) {
+                        ((TextView) findViewById(R.id.lostThresholdText)).setText("will reset angle after " + progress + " frames");
+                    }else {
+                        ((TextView) findViewById(R.id.lostThresholdText)).setText("will never reset angle");
+                    }
+                    Autodrive.setForwardWhenLost(progress);
+                break;
+            case R.id.smoothening:
                 if(fromUser) {
-                    float progressValue = (float) (progress / 10.0);
-                    ((TextView)findViewById(R.id.progress3)).setText("kd value set to " + progressValue);
-                    Autodrive.setPIDkd(progressValue);
+                    ((TextView)findViewById(R.id.smootheningText)).setText("smoothening value set to " + progress);
+                    Autodrive.setSettingSmoothening(progress);
                 }
                 break;
         }
