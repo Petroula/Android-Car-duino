@@ -86,24 +86,32 @@ namespace Autodrive
             bestChoice.found = false;
             bestChoice.distance = 1000;
             int unfound = 0;
+            int newDelta = delta;
 
-            while(unfound < maxUpwardsIteration * nTries)
+            while(unfound < maxUpwardsIteration + nTries)
             {
-                it.y-=delta;
-                it.x += cosf(est_angle)*delta;
-                est_angle+=angle_derivate;
+                it.y-=newDelta;
+                it.x += cosf(est_angle)*newDelta;
+                est_angle+=angle_derivate*newDelta;
                 SearchResult result = FindPoint(cannied, it);
                 unfound++;
 
                 if(result.found)
                 {
-                    if(result.distance == 0)
+                    newDelta = delta;
+                    /*if(result.distance == 0)
                     {
                         return result.point;
-                    }else if(result.distance < bestChoice.distance)
+                    }else
+                    */
+                    if(!bestChoice.found
+                       || (angleIn <= 0.1f && result.point.x > bestChoice.point.x)
+                            || (angleIn >= 0.5f && result.point.x < bestChoice.point.x))
                     {
                         bestChoice = result;
                     }
+                } else{
+                    newDelta= std::min(delta + 2,newDelta + 1);
                 }
             }
             if(bestChoice.found)
@@ -156,7 +164,7 @@ namespace Autodrive
                 optional<POINT> newPoint;
                 while (road->points.size() < maxsize)
                 {
-                    newPoint = GetNextPoint(cannied, road->getEstimatedAngle(),road->getMeanAngleDiffs(), road->points.back(),pointDist);
+                    newPoint = GetNextPoint2(cannied, road->getEstimatedAngle(),road->getMeanAngleDiffs(), road->points.back(),pointDist);
                     if(!newPoint)
                         break;
                     if (!road->addPoint(*newPoint))
