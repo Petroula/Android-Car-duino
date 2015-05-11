@@ -42,20 +42,16 @@ extern "C"
         Autodrive::SensorData::infrared[sensor] = value;
     }
 
-    TYPE(jint) NAME(getUltraSound) PARAMS(int sensor){
-        return Autodrive::SensorData::ultrasound[sensor];
-    }
-    
-    TYPE(jint) NAME(getInfrared) PARAMS(int sensor){
-        return Autodrive::SensorData::infrared[sensor];
-    }
-    
     TYPE(void) NAME(setEncoderPulses) PARAMS(long value){
         Autodrive::SensorData::encoderPulses = value;
     }
     
-    TYPE(jlong) NAME(getEncoderDistance) (){
-        return Autodrive::SensorData::encoderDistance();
+    TYPE(void) NAME(setGyroHeading) PARAMS(int value){
+        Autodrive::SensorData::gyroHeading = value;
+    }
+    
+    TYPE(void) NAME(setRazorHeading) PARAMS(int value){
+        Autodrive::SensorData::razorHeading = value;
     }
     
 	

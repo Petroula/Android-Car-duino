@@ -20,11 +20,10 @@ public class Autodrive
 /*----- SENSORDATA -----*/
     public static native void setImage(long matAddrRgba);
     public static native void setUltrasound(int sensor, int value);
-    public static native int getUltrasoundSensor(int sensor);
     public static native void setInfrared(int sensor, int value);
-    public static native int getInfraredSensor(int sensor);
     public static native void setEncoderPulses(long value);
-    public static native long getEncoderDistance();
+    public static native void setGyroHeading(int value);
+    public static native void setRazorHeading(int value);
 
 /*----- RESULTING AUTODRIVE DATA -----*/
     public static native boolean speedChanged();
