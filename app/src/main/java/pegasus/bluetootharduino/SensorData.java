@@ -18,8 +18,10 @@ public class SensorData {
     };
 
     public enum InfraredSensor {
-        FRONT(0),
-        REAR(1);
+        SIDE_FRONT(0),
+        SIDE_REAR(1),
+        REAR(2);
+
 
         private final int value;
         private InfraredSensor(int value) {
@@ -50,9 +52,50 @@ public class SensorData {
         Autodrive.setEncoderPulses(value);
     }
 
-    static double getEncoderDistance(){
+    static long getEncoderDistance(){
         return Autodrive.getEncoderDistance();
     }
 
+    static void setGyroHeading(int value){
 
+    }
+
+    static void setRazorHeading(int value){
+
+    }
+
+
+    static void handleInput(String input){
+        if (input.startsWith("EN")){
+            setEncoderPulses(Integer.parseInt(input.substring(3)));
+        }else if (input.startsWith("HE")){
+            setGyroHeading(Integer.parseInt(input.substring(3)));
+        }else if (input.startsWith("RZR")){
+            setRazorHeading(Integer.parseInt(input.substring(4)));
+        }else if (input.startsWith("US")){
+            int sensorNum = Integer.parseInt(input.substring(2,3));
+            UltrasoundSensor sensor = UltrasoundSensor.REAR;
+            switch (sensorNum){
+                case 0:
+                    sensor = UltrasoundSensor.FRONT;
+                    break;
+                case 1:
+                    sensor = UltrasoundSensor.FRONT_RIGHT;
+                    break;
+            }
+            setUltrasound(sensor,Integer.parseInt(input.substring(4)));
+        }else if (input.startsWith("IR")){
+            int sensorNum = Integer.parseInt(input.substring(2,3));
+            InfraredSensor sensor = InfraredSensor.REAR;
+            switch (sensorNum){
+                case 0:
+                    sensor = InfraredSensor.SIDE_FRONT;
+                    break;
+                case 1:
+                    sensor = InfraredSensor.SIDE_REAR;
+                    break;
+            }
+            setInfrared(sensor,Integer.parseInt(input.substring(4)));
+        }
+    }
 }

@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import android.bluetooth.*;
+import android.hardware.Sensor;
 import android.os.Handler;
 import android.util.Log;
 
@@ -99,6 +100,7 @@ public class Bluetooth {
                                         public void run() {
                                             returnResult = nt.decodedNetstring(result);
                                             Log.i("result", returnResult);
+                                            SensorData.handleInput(returnResult);
                                         }
                                     });
 

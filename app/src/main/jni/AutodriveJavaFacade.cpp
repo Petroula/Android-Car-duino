@@ -50,11 +50,11 @@ extern "C"
         return Autodrive::SensorData::infrared[sensor];
     }
     
-    TYPE(void) NAME(setEncoderPulses) PARAMS(int value){
+    TYPE(void) NAME(setEncoderPulses) PARAMS(long value){
         Autodrive::SensorData::encoderPulses = value;
     }
     
-    TYPE(jdouble) NAME(getEncoderDistance) (){
+    TYPE(jlong) NAME(getEncoderDistance) (){
         return Autodrive::SensorData::encoderDistance();
     }
     

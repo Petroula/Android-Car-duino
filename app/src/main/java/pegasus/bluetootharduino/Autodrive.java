@@ -23,8 +23,8 @@ public class Autodrive
     public static native int getUltrasoundSensor(int sensor);
     public static native void setInfrared(int sensor, int value);
     public static native int getInfraredSensor(int sensor);
-    public static native void setEncoderPulses(int value);
-    public static native double getEncoderDistance();
+    public static native void setEncoderPulses(long value);
+    public static native long getEncoderDistance();
 
 /*----- RESULTING AUTODRIVE DATA -----*/
     public static native boolean speedChanged();
