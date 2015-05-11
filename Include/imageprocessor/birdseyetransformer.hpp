@@ -37,10 +37,11 @@ namespace Autodrive
             if (abs(dir_diff) < 0.f || abs(dir_diff) > 1.f)
                 continue;
 
+            vector.draw(*drawMat, cv::Scalar(0, 0, 255), 5);
 
             if ( leftx > center + 20) 
             {
-                    if (rightx > leftx && topy > boty && vector.length() > 80) 
+                    if (rightx > leftx && topy > boty && vector.length() > 10) 
                     {
                         leftMostLine = linef(line);
                         foundLeft = true;
@@ -84,8 +85,8 @@ namespace Autodrive
     optional<cv::Mat> find_perspective(cv::Mat* matIn, double thresh1 = 300, double thresh2 = 150){
         optional<cv::Mat> birdseye_matrix;
         cv::Mat matCopy = matIn->clone();
-
-        cv::erode(matCopy, matCopy, cv::Mat(), cv::Point(-1, -1), 1);
+        //Might be needed on track
+        //cv::erode(matCopy, matCopy, cv::Mat(), cv::Point(-1, -1), 1);
         cv::Mat cannied;
         cv::Canny(matCopy, cannied, thresh1, thresh2, 3);
         matCopy = cannied;
