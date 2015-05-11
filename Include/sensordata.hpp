@@ -12,13 +12,13 @@ namespace Autodrive
             REAR = 2
         };
 
-        double PULSES_PER_CM = 0.5; //to be determined experimentally
+        double PULSES_PER_CM = 1; //to be determined experimentally
         int ultrasound[] = { 0, 0, 0 };
-        int infrared[] = { 0, 0 };
+        int infrared[] = { 0, 0, 0 };
         long encoderPulses = 0;
         double encoderDistance()
         {
-            return encoderPulses / PULSES_PER_CM;
+            return encoderPulses;
         }
         cv::Mat* image = 0;
     };
