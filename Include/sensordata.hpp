@@ -12,9 +12,11 @@ namespace Autodrive
             REAR = 2
         };
 
-        double PULSES_PER_CM = 1; //to be determined experimentally
+        double PULSES_PER_CM = 1; //TODO: to be determined experimentally
         int ultrasound[] = { 0, 0, 0 };
         int infrared[] = { 0, 0, 0 };
+        int gyroHeading = 0;
+        int razorHeading = 0;
         long encoderPulses = 0;
         double encoderDistance()
         {
