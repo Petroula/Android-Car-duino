@@ -26,7 +26,14 @@ extern "C"
     {
         return Autodrive::reset();
     }
-	
+    
+    /*----- DEBUGDATA -----*/
+    
+    TYPE(jint) NAME(getGapLength)()
+    {
+        return Autodrive::Parking::gapLength;
+    }
+    
 	/*----- SENSORDATA -----*/
 
     TYPE(void) NAME(setImage) PARAMS(long newMat){

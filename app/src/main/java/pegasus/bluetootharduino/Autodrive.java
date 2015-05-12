@@ -16,6 +16,9 @@ public class Autodrive
 
     public static native void reset();
     public static native void drive();
+    
+/*----- DEBUGDATA -----*/
+    public static native int getGapLength();
 
 /*----- SENSORDATA -----*/
     public static native void setImage(long matAddrRgba);
