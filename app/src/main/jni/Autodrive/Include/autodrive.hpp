@@ -36,8 +36,8 @@ namespace Autodrive
 
     void reset()
     {
-        status = SEARCHING_FOR_LANES;
-        //status = DETECTING_GAP;
+        //status = SEARCHING_FOR_LANES;
+        status = DETECTING_GAP;
     }
 
     void drive()
@@ -66,7 +66,7 @@ namespace Autodrive
                 if(Parking::parkingProcedure == Parking::PERPENDICULAR_STANDARD){ // select parking procedure
                     status = PARKING;
                 }else{
-                    lastCommand.setSpeed(2);
+                    lastCommand.setSpeed(10);
                 }
                 break;
             // -----------
