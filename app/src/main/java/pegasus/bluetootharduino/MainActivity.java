@@ -47,11 +47,12 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
                 Intent changeToCamera= new Intent(getApplicationContext(),
                 CameraActivity.class);
                 startActivity(changeToCamera);
+                break;
             case R.id.advanced:
                 Intent changeToSettings= new Intent(getApplicationContext(),
                 AdvSettingsActivity.class);
                 startActivity(changeToSettings);
-
+                break;
         }
     }
 
