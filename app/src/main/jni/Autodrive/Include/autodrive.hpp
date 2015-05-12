@@ -66,7 +66,8 @@ namespace Autodrive
                 if(Parking::parkingProcedure == Parking::PERPENDICULAR_STANDARD){ // select parking procedure
                     status = PARKING;
                 }else{
-                    lastCommand.setSpeed(10);
+                    lastCommand.setSpeed(60);
+                    lastCommand.setAngle(25);
                 }
                 break;
             // -----------
