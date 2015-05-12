@@ -19,8 +19,8 @@ namespace Autodrive
         
 		// required for parking
         int irFrontRight = infrared[0];
-        int irRear = infrared[1];
-        int irRearRight = infrared[2];
+        int irRearRight = infrared[1];
+        int irRear = infrared[2];
         
         int usFront = ultrasound[0];
         int usFrontRight = ultrasound[1];

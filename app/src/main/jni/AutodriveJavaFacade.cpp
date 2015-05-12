@@ -27,12 +27,12 @@ extern "C"
         return Autodrive::reset();
     }
 
-//   /*----- DEBUGDATA -----*/
-//
-//   TYPE(jint) NAME(getGapLength)()
-//  	{
-//	    return Autodrive::Parking::gapLength;
-//	}
+   /*----- DEBUGDATA -----*/
+
+   TYPE(jint) NAME(getGapLength)()
+  	{
+	    return Autodrive::Parking::gapLength;
+	}
     
 	/*----- SENSORDATA -----*/
 
