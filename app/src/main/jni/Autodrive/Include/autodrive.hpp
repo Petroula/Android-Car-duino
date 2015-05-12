@@ -39,6 +39,7 @@ namespace Autodrive
         //status = SEARCHING_FOR_LANES;
         //status = DETECTING_GAP;
         status = DEBUG;
+        //status = DISTANCE_MEASURED_DEBUG
     }
 
     void drive()
@@ -92,7 +93,7 @@ namespace Autodrive
                 break;
                 
             case Autodrive::DISTANCE_MEASURED_DEBUG:
-                lastCommand = Parking::SetGapLength();
+                lastCommand = Parking::DebugGapLength();
                 break;
                 
             default:

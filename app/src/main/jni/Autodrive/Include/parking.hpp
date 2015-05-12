@@ -51,6 +51,15 @@ namespace Autodrive {
 				return Maneuver::Move(Maneuver::normalSpeed);
 			}
 		}
+		
+		command DebugGapLength(){
+			SetGapLength();
+			if(gapLength > 6){
+				return Maneuver::Stop();
+			}else{
+				return Maneuver::Move(Maneuver::normalSpeed);
+			}
+		}
 		//=====================================================
 		
 		command Park(){
