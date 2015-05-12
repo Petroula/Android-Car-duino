@@ -113,12 +113,12 @@ namespace Autodrive {
 
 				// initialize start point
 				if(!measuringAngle){
-					startAngle = SensorData::currentAngle;
+					startAngle = SensorData::gyroHeading;
 					measuringAngle = true;
 				}
 
 				// get the current angle from where the car was, to where it is now
-				currentAngle = fmod((startAngle - SensorData::currentAngle),360);
+				currentAngle = fmod((startAngle - SensorData::gyroHeading),360);
 				if(currentAngle > 180) currentAngle = 360 - currentAngle;
 
 				if(abs(currentAngle) > abs(desiredAngle)) { // TODO make sure currentAngle & desiredAngle are INT
