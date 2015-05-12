@@ -17,6 +17,8 @@ public class Autodrive
     public static native void reset();
     public static native void drive();
 
+	public static native int getGapLength();
+
 /*----- SENSORDATA -----*/
     public static native void setImage(long matAddrRgba);
     public static native void setUltrasound(int sensor, int value);
