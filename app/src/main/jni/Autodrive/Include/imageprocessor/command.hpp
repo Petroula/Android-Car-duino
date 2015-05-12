@@ -1,6 +1,5 @@
 #pragma once
 #include <string.h>
-#include "imageprocessor.hpp"
 
 namespace Autodrive {
 
