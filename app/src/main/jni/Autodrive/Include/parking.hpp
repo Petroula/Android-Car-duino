@@ -48,7 +48,7 @@ namespace Autodrive {
 			if(SensorData::irRearRight > 0){
 				return Maneuver::Stop();
 			}else{
-				return Maneuver::Move(Maneuver::normalSpeed);
+				return Maneuver::Stop();
 			}
 		}
 		
