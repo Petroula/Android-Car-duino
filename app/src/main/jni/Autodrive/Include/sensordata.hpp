@@ -26,8 +26,11 @@ namespace Autodrive
         int usFrontRight = ultrasound[1];
         int usRearRight = ultrasound[2];
         
+        int razorHeading = 0;   // from -180 to 180
+        int gyroHeading = 0;    // from 0 to 360
+        
 		int currentSpeed = 0;
-		int currentAngle = 0;
+        int currentAngle = 0; 
 		// --------------------
 		
         double encoderDistance()
@@ -35,6 +38,7 @@ namespace Autodrive
             return encoderPulses / PULSES_PER_CM;
         }
         cv::Mat* image = 0;
+  
     };
 
 }
