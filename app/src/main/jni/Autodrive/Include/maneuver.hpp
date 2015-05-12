@@ -121,7 +121,7 @@ namespace Autodrive {
 				currentAngle = fmod((startAngle - SensorData::currentAngle),360);
 				if(currentAngle > 180) currentAngle = 360 - currentAngle;
 
-				if(fabs(currentAngle) > fabs(desiredAngle)) {
+				if(abs(currentAngle) > abs(desiredAngle)) { // TODO make sure currentAngle & desiredAngle are INT
 					measuringAngle = false;
 					return true;
 				}else{
@@ -250,7 +250,7 @@ namespace Autodrive {
 			// perpendicular parking maneuver
 			command PerpendicularStandard(){
 				command cmd;
-				std::cout << "PERPENDICULAR_STANDARD" << std::endl;
+				//std::cout << "PERPENDICULAR_STANDARD" << std::endl;
 				
 				if(!init){
 					currentManeuver = NO_MANEUVER;
@@ -260,7 +260,7 @@ namespace Autodrive {
 				switch(currentManeuver){
 					
 					case NO_MANEUVER:
-						std::cout << "NO_MANEUVER" << std::endl;
+						//std::cout << "NO_MANEUVER" << std::endl;
 						if(Status::IsStoped()){
 							currentManeuver = BACKWARDS_RIGHT;
 							return command();
@@ -269,7 +269,7 @@ namespace Autodrive {
 						}
 		
 					case BACKWARDS_RIGHT:
-						std::cout << "BACKWARDS_RIGHT" << std::endl;
+						//std::cout << "BACKWARDS_RIGHT" << std::endl;
 						cmd.setSpeed(slowSpeed * -1);
 						if(Status::HasTurnedAngle(90)){
 							currentManeuver = DONE;
@@ -286,7 +286,7 @@ namespace Autodrive {
 						}*/
 		
 		            case BACKWARDS:
-						std::cout << "BACKWARDS" << std::endl;
+						//std::cout << "BACKWARDS" << std::endl;
 		                if(Status::HasTraveledDistance(1)){
 							currentManeuver = DONE;
 							return Stop();
@@ -295,7 +295,7 @@ namespace Autodrive {
 						}
 		
 					default:
-						std::cout << "DONE" << std::endl;
+						//std::cout << "DONE" << std::endl;
 						return command();
 				}
 			}
