@@ -10,6 +10,7 @@ import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -20,12 +21,17 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
 import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class CameraActivity extends Activity implements CvCameraViewListener2, OnGestureListener {
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private static final String TAG = "CameraActivity";
+    static TextView debugConsole;
 
     GestureDetector detector;
     AutomaticCarDriver driver = new AutomaticCarDriver();
@@ -44,9 +50,9 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-
-
         detector = new GestureDetector(this);
+
+        debugConsole = (TextView) findViewById(R.id.debugConsole);
 
         bt.checkBT();
 
@@ -67,6 +73,18 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         }
     }
 
+    static public void updateDebuggingConsole() {
+        debugConsole.setText("");
+        debugConsole.append("ultrasonicFront: " + SensorData.ultrasonicFront + "\n");
+        debugConsole.append("ultrasonicFrontRight: " + SensorData.ultrasonicFrontRight + "\n");
+        debugConsole.append("ultrasonicRear: " + SensorData.ultrasonicRear + "\n");
+        debugConsole.append("infraredSideFront: " + SensorData.infraredSideFront + "\n");
+        debugConsole.append("infraredSideRear: " + SensorData.infraredSideRear + "\n");
+        debugConsole.append("infraredRear: " + SensorData.infraredRear + "\n");
+        debugConsole.append("gyroHeading: " + SensorData.gyroHeading + "\n");
+        debugConsole.append("razorHeading: " + SensorData.razorHeading + "\n");
+        debugConsole.append("encoderPulses: " + SensorData.encoderPulses + "\n");
+    }
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
