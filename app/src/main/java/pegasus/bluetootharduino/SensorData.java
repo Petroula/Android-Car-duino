@@ -33,7 +33,7 @@ public class SensorData {
         }
     }
     static void setUltrasound(UltrasoundSensor sensor, int value){
-        Autodrive.setUltraSound(sensor.toInt(), value);
+        Autodrive.setUltrasound(sensor.toInt(), value);
     };
 
     static int getUltrasoundSensor(UltrasoundSensor sensor){
