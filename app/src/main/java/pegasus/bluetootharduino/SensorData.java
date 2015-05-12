@@ -2,7 +2,7 @@ package pegasus.bluetootharduino;
 
 //TODO: We might want to remove this class completely and just use something like Autodrive.SensorData instead
 public class SensorData {
-    public static int ultrasonicFront = 0,
+    static int ultrasonicFront = 0,
         ultrasonicFrontRight = 0,
         ultrasonicRear = 0,
         infraredSideFront = 0,
@@ -12,7 +12,7 @@ public class SensorData {
         razorHeading = 0,
         encoderPulses = 0;
 
-    public enum UltrasoundSensor{
+    public enum UltrasoundSensor {
         FRONT(0),
         FRONT_RIGHT(1),
         REAR(2);
@@ -43,33 +43,29 @@ public class SensorData {
     }
 
     static void setUltrasound(UltrasoundSensor sensor, int value){
-        Autodrive.setUltrasound(sensor.toInt(), value);
+        int sensorNr = sensor.toInt();
+        Autodrive.setUltrasound(sensorNr, value);
 
-        switch (sensor.toInt()) {
-            case 0:
-                ultrasonicFront = value;
-                break;
-            case 1:
-                ultrasonicFrontRight = value;
-                break;
-            case 2:
-                ultrasonicRear = value;
+        if (sensorNr == 0) {
+            ultrasonicFront = value;
+        } else if (sensorNr == 1) {
+            ultrasonicFrontRight = value;
+        } else if (sensorNr == 2) {
+            ultrasonicRear = value;
         }
         CameraActivity.updateDebuggingConsole();
     };
 
     static void setInfrared(InfraredSensor sensor, int value){
-        Autodrive.setInfrared(sensor.toInt(),value);
+        int sensorNr = sensor.toInt();
+        Autodrive.setInfrared(sensorNr,value);
 
-        switch (sensor.toInt()) {
-            case 0:
-                infraredSideFront = value;
-                break;
-            case 1:
-                infraredSideRear = value;
-                break;
-            case 2:
-                infraredRear = value;
+        if (sensorNr == 0) {
+            infraredSideFront = value;
+        } else if (sensorNr == 1) {
+            infraredSideRear = value;
+        } else if (sensorNr == 2) {
+            infraredRear = value;
         }
         CameraActivity.updateDebuggingConsole();
     }
