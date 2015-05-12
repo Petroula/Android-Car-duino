@@ -36,8 +36,8 @@ namespace Autodrive
 
     void reset()
     {
-        //status = SEARCHING_FOR_LANES;
-        status = DETECTING_GAP;
+        status = SEARCHING_FOR_LANES;
+        //status = DETECTING_GAP;
     }
 
     void drive()
