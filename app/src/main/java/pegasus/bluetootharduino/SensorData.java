@@ -54,6 +54,8 @@ public class SensorData {
 
 
     static void handleInput(String input){
+        input = input.replaceAll("\\r|\\n", "");
+
         if (input.startsWith("EN")){
             setEncoderPulses(Integer.parseInt(input.substring(3)));
         }else if (input.startsWith("HE")){
