@@ -50,7 +50,7 @@ public class AdvSettingsActivity extends Activity implements SeekBar.OnSeekBarCh
         rightIteration.setOnSeekBarChangeListener(this);
 
         angle = (SeekBar)findViewById(R.id.angle);
-        angle.setMax(8); // values 0.4-1.4
+        angle.setMax(14); // values 0.4-1.4
         angle.setOnSeekBarChangeListener(this);
     }
 
@@ -77,6 +77,51 @@ public class AdvSettingsActivity extends Activity implements SeekBar.OnSeekBarCh
                     float progressValue = (float) (progress / 10.0);
                     ((TextView)findViewById(R.id.progress3)).setText("kd value set to " + progressValue);
                     Autodrive.setPIDkd(progressValue);
+                }
+                break;
+            case R.id.smoothening:
+                if(fromUser) {
+                    ((TextView)findViewById(R.id.progress4)).setText("Smoothening value set to " + progress);
+                    Autodrive.setSettingSmoothening(progress);
+                }
+                break;
+            case R.id.fragment:
+                if(fromUser) {
+                    if(progress < 15) {
+                        progress = 15;
+                    }
+                    ((TextView)findViewById(R.id.progress5)).setText("Fragment distance value set to " + progress);
+                    Autodrive.setSettingFirstFragmentMaxDist(progress);
+                }
+                break;
+            case R.id.leftIteration:
+                if(fromUser) {
+                    if(progress < 1) {
+                        progress = 1;
+                    }
+                    ((TextView)findViewById(R.id.progress6)).setText("Left Iteration value set to " + progress);
+                    Autodrive.setSettingLeftIterationLength(progress);
+                }
+                break;
+            case R.id.rightIteration:
+                if(fromUser) {
+                    if(progress < 1) {
+                        progress = 1;
+                    }
+                    ((TextView)findViewById(R.id.progress7)).setText("Right Iteration value set to " + progress);
+                    Autodrive.setSettingRightIterationLength(progress);
+                }
+                break;
+            case R.id.angle:
+                if(fromUser) {
+                    float progressValue = (float) (progress / 10.0);
+                    if(progressValue < 0.4) {
+                        progressValue = (float) 0.4;
+                    } else if(progressValue > 1.4) {
+                        progressValue = (float) 1.4;
+                    }
+                    ((TextView)findViewById(R.id.progress8)).setText("Max angle value set to " + progressValue);
+                    Autodrive.setSettingMaxAngleDiff(progressValue);
                 }
                 break;
         }

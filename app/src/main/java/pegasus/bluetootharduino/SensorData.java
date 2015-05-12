@@ -2,6 +2,16 @@ package pegasus.bluetootharduino;
 
 //TODO: We might want to remove this class completely and just use something like Autodrive.SensorData instead
 public class SensorData {
+    public static int ultrasonicFront = 0,
+        ultrasonicFrontRight = 0,
+        ultrasonicRear = 0,
+        infraredSideFront = 0,
+        infraredSideRear = 0,
+        infraredRear = 0,
+        gyroHeading = 0,
+        razorHeading = 0,
+        encoderPulses = 0;
+
     public enum UltrasoundSensor{
         FRONT(0),
         FRONT_RIGHT(1),
@@ -22,7 +32,6 @@ public class SensorData {
         SIDE_REAR(1),
         REAR(2);
 
-
         private final int value;
         private InfraredSensor(int value) {
             this.value = value;
@@ -32,26 +41,59 @@ public class SensorData {
             return value;
         }
     }
+
     static void setUltrasound(UltrasoundSensor sensor, int value){
         Autodrive.setUltrasound(sensor.toInt(), value);
+
+        switch (sensor.toInt()) {
+            case 0:
+                ultrasonicFront = value;
+                break;
+            case 1:
+                ultrasonicFrontRight = value;
+                break;
+            case 2:
+                ultrasonicRear = value;
+        }
+        CameraActivity.updateDebuggingConsole();
     };
 
     static void setInfrared(InfraredSensor sensor, int value){
         Autodrive.setInfrared(sensor.toInt(),value);
+
+        switch (sensor.toInt()) {
+            case 0:
+                infraredSideFront = value;
+                break;
+            case 1:
+                infraredSideRear = value;
+                break;
+            case 2:
+                infraredRear = value;
+        }
+        CameraActivity.updateDebuggingConsole();
     }
 
     static void setEncoderPulses(int value){
         Autodrive.setEncoderPulses(value);
+
+        encoderPulses = value;
+        CameraActivity.updateDebuggingConsole();
     }
 
     static void setGyroHeading(int value){
         Autodrive.setGyroHeading(value);
+
+        gyroHeading = value;
+        CameraActivity.updateDebuggingConsole();
     }
 
     static void setRazorHeading(int value){
         Autodrive.setRazorHeading(value);
-    }
 
+        razorHeading = value;
+        CameraActivity.updateDebuggingConsole();
+    }
 
     static void handleInput(String input){
         input = input.replaceAll("\\r|\\n", "");
@@ -74,7 +116,7 @@ public class SensorData {
                     break;
             }
             setUltrasound(sensor, Integer.parseInt(input.substring(4)));
-        }else if (input.startsWith("IR")){
+        } else if (input.startsWith("IR")){
             int sensorNum = Integer.parseInt(input.substring(2,3));
             InfraredSensor sensor = InfraredSensor.REAR;
             switch (sensorNum){

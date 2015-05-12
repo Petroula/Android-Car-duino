@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/progress1"
-            android:text="kp default value set to 0.5"
+            android:text="kp value"
             android:textColor="#ff00b9ff"
             android:textSize="12sp"
             android:gravity="center"
@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/progress2"
-            android:text="ki default value set to 0.0"
+            android:text="ki value"
             android:textColor="#ff00b9ff"
             android:textSize="12sp"
             android:gravity="center"
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/progress3"
-            android:text="kd default value set to 0.0"
+            android:text="kd value"
             android:textColor="#ff00b9ff"
             android:textSize="12sp"
             android:gravity="center"
@@ -81,10 +81,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        android:layout_height="match_parent">
 
         <TextView
             android:layout_width="match_parent"
