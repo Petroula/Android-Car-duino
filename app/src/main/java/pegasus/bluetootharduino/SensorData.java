@@ -36,12 +36,24 @@ public class SensorData {
         Autodrive.setUltraSound(sensor.toInt(), value);
     };
 
+    static int getUltrasoundSensor(UltrasoundSensor sensor){
+        return Autodrive.getUltrasoundSensor(sensor.toInt());
+    }
+
     static void setInfrared(InfraredSensor sensor, int value){
         Autodrive.setInfrared(sensor.toInt(),value);
     }
 
+    static int getInfraredSensor(InfraredSensor sensor){
+        return Autodrive.getInfraredSensor(sensor.toInt());
+    }
+
     static void setEncoderPulses(int value){
         Autodrive.setEncoderPulses(value);
+    }
+
+    static long getEncoderDistance(){
+        return Autodrive.getEncoderDistance();
     }
 
     static void setGyroHeading(int value){
