@@ -6,7 +6,6 @@ namespace Autodrive
     {
         int carY = 0;
         int centerX = 0;
-        int lostCounter = 0;
         std::unique_ptr<linefollower> leftLineFollower = nullptr;
         std::unique_ptr<linefollower> rightLineFollower = nullptr;
         
@@ -14,7 +13,7 @@ namespace Autodrive
 
         int FindCarEnd(const cv::Mat& cannied)
         {
-            POINT center_bottom(centerX, cannied.size().height - 12);
+            POINT center_bottom(centerX, cannied.size().height - 15);
             //SEARCH UPWARDS UNTIL _NOT_ HIT ON THE CENTER +/- 10
             bool hit = true;
             while (hit)
@@ -47,12 +46,10 @@ namespace Autodrive
         {
             cv::Mat colorCopy;
             cv::cvtColor(cannied, colorCopy, CV_GRAY2RGB);
-            if(Settings::goForwardWhenLost && lostCounter > Settings::goForwardWhenLost){
-                cv::circle(colorCopy,POINT(centerX,colorCopy.size().height/2),5,cv::Scalar(255,255,0),5);
-            }else{
-                leftLineFollower->draw(&colorCopy,centerX);
-                rightLineFollower->draw(&colorCopy, centerX);
-            }
+
+            leftLineFollower->draw(&colorCopy,centerX);
+            rightLineFollower->draw(&colorCopy, centerX);
+
             return colorCopy;
         }
 
@@ -64,8 +61,8 @@ namespace Autodrive
             POINT rightLineStart = FindLineStart(cannied, Direction::RIGHT);
             POINT leftLineStart = FindLineStart(cannied, Direction::LEFT);
 
-            leftLineFollower = make_unique<linefollower>(cannied, leftLineStart, centerX,Direction::RIGHT,Direction::LEFT);
-            rightLineFollower = make_unique<linefollower>(cannied, rightLineStart, centerX,Direction::LEFT,Direction::RIGHT);
+            leftLineFollower = make_unique<linefollower>(cannied, leftLineStart, centerX);
+            rightLineFollower = make_unique<linefollower>(cannied, rightLineStart, centerX);
         }
 
 
@@ -75,6 +72,8 @@ namespace Autodrive
 
             leftLineFollower->update(cannied);
             rightLineFollower->update(cannied);
+
+            drawMat = draw(cannied);
 
             optional<int> leftTargetAngle = leftLineFollower->getPreferedAngle();
             optional<int> rightTargetAngle = rightLineFollower->getPreferedAngle();
@@ -94,7 +93,7 @@ namespace Autodrive
             
             if(targetAngle)
             {
-                lostCounter = 0;
+
                 if(Settings::smoothening == 0)
                 {
                     cmd.setAngle(*targetAngle);
@@ -109,11 +108,7 @@ namespace Autodrive
                     
                     cmd.setAngle(newAngle);
                 }
-            } else if(Settings::goForwardWhenLost && lostCounter++ > Settings::goForwardWhenLost){
-                cmd.setAngle(0);
             }
-
-            drawMat = draw(cannied);
             
 
             return cmd;
