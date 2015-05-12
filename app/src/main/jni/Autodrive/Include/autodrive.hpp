@@ -29,7 +29,7 @@ namespace Autodrive
 
     enum carstatus
     {
-        DETECTING_GAP,PARKING,SEARCHING_FOR_LANES,FOLLOWING_LANES,UNKNOWN
+        DETECTING_GAP,PARKING,SEARCHING_FOR_LANES,FOLLOWING_LANES,UNKNOWN,BASIC_DEBUG,DISTANCE_MEASURED_DEBUG
     };  
     
     carstatus status;
@@ -37,7 +37,8 @@ namespace Autodrive
     void reset()
     {
         //status = SEARCHING_FOR_LANES;
-        status = DETECTING_GAP;
+        //status = DETECTING_GAP;
+        status = DEBUG;
     }
 
     void drive()
@@ -66,8 +67,7 @@ namespace Autodrive
                 if(Parking::parkingProcedure == Parking::PERPENDICULAR_STANDARD){ // select parking procedure
                     status = PARKING;
                 }else{
-                    lastCommand.setSpeed(60);
-                    lastCommand.setAngle(25);
+                    lastCommand.setSpeed(60); // this value breaks the simulation if it is higher than 2
                 }
                 break;
             // -----------
@@ -86,6 +86,15 @@ namespace Autodrive
 
                 */
                 break;
+                
+            case Autodrive::DEBUG:
+                lastCommand = Parking::Debug();
+                break;
+                
+            case Autodrive::DISTANCE_MEASURED_DEBUG:
+                lastCommand = Parking::SetGapLength();
+                break;
+                
             default:
                 break;
         }

@@ -43,6 +43,16 @@ namespace Autodrive {
 			}
 		}
 		
+		//=====================================================
+		command Debug(){
+			if(SensorData::irRearRight > 0){
+				return Maneuver::Stop();
+			}else{
+				return Maneuver::Move(Maneuver::normalSpeed);
+			}
+		}
+		//=====================================================
+		
 		command Park(){
            	//std::cout << "PARKING" << std::endl;
 			command cmd; // so ugly!
