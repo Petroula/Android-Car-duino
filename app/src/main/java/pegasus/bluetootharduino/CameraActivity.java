@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -21,11 +20,6 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import org.opencv.android.NativeCameraView;
 
 
 public class CameraActivity extends Activity implements CvCameraViewListener2, OnGestureListener {
@@ -49,6 +43,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         //mOpenCvCameraView.setMaxFrameSize(240,135);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
+
+
 
         detector = new GestureDetector(this);
 

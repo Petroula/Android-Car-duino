@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:weightSum="1">
+
+
+    <RelativeLayout
+        android:layout_width="290dp"
+        android:layout_height="321dp"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress1"
+            android:text="kp default value set to 0.5"
+            android:textColor="#ff00b9ff"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_above="@+id/kp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/kp"
+            android:indeterminate="false"
+            android:paddingTop="2dp"
+            android:layout_above="@+id/progress2"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="39dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress2"
+            android:text="ki default value set to 0.0"
+            android:textColor="#ff00b9ff"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_above="@+id/ki"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ki"
+            android:indeterminate="false"
+            android:paddingTop="2dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress3"
+            android:text="kd default value set to 0.0"
+            android:textColor="#ff00b9ff"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_above="@+id/kd"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/kd"
+            android:indeterminate="false"
+            android:paddingTop="2dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="49dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress4"
+            android:text="Smoothening"
+            android:textColor="#ff00b9ff"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_above="@+id/smoothening"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/smoothening"
+            android:indeterminate="false"
+            android:paddingTop="2dp"
+            android:layout_above="@+id/progress5"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress5"
+            android:text="Fragment Max Distance"
+            android:textSize="12sp"
+            android:textColor="#ff00b9ff"
+            android:gravity="center"
+            android:layout_above="@+id/fragment"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment"
+            android:indeterminate="false"
+            android:paddingTop="2dp"
+            android:layout_above="@+id/progress6"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress6"
+            android:text="Left Iteration"
+            android:textSize="12sp"
+            android:textColor="#ff00b9ff"
+            android:gravity="center"
+            android:layout_above="@+id/leftIteration"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/leftIteration"
+            android:indeterminate="false"
+            android:paddingTop="2dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress7"
+            android:text="Right Iteration"
+            android:textSize="12sp"
+            android:textColor="#ff00b9ff"
+            android:gravity="center"
+            android:layout_below="@+id/leftIteration"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rightIteration"
+            android:indeterminate="false"
+            android:paddingTop="2dp"
+            android:layout_below="@+id/progress7"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress8"
+            android:text="Max angle"
+            android:textSize="12sp"
+            android:textColor="#ff00b9ff"
+            android:gravity="center"
+            android:layout_below="@+id/rightIteration"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/angle"
+            android:indeterminate="false"
+            android:paddingTop="2dp"
+            android:layout_below="@+id/progress8"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+</LinearLayout>

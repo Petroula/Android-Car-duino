@@ -11,10 +11,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements OnClickListener, CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener {
-
-
-    SeekBar kp, ki, kd;
+public class MainActivity extends Activity implements OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +22,7 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
         ((Button)findViewById(R.id.auto)).setOnClickListener(this);
         ((Button)findViewById(R.id.parking)).setOnClickListener(this);
         ((Button)findViewById(R.id.manual)).setOnClickListener(this);
+        ((Button)findViewById(R.id.advanced)).setOnClickListener(this);
 
         //DISPLAY DEBUG INFORMATION SWITCH
         ((Switch)findViewById(R.id.DisplayDebugSwitch)).setOnCheckedChangeListener(this);
@@ -33,24 +31,6 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
         //USE LEFT LINE SWITCH
         ((Switch)findViewById(R.id.LeftLineSwitch)).setOnCheckedChangeListener(this);
 
-        //PID SEEK BARS
-        kp = (SeekBar)findViewById(R.id.kp);
-        kp.setMax(50);
-        kp.setOnSeekBarChangeListener(this);
-
-        ki = (SeekBar)findViewById(R.id.ki);
-        ki.setMax(50);
-        ki.setOnSeekBarChangeListener(this);
-
-        kd = (SeekBar)findViewById(R.id.kd);
-        kd.setMax(50);
-        kd.setOnSeekBarChangeListener(this);
-
-
-        //PID DESCRIPTIONS
-        ((TextView)findViewById(R.id.progress1)).setText("kp default value set to 0.5");
-        ((TextView)findViewById(R.id.progress2)).setText("ki default value set to 0.0");
-        ((TextView)findViewById(R.id.progress3)).setText("kd default value set to 0.0");
 
     }
 
@@ -62,10 +42,17 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
             case R.id.manual:
                 break;
             case R.id.parking:
+                break;
             case R.id.auto:
                 Intent changeToCamera= new Intent(getApplicationContext(),
                 CameraActivity.class);
                 startActivity(changeToCamera);
+                break;
+            case R.id.advanced:
+                Intent changeToSettings= new Intent(getApplicationContext(),
+                AdvSettingsActivity.class);
+                startActivity(changeToSettings);
+                break;
         }
     }
 
@@ -85,38 +72,5 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
         }
     }
 
-    /* SEEK BAR */
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        Autodrive.setSettingSmoothening(progress);
-        switch (seekBar.getId()) {
-            case R.id.kp:
-                if(fromUser) {
-                    float progressValue = (float) (progress / 10.0);
-                    ((TextView)findViewById(R.id.progress1)).setText("kp value set to " + progressValue);
-                    Autodrive.setPIDkp(progressValue);
-                }
-                break;
-            case R.id.ki:
-                if(fromUser) {
-                    float progressValue = (float) (progress / 10.0);
-                    ((TextView)findViewById(R.id.progress2)).setText("ki value set to " + progressValue);
-                    Autodrive.setPIDki(progressValue);
-                }
-                break;
-            case R.id.kd:
-                if(fromUser) {
-                    float progressValue = (float) (progress / 10.0);
-                    ((TextView)findViewById(R.id.progress3)).setText("kd value set to " + progressValue);
-                    Autodrive.setPIDkd(progressValue);
-                }
-                break;
-        }
-    }
 
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {}
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {}
 }
