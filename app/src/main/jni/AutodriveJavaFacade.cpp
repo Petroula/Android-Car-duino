@@ -26,17 +26,13 @@ extern "C"
     {
         return Autodrive::reset();
     }
-<<<<<<< HEAD
-=======
 
-   
 //   /*----- DEBUGDATA -----*/
 //
 //   TYPE(jint) NAME(getGapLength)()
 //  	{
 //	    return Autodrive::Parking::gapLength;
 //	}
->>>>>>> 709b51fcd1dff950c792a23ebe0f13f3e9978b2b
     
 	/*----- SENSORDATA -----*/
 
