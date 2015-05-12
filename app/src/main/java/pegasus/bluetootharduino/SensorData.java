@@ -33,7 +33,7 @@ public class SensorData {
         }
     }
     static void setUltrasound(UltrasoundSensor sensor, int value){
-        Autodrive.setUltrasound(sensor.toInt(), value);
+        Autodrive.setUltraSound(sensor.toInt(), value);
     };
 
     static void setInfrared(InfraredSensor sensor, int value){
@@ -73,7 +73,7 @@ public class SensorData {
                     sensor = UltrasoundSensor.FRONT_RIGHT;
                     break;
             }
-            setUltrasound(sensor,Integer.parseInt(input.substring(4)));
+            setUltrasound(sensor, Integer.parseInt(input.substring(4)));
         }else if (input.startsWith("IR")){
             int sensorNum = Integer.parseInt(input.substring(2,3));
             InfraredSensor sensor = InfraredSensor.REAR;
