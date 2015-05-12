@@ -45,7 +45,7 @@ namespace Autodrive {
 		
 		//=====================================================
 		command Debug(){
-			if(SensorData::irRearRight > 0){
+			if(SensorData::irFrontRight > 0){
 				return Maneuver::Stop();
 			}else{
 				return Maneuver::Move(Maneuver::slowSpeed);
