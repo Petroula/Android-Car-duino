@@ -23,11 +23,12 @@ namespace Autodrive
         static linef lastLML;
         static linef lastRML;
         for(cv::Vec4i line : lines){
+            int leftx = line[0];
+            int rightx = line[2];
             int boty = line[1];
             int topy = line[3];
             linef vector(line);
-            int leftx = vector.leftMost_x();
-            int rightx = vector.rightMost_x();
+
 
             float dirr = vector.direction_fixed_half();
 
@@ -36,10 +37,11 @@ namespace Autodrive
             if (abs(dir_diff) < 0.f || abs(dir_diff) > 1.f)
                 continue;
 
+            vector.draw(*drawMat, cv::Scalar(0, 0, 255), 5);
 
-            if ( leftx > center + 20)
+            if ( leftx > center + 20) 
             {
-                    if (rightx > leftx && topy > boty && vector.length() > 80) 
+                    if (rightx > leftx && topy > boty && vector.length() > 80)
                     {
                         leftMostLine = linef(line);
                         foundLeft = true;
@@ -83,8 +85,8 @@ namespace Autodrive
     optional<cv::Mat> find_perspective(cv::Mat* matIn, double thresh1 = 300, double thresh2 = 150){
         optional<cv::Mat> birdseye_matrix;
         cv::Mat matCopy = matIn->clone();
-
-        cv::erode(matCopy, matCopy, cv::Mat(), cv::Point(-1, -1), 1);
+        //Might be needed on track
+        //cv::erode(matCopy, matCopy, cv::Mat(), cv::Point(-1, -1), 1);
         cv::Mat cannied;
         cv::Canny(matCopy, cannied, thresh1, thresh2, 3);
         matCopy = cannied;
@@ -139,9 +141,8 @@ namespace Autodrive
 
             birdseye_matrix = cv::getPerspectiveTransform(pts1, pts2);
 
-            POINT offset(0,10);
-            leftImageBorder = linef(POINT(xleft - leftLine.end.x / 2, leftLine.end.y)  + offset, POINT(0, leftLine.begin.y) + offset);
-            rightImageBorder = linef(POINT(xright - (rightLine.end.x - width)/2, rightLine.end.y) + offset, POINT(width, rightLine.begin.y) + offset);
+            leftImageBorder = linef(POINT(xleft - leftLine.end.x / 2, leftLine.end.y +2), POINT(0, leftLine.begin.y+2));
+            rightImageBorder = linef(POINT(xright - (rightLine.end.x - width)/2, rightLine.end.y+2), POINT(width, rightLine.begin.y+2));
             
 #ifdef _VISUAL_WARP
             cv::Mat warped_image;
