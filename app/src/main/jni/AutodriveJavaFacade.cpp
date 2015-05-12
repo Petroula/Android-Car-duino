@@ -33,7 +33,7 @@ extern "C"
         Autodrive::SensorData::image = (cv::Mat*)newMat;
     }
 
-    TYPE(void) NAME(setUltraSound) PARAMS(int sensor,int value){
+    TYPE(void) NAME(setUltrasound) PARAMS(int sensor,int value){
         Autodrive::SensorData::ultrasound[sensor] = value;
 
     }
