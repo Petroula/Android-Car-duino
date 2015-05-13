@@ -35,9 +35,9 @@ namespace Autodrive {
 			if (SensorData::usFrontRight < 1) {		
 				parkingProcedure = PARALLEL_WIDE;
 			} else {
-				if (gapLength > 70 && SensorData::infrared[1] > 0) {		
+				if (gapLength > 100 && SensorData::infrared[1] > 0) {		
 					parkingProcedure = PARALLEL_STANDARD;
-				} else if (gapLength > 30 && gapLength < 71 && SensorData::infrared[1] > 0) {
+				} else if (gapLength > 20 && gapLength < 80 /*&& SensorData::infrared[1] > 0*/) {
 					//std::cout << "values correct" << std::endl;
 					ObstacleFound = true;
 					parkingProcedure = PERPENDICULAR_STANDARD;
