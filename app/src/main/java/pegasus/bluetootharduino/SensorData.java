@@ -50,6 +50,10 @@ public class SensorData {
         return Autodrive.irFrontAutodrive();
     }
 
+    static int usFrontAutodrive() {
+        return Autodrive.usFrontAutodrive();
+    }
+
     static void setUltrasound(UltrasoundSensor sensor, int value){
         int sensorNr = sensor.toInt();
         Autodrive.setUltrasound(0, 5);
@@ -65,6 +69,7 @@ public class SensorData {
     }
 
     static void setInfrared(InfraredSensor sensor, int value){
+        int sensorNr = sensor.toInt();
         Autodrive.setInfrared(sensor.toInt(),5);
 
         if (sensorNr == 0) {
