@@ -87,6 +87,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         debugConsole.append("Obstacle Found: " + ((SensorData.foundObstacle()) ? "true" : "false") + "\n");
         debugConsole.append("irFrontAutodrive: " + String.valueOf(SensorData.irFrontAutodrive()) + "\n");
         debugConsole.append("usFrontAutodrive: " + String.valueOf(SensorData.usFrontAutodrive()) + "\n");
+        debugConsole.append("Gap Length: " + SensorData.getGapLength() + "\n");
     }
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {

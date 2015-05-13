@@ -71,6 +71,10 @@ public class SensorData {
         CameraActivity.updateDebuggingConsole();
     }
 
+    static int getGapLength() {
+        return Autodrive.getGapLength();
+    }
+
     static void handleInput(String input){
         input = input.replaceAll("\\r|\\n", "");
 
