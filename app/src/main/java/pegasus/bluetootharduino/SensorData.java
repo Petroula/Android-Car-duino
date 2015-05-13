@@ -12,36 +12,6 @@ public class SensorData {
             razorHeading = 0,
             encoderPulses = 0;
 
-    public enum UltrasoundSensor {
-        FRONT(0),
-        FRONT_RIGHT(1),
-        REAR(2);
-
-        private final int value;
-        private UltrasoundSensor(int value) {
-            this.value = value;
-        }
-
-        public int toInt() {
-            return value;
-        }
-    };
-
-    public enum InfraredSensor {
-        SIDE_FRONT(0),
-        SIDE_REAR(1),
-        REAR(2);
-
-        private final int value;
-        private InfraredSensor(int value) {
-            this.value = value;
-        }
-
-        public int toInt() {
-            return value;
-        }
-    }
-
     static boolean foundObstacle() {
         return Autodrive.hasFoundObstacle();
     }
@@ -54,29 +24,27 @@ public class SensorData {
         return Autodrive.usFrontAutodrive();
     }
 
-    static void setUltrasound(UltrasoundSensor sensor, int value){
-        int sensorNr = sensor.toInt();
-        Autodrive.setUltrasound(0, 5);
+    static void setUltrasound(int sensor, int value){
+        Autodrive.setUltrasound(0, value);
 
-        if (sensorNr == 0) {
+        if (sensor == 0) {
             ultrasonicFront = value;
-        } else if (sensorNr == 1) {
+        } else if (sensor == 1) {
             ultrasonicFrontRight = value;
-        } else if (sensorNr == 2) {
+        } else if (sensor == 2) {
             ultrasonicRear = value;
         }
         CameraActivity.updateDebuggingConsole();
     }
 
-    static void setInfrared(InfraredSensor sensor, int value){
-        int sensorNr = sensor.toInt();
-        Autodrive.setInfrared(sensor.toInt(),5);
+    static void setInfrared(int sensor, int value){
+        Autodrive.setInfrared(sensor,5);
 
-        if (sensorNr == 0) {
+        if (sensor == 0) {
             infraredSideFront = value;
-        } else if (sensorNr == 1) {
+        } else if (sensor == 1) {
             infraredSideRear = value;
-        } else if (sensorNr == 2) {
+        } else if (sensor == 2) {
             infraredRear = value;
         }
         CameraActivity.updateDebuggingConsole();
@@ -114,28 +82,10 @@ public class SensorData {
             setRazorHeading(Integer.parseInt(input.substring(4)));
         }else if (input.startsWith("US")){
             int sensorNum = Integer.parseInt(input.substring(2,3));
-            UltrasoundSensor sensor = UltrasoundSensor.REAR;
-            switch (sensorNum){
-                case 0:
-                    sensor = UltrasoundSensor.FRONT;
-                    break;
-                case 1:
-                    sensor = UltrasoundSensor.FRONT_RIGHT;
-                    break;
-            }
-            setUltrasound(sensor, Integer.parseInt(input.substring(4)));
+            setUltrasound(sensorNum - 1, Integer.parseInt(input.substring(4)));
         } else if (input.startsWith("IR")){
             int sensorNum = Integer.parseInt(input.substring(2,3));
-            InfraredSensor sensor = InfraredSensor.REAR;
-            switch (sensorNum){
-                case 0:
-                    sensor = InfraredSensor.SIDE_FRONT;
-                    break;
-                case 1:
-                    sensor = InfraredSensor.SIDE_REAR;
-                    break;
-            }
-            setInfrared(sensor,Integer.parseInt(input.substring(4)));
+            setInfrared(sensorNum - 1,Integer.parseInt(input.substring(4)));
         }
     }
 }
