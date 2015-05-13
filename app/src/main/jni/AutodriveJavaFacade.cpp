@@ -49,6 +49,10 @@ extern "C"
         return Autodrive::SensorData::ultrasound[0];
     }
     
+    TYPE(jint)NAME(getManeuver)(){
+        return Autodrive::Maneuver::mInt;
+    }
+    
 	/*----- SENSORDATA -----*/
 
     TYPE(void) NAME(setImage) PARAMS(long newMat){

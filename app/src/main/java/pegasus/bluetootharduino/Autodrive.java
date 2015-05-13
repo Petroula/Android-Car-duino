@@ -22,6 +22,7 @@ public class Autodrive
     public static native boolean hasFoundObstacle();
     public static native int irFrontAutodrive();
     public static native int usFrontAutodrive();
+    public static native int getManeuver();
 
 /*----- SENSORDATA -----*/
     public static native void setImage(long matAddrRgba);

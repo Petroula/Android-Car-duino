@@ -7,6 +7,8 @@
 namespace Autodrive {
 
 	namespace Maneuver{
+		
+		int mInt = 0;
 
 		int slowSpeed = 50;
 		int normalSpeed = 60;
@@ -267,17 +269,19 @@ namespace Autodrive {
 						}else{
 							return Stop();
 						}*/
+						mInt = 0;
 						currentManeuver = BACKWARDS_RIGHT;
-						return Stop();
+						return Move(slowSpeed * -1);
 		
 					case BACKWARDS_RIGHT:
 						//std::cout << "BACKWARDS_RIGHT" << std::endl;
-						cmd.setSpeed(slowSpeed * -1);
+						mInt = 1;
+						
 						if(Status::HasTurnedAngle(90)){
 							currentManeuver = DONE;
 							return command();
 						}else{
-							return Turn(cmd,right);
+							return Turn(right);
 						}
 						// return cmd;
 						/*if(Status::EmergencyStop(back)){
@@ -289,6 +293,7 @@ namespace Autodrive {
 		
 		            case BACKWARDS:
 						//std::cout << "BACKWARDS" << std::endl;
+						mInt = 2;
 		                if(Status::HasTraveledDistance(1)){
 							currentManeuver = DONE;
 							return Stop();
