@@ -37,9 +37,9 @@ namespace Autodrive
     void reset()
     {
         //status = SEARCHING_FOR_LANES;
-        //status = DETECTING_GAP;
+        status = DETECTING_GAP;
         //status = DEBUG;
-        status = DISTANCE_MEASURED_DEBUG;
+        //status = DISTANCE_MEASURED_DEBUG;
     }
 
     void drive()
@@ -68,7 +68,7 @@ namespace Autodrive
                 if(Parking::parkingProcedure == Parking::PERPENDICULAR_STANDARD){ // select parking procedure
                     status = PARKING;
                 }else{
-                    lastCommand.setSpeed(60); // this value breaks the simulation if it is higher than 2
+                    lastCommand.setSpeed(40); // this value breaks the simulation if it is higher than 2
                 }
                 break;
             // -----------
