@@ -12,7 +12,7 @@ namespace Autodrive
             REAR = 2
         };
 
-        double PULSES_PER_CM = 1;     //to be determined experimentally - 1 for sim
+        double PULSES_PER_CM = 1;     //to be determined experimentally 1 for sim
         int ultrasound[] = { 0, 0, 0 }; // front, frontright, rear
         int infrared[] = { 0, 0, 0 };   // frontright, rearright, rear
         long encoderPulses = 0;

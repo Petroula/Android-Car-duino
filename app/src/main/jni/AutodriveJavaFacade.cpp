@@ -41,7 +41,12 @@ extern "C"
     
     TYPE(jint)NAME(irFrontAutodrive)()
     {
-        return Autodrive::SensorData::irFrontRight;
+        return Autodrive::SensorData::infrared[0];
+    }
+    
+    TYPE(jint)NAME(usFrontAutodrive)()
+    {
+        return Autodrive::SensorData::ultrasonic[0];
     }
     
 	/*----- SENSORDATA -----*/
