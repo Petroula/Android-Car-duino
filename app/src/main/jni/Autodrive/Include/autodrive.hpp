@@ -38,8 +38,8 @@ namespace Autodrive
     {
         //status = SEARCHING_FOR_LANES;
         //status = DETECTING_GAP;
-        status = DEBUG;
-        //status = DISTANCE_MEASURED_DEBUG
+        //status = DEBUG;
+        status = DISTANCE_MEASURED_DEBUG
     }
 
     void drive()
