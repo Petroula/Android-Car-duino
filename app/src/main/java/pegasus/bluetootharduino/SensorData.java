@@ -52,8 +52,7 @@ public class SensorData {
 
     static void setUltrasound(UltrasoundSensor sensor, int value){
         int sensorNr = sensor.toInt();
-        Autodrive.setUltrasound(sensorNr, value);
-        Autodrive.setUltrasound(sensor.toInt(), value);
+        Autodrive.setUltrasound(0, 5);
 
         if (sensorNr == 0) {
             ultrasonicFront = value;
@@ -66,9 +65,7 @@ public class SensorData {
     }
 
     static void setInfrared(InfraredSensor sensor, int value){
-        int sensorNr = sensor.toInt();
-        Autodrive.setInfrared(sensorNr,value);
-        Autodrive.setInfrared(sensor.toInt(),value);
+        Autodrive.setInfrared(sensor.toInt(),5);
 
         if (sensorNr == 0) {
             infraredSideFront = value;
