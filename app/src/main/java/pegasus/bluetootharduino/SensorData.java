@@ -3,14 +3,14 @@ package pegasus.bluetootharduino;
 //TODO: We might want to remove this class completely and just use something like Autodrive.SensorData instead
 public class SensorData {
     public static int ultrasonicFront = 0,
-            ultrasonicFrontRight = 0,
-            ultrasonicRear = 0,
-            infraredSideFront = 0,
-            infraredSideRear = 0,
-            infraredRear = 0,
-            gyroHeading = 0,
-            razorHeading = 0,
-            encoderPulses = 0;
+        ultrasonicFrontRight = 0,
+        ultrasonicRear = 0,
+        infraredSideFront = 0,
+        infraredSideRear = 0,
+        infraredRear = 0,
+        gyroHeading = 0,
+        razorHeading = 0,
+        encoderPulses = 0;
 
     static boolean foundObstacle() {
         return Autodrive.hasFoundObstacle();
@@ -38,7 +38,7 @@ public class SensorData {
     }
 
     static void setInfrared(int sensor, int value){
-        Autodrive.setInfrared(sensor,5);
+        Autodrive.setInfrared(sensor, value);
 
         if (sensor == 0) {
             infraredSideFront = value;
