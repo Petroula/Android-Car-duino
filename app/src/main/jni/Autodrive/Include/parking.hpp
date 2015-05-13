@@ -21,7 +21,7 @@ namespace Autodrive {
 		
 		// measure the length of a gap
 	    void SetGapLength(){
-	        if(SensorData::irRearRight < 1){
+	        if(SensorData::infrared[1] < 1){
 				gapLength = SensorData::encoderDistance() - gapStart;
 			}else{
 				gapStart = SensorData::encoderDistance();
@@ -35,9 +35,9 @@ namespace Autodrive {
 			if (SensorData::usFrontRight < 1) {		
 				parkingProcedure = PARALLEL_WIDE;
 			} else {
-				if (gapLength > 70 && SensorData::irRearRight > 0) {		
+				if (gapLength > 70 && SensorData::infrared[1] > 0) {		
 					parkingProcedure = PARALLEL_STANDARD;
-				} else if (gapLength > 30 && gapLength < 71 && SensorData::irRearRight > 0) {
+				} else if (gapLength > 30 && gapLength < 71 && SensorData::infrared[1] > 0) {
 					//std::cout << "values correct" << std::endl;
 					ObstacleFound = true;
 					parkingProcedure = PERPENDICULAR_STANDARD;
