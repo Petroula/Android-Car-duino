@@ -63,13 +63,12 @@ namespace Autodrive
                 
             // debug only! will be merged with lane following   
             case Autodrive::DETECTING_GAP:
-                Parking::SetGapLength();
-                Parking::SetParkingProcedure();
-                if(Parking::parkingProcedure == Parking::PERPENDICULAR_STANDARD){ // select parking procedure
+                lastCommand = Parking::SetParkingProcedure();
+                /*if(Parking::parkingProcedure == Parking::PERPENDICULAR_STANDARD){ // select parking procedure
                     status = PARKING;
                 }else{
                     lastCommand.setSpeed(40); // this value breaks the simulation if it is higher than 2
-                }
+                }*/
                 break;
             // -----------
             

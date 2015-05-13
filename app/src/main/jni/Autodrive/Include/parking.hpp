@@ -29,21 +29,31 @@ namespace Autodrive {
 	    }
 	
 	    // defines the procedure to engage depending on the size of a  gap
-		void SetParkingProcedure() {
+		command SetParkingProcedure() {
 			//std::cout << gapLength << std::endl;						
 	        // return the appropriate parking procedure
-			if (SensorData::usFrontRight < 1) {		
+			SetGapLength();
+			/*if (SensorData::usFrontRight < 1) {		
 				parkingProcedure = PARALLEL_WIDE;
 			} else {
 				if (gapLength > 100 && SensorData::infrared[1] > 0) {		
 					parkingProcedure = PARALLEL_STANDARD;
-				} else if (gapLength > 20 && gapLength < 80 /*&& SensorData::infrared[1] > 0*/) {
+				} else if (gapLength > 20 && gapLength < 80 && SensorData::infrared[1] > 0) {
 					//std::cout << "values correct" << std::endl;
 					ObstacleFound = true;
 					parkingProcedure = PERPENDICULAR_STANDARD;
 				} else {
 					parkingProcedure = NO_PROCEDURE;
 				}
+			}*/
+			
+			if (gapLength > 40 && SensorData::infrared[1] > 0) {
+					//std::cout << "values correct" << std::endl;
+					ObstacleFound = true;
+					parkingProcedure = PERPENDICULAR_STANDARD;
+					return Maneuver::Stop();
+			}else{
+				return Maneuver::Move(Maneuver::slowSpeed);
 			}
 		}
 		

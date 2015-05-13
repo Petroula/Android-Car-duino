@@ -261,12 +261,14 @@ namespace Autodrive {
 					
 					case NO_MANEUVER:
 						//std::cout << "NO_MANEUVER" << std::endl;
-						if(Status::IsStoped()){
+						/*if(Status::IsStoped()){
 							currentManeuver = BACKWARDS_RIGHT;
 							return command();
 						}else{
 							return Stop();
-						}
+						}*/
+						currentManeuver = BACKWARDS_RIGHT;
+						return Stop();
 		
 					case BACKWARDS_RIGHT:
 						//std::cout << "BACKWARDS_RIGHT" << std::endl;
