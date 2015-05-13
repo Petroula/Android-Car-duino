@@ -34,6 +34,16 @@ extern "C"
 	    return Autodrive::Parking::gapLength;
 	}
     
+    TYPE(jboolean)NAME(hasFoundObstacle)()
+    {
+        return Autodrive::Parking::ObstacleFound;
+    }
+    
+    TYPE(jint)NAME(irFrontAutodrive)()
+    {
+        return Autodrive::SensorData::irFrontRight;
+    }
+    
 	/*----- SENSORDATA -----*/
 
     TYPE(void) NAME(setImage) PARAMS(long newMat){

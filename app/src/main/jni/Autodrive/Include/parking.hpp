@@ -18,6 +18,7 @@ namespace Autodrive {
 		
 		//debugStop
 		bool debugStop = false;
+		bool ObstacleFound = false;
 		
 		// measure the length of a gap
 	    void SetGapLength(){
@@ -49,6 +50,7 @@ namespace Autodrive {
 		//=====================================================
 		command Debug(){
 			if(SensorData::irFrontRight > 0 || SensorData::irRearRight > 0){
+				ObstacleFound = true;
 				debugStop = true;
 				return Maneuver::Stop();
 			}else{
