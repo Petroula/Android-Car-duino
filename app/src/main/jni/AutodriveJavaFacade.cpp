@@ -46,7 +46,7 @@ extern "C"
     
     TYPE(jint)NAME(usFrontAutodrive)()
     {
-        return Autodrive::SensorData::ultrasonic[0];
+        return Autodrive::SensorData::ultrasound[0];
     }
     
 	/*----- SENSORDATA -----*/
