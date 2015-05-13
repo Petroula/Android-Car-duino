@@ -62,7 +62,7 @@ namespace Autodrive {
 		
 		command DebugGapLength(){
 			SetGapLength();
-			if(gapLength > 6){
+			if(gapLength > 50){
 				return Maneuver::Stop();
 			}else{
 				return Maneuver::Move(Maneuver::normalSpeed);
