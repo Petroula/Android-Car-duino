@@ -64,7 +64,7 @@ namespace Autodrive {
 				return Maneuver::Stop();
 			}else{
 				if(!ObstacleFound){
-					return Maneuver::Move(Maneuver::slowSpeed);
+					return Maneuver::Move(Maneuver::slowSpeed * -1);
 				}else{
 					return Maneuver::Stop();
 				}
