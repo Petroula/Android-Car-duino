@@ -8,8 +8,8 @@ namespace Autodrive {
 
 	namespace Maneuver{
 
-		int slowSpeed = 60;
-		int normalSpeed = 70;
+		int slowSpeed = 50;
+		int normalSpeed = 60;
 
 		// measuring distance traveled
 		bool measuringDistance = false;
