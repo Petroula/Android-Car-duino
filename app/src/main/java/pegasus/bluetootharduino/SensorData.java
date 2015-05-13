@@ -25,7 +25,7 @@ public class SensorData {
     }
 
     static void setUltrasound(int sensor, int value){
-        Autodrive.setUltrasound(0, value);
+        Autodrive.setUltrasound(sensor, value);
 
         if (sensor == 0) {
             ultrasonicFront = value;
