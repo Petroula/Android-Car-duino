@@ -17,7 +17,7 @@ using namespace cv;
 
 extern "C" 
 {
-    TYPE(void) NAME (drive) ()
+    TYPE(void) NAME (drive)()
     {
         Autodrive::drive();
     }
@@ -25,6 +25,11 @@ extern "C"
     TYPE(void) NAME(reset)()
     {
         return Autodrive::reset();
+    }
+
+    TYPE(void) NAME(setParkingMode)()
+    {
+        return Autodrive::setStatus(Autodrive::DETECTING_GAP);
     }
 
    /*----- DEBUGDATA -----*/

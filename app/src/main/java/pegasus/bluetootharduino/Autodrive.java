@@ -16,6 +16,7 @@ public class Autodrive
 
     public static native void reset();
     public static native void drive();
+    public static native void setParkingMode();
     
 /*----- DEBUGDATA -----*/
     public static native int getGapLength();
