@@ -1,22 +1,22 @@
 #pragma once
 #include <string.h>
-#include "imageprocessor.hpp"
 
 namespace Autodrive {
 
     struct command{
         bool changedAngle = false;
         bool changedSpeed = false;
-        int angle = 0;
-        int speed = 0;
-        inline void setSpeed(int newSpeed)
+        double angle = 0;
+        double speed = 0;
+        inline void setSpeed(double newSpeed)
         {
+            assert(newSpeed >= -1.0 && newSpeed <= 1.0);
             changedSpeed = true;
             speed = newSpeed;
         }
-        inline void setAngle(int newAngle)
+        inline void setAngle(double newAngle)
         {
-            assert(angle >= -25 && angle <= 25);
+            assert(newAngle >= -1.0 && newAngle <= 1.0);
             changedAngle = true;
             angle = newAngle;
         }

@@ -126,9 +126,9 @@ public class Bluetooth {
         try {
                 String text = "";
                 if(Autodrive.speedChanged())
-                    text +=nt.encodedNetstring("m" + String.valueOf(Autodrive.getTargetSpeed()));
+                    text +=nt.encodedNetstring("m" + String.valueOf(Autodrive.getConvertedSpeed()));
                 if(Autodrive.angleChanged())
-                    text += nt.encodedNetstring("t" + String.valueOf(Autodrive.getTargetAngle()));
+                    text += nt.encodedNetstring("t" + String.valueOf(Autodrive.getConvertedAngle()));
 
                 if(!text.isEmpty()) {
                     if (socket.isConnected()) {

@@ -75,18 +75,18 @@ namespace Autodrive
 
             drawMat = draw(cannied);
 
-            optional<int> leftTargetAngle = leftLineFollower->getPreferedAngle();
+            //optional<int> leftTargetAngle = leftLineFollower->getPreferedAngle();
             optional<int> rightTargetAngle = rightLineFollower->getPreferedAngle();
             optional<int> targetAngle = nullptr;
 
-            if (leftTargetAngle && rightTargetAngle && Settings::useLeftLine)
+            /*if (leftTargetAngle && rightTargetAngle && Settings::useLeftLine)
             {
                 // Give the right line just a bit more priority since it seems more reliable
                 targetAngle = weighted_average(*rightTargetAngle, *leftTargetAngle, 3);
             } else if (leftTargetAngle && Settings::useLeftLine)
             {
                 targetAngle = *leftTargetAngle;
-            } else if (rightTargetAngle)
+            } else*/ if (rightTargetAngle)
             {
                 targetAngle = *rightTargetAngle;
             }
@@ -96,7 +96,7 @@ namespace Autodrive
 
                 if(Settings::smoothening == 0)
                 {
-                    cmd.setAngle(*targetAngle);
+                    cmd.setAngle(*targetAngle / 25.0);
                 }
                 else
                 {
@@ -106,7 +106,7 @@ namespace Autodrive
                     if(prevDirs.size() > Settings::smoothening)
                         prevDirs.erase(prevDirs.begin());
                     
-                    cmd.setAngle(newAngle);
+                    cmd.setAngle(newAngle  / 25.0);
                 }
             }
             

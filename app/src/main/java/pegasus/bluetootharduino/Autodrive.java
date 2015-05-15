@@ -16,8 +16,14 @@ public class Autodrive
 
     public static native void reset();
     public static native void drive();
-
-	public static native int getGapLength();
+    public static native void setParkingMode();
+    
+/*----- DEBUGDATA -----*/
+    public static native int getGapLength();
+    public static native boolean hasFoundObstacle();
+    public static native int irFrontAutodrive();
+    public static native int usFrontAutodrive();
+    public static native int getManeuver();
 
 /*----- SENSORDATA -----*/
     public static native void setImage(long matAddrRgba);
@@ -30,8 +36,16 @@ public class Autodrive
 /*----- RESULTING AUTODRIVE DATA -----*/
     public static native boolean speedChanged();
     public static native boolean angleChanged();
-    public static native int getTargetSpeed();
-    public static native int getTargetAngle();
+    private static native double getTargetSpeed();
+    private static native double getTargetAngle();
+
+    public static int getConvertedSpeed(){
+        return (int)(getTargetSpeed() * carConfiguration.maxSpeed);
+    }
+
+    public static int getConvertedAngle(){
+        return (int)(getTargetAngle() * carConfiguration.maxAngle);
+    }
 
 /*---- SETTINGS -----*/
     public static native void setSettingLightNormalization(boolean on);
