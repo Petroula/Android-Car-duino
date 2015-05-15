@@ -39,18 +39,19 @@ public class Bluetooth {
         //check if bluetooth on device is enabled
         adapter = BluetoothAdapter.getDefaultAdapter();
 
-        if (!adapter.isEnabled()) {
+        if (adapter == null || !adapter.isEnabled()) {
             btEnabled = false;
         }
-
-        // pairs device
-        Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
-        if(pairedDevices.size() > 0) {
-            for(BluetoothDevice device : pairedDevices) {
-                if(device.getName().equals("carduino")) {
-                    MiDevice = device;
-                    // data.setText("device paired");
-                    break;
+        else{
+            // pairs device
+            Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
+            if(pairedDevices.size() > 0) {
+                for(BluetoothDevice device : pairedDevices) {
+                    if(device.getName().equals("carduino")) {
+                        MiDevice = device;
+                        // data.setText("device paired");
+                        break;
+                    }
                 }
             }
         }

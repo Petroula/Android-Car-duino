@@ -56,20 +56,12 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
 
         bt.checkBT();
 
-        //if device does not support bluetooth (not really needed)
-        if(bt.adapter == null) {
-            Intent enable = new Intent(String.valueOf(BluetoothAdapter.ERROR));
-            startActivityForResult(enable,  0);
-        }
-
-        if(!bt.btEnabled) {
-            Intent enable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enable,  1);
-        }
-        try {
-            bt.runBT();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(bt.btEnabled) {
+            try {
+                bt.runBT();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
