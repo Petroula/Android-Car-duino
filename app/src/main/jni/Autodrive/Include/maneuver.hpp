@@ -279,7 +279,7 @@ namespace Autodrive {
 						
 						if(Status::HasTurnedAngle(90)){
 							currentManeuver = DONE;
-							return command();
+							return Stop();
 						}else{
 							return Turn(right);
 						}
