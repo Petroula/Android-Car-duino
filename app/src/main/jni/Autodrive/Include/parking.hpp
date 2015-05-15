@@ -1,7 +1,7 @@
 #pragma once
 #include <string.h>
 #include <math.h>
-#include "imageprocessor/command.hpp"
+#include "command.hpp"
 #include "sensordata.hpp"
 #include "maneuver.hpp"
 
@@ -21,7 +21,7 @@ namespace Autodrive {
 		
 		// measure the length of a gap
 	    void SetGapLength(){
-	        if(SensorData::infrared[1] < 1){
+	        if(SensorData::infrared.rearright < 1){
 				gapLength = SensorData::encoderDistance() - gapStart;
 			}else{
 				gapStart = SensorData::encoderDistance();
@@ -47,7 +47,7 @@ namespace Autodrive {
 				}
 			}*/
 			
-			if (gapLength > 40 && SensorData::infrared[1] > 0) {
+			if (gapLength > 40 && SensorData::infrared.rearright > 0) {
 					//std::cout << "values correct" << std::endl;
 					ObstacleFound = true;
 					parkingProcedure = PERPENDICULAR_STANDARD;
@@ -59,7 +59,7 @@ namespace Autodrive {
 		
 		//=====================================================
 		command Debug(){
-			if(SensorData::infrared[0] > 0 || SensorData::infrared[1] > 0){
+			if(SensorData::infrared.frontright > 0 || SensorData::infrared.rearright > 0){
 				ObstacleFound = true;
 				return Maneuver::Stop();
 			}else{

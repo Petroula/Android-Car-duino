@@ -96,7 +96,7 @@ namespace Autodrive
 
                 if(Settings::smoothening == 0)
                 {
-                    cmd.setAngle(*targetAngle);
+                    cmd.setAngle(*targetAngle / 25.0);
                 }
                 else
                 {
@@ -106,7 +106,7 @@ namespace Autodrive
                     if(prevDirs.size() > Settings::smoothening)
                         prevDirs.erase(prevDirs.begin());
                     
-                    cmd.setAngle(newAngle);
+                    cmd.setAngle(newAngle  / 25.0);
                 }
             }
             

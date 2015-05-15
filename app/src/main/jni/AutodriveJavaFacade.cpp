@@ -41,12 +41,12 @@ extern "C"
     
     TYPE(jint)NAME(irFrontAutodrive)()
     {
-        return Autodrive::SensorData::infrared[0];
+        return Autodrive::SensorData::infrared.frontright;
     }
     
     TYPE(jint)NAME(usFrontAutodrive)()
     {
-        return Autodrive::SensorData::ultrasound[0];
+        return Autodrive::SensorData::ultrasound.front;
     }
     
     TYPE(jint)NAME(getManeuver)(){
@@ -60,12 +60,36 @@ extern "C"
     }
 
     TYPE(void) NAME(setUltrasound) PARAMS(int sensor,int value){
-        Autodrive::SensorData::ultrasound[sensor] = value;
-
+        switch (sensor)
+        {
+            case 0:
+                Autodrive::SensorData::ultrasound.front = value;
+                break;
+            case 1:
+                Autodrive::SensorData::ultrasound.frontright = value;
+                break;
+            default:
+            case 2:
+                Autodrive::SensorData::ultrasound.rear = value;
+                break;
+        }
     }
 
     TYPE(void) NAME(setInfrared) PARAMS(int sensor,int value){
-        Autodrive::SensorData::infrared[sensor] = value;
+        switch (sensor)
+        {
+            case 0:
+                Autodrive::SensorData::infrared.frontright = value;
+                break;
+            case 1:
+                Autodrive::SensorData::infrared.rearright = value;
+                break;
+            default:
+            case 2:
+                Autodrive::SensorData::infrared.rear = value;
+                break;
+        }
+
     }
 
     TYPE(void) NAME(setEncoderPulses) PARAMS(long value){
@@ -93,12 +117,12 @@ extern "C"
         return Autodrive::angleChanged();
     }
 
-    TYPE(jint) NAME(getTargetSpeed)()
+    TYPE(jdouble) NAME(getTargetSpeed)()
     {
         return Autodrive::getSpeed();
     }
 
-    TYPE(jint) NAME(getTargetAngle)()
+    TYPE(jdouble) NAME(getTargetAngle)()
     {
         return Autodrive::getAngle();
     }

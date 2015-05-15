@@ -35,8 +35,16 @@ public class Autodrive
 /*----- RESULTING AUTODRIVE DATA -----*/
     public static native boolean speedChanged();
     public static native boolean angleChanged();
-    public static native int getTargetSpeed();
-    public static native int getTargetAngle();
+    private static native double getTargetSpeed();
+    private static native double getTargetAngle();
+
+    public static int getConvertedSpeed(){
+        return (int)(getTargetSpeed() * carConfiguration.maxSpeed);
+    }
+
+    public static int getConvertedAngle(){
+        return (int)(getTargetAngle() * carConfiguration.maxAngle);
+    }
 
 /*---- SETTINGS -----*/
     public static native void setSettingLightNormalization(boolean on);

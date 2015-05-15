@@ -17,12 +17,12 @@ namespace Autodrive
         return lastCommand.changedAngle;
     }
 
-    int getSpeed()
+    double getSpeed()
     {
         return lastCommand.speed;
     }
 
-    float getAngle()
+    double getAngle()
     {
         return lastCommand.angle;
     }
@@ -52,7 +52,7 @@ namespace Autodrive
             case Autodrive::SEARCHING_FOR_LANES:
                 if (Autodrive::imageProcessor::init_processing(Autodrive::SensorData::image))
                 {
-                    lastCommand.setSpeed(2);
+                    lastCommand.setSpeed(0.28);
                     status = FOLLOWING_LANES;
                 }
                 break;
@@ -67,7 +67,7 @@ namespace Autodrive
                 /*if(Parking::parkingProcedure == Parking::PERPENDICULAR_STANDARD){ // select parking procedure
                     status = PARKING;
                 }else{
-                    lastCommand.setSpeed(40); // this value breaks the simulation if it is higher than 2
+                    lastCommand.setSpeed(0.4); // this value breaks the simulation if it is higher than 2
                 }*/
                 break;
             // -----------
@@ -77,14 +77,6 @@ namespace Autodrive
                 break; 
                 
             case Autodrive::UNKNOWN:
-                /*
-                
-                EXAMPLE:
-
-                if(Autodrive::SensorData::infrared[1] < 10)
-                    lastCommand.setSpeed(0);
-
-                */
                 break;
                 
             case Autodrive::DEBUG:

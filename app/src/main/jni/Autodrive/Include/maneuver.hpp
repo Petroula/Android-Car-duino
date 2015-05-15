@@ -1,7 +1,7 @@
 #pragma once
 #include <string.h>
 #include <math.h>
-#include "imageprocessor/command.hpp"
+#include "command.hpp"
 #include "sensordata.hpp"
 
 namespace Autodrive {
@@ -10,8 +10,8 @@ namespace Autodrive {
 		
 		int mInt = 0;
 
-		int slowSpeed = 50;
-		int normalSpeed = 60;
+		double slowSpeed = 0.5;
+		double normalSpeed = 0.6;
 
 		// measuring distance traveled
 		bool measuringDistance = false;
@@ -39,7 +39,7 @@ namespace Autodrive {
 		}
 
 		// sets the car speed
-		command SetSpeed(int speed) {
+		command SetSpeed(double speed) {
 			command cmd;
 			cmd.setSpeed(speed);
 			return cmd;
@@ -54,7 +54,7 @@ namespace Autodrive {
 		}
 
 		// turns the car
-		command Turn(int angle) {
+		command Turn(double angle) {
 			command cmd;
 			cmd.setSpeed(slowSpeed);
 			cmd.setAngle(angle);
@@ -64,18 +64,18 @@ namespace Autodrive {
 		command Turn(direction direction) {
 			command cmd;
 			if (direction == right) {
-				cmd.setAngle(25);
+				cmd.setAngle(1.0);
 			} else {
-				cmd.setAngle(-25);
+				cmd.setAngle(-1.0);
 			}
 			return cmd;
 		}
 		
 		command Turn(command cmd, direction direction) {
 			if (direction == right) {
-				cmd.setAngle(25);
+				cmd.setAngle(1.0);
 			} else {
-				cmd.setAngle(-25);
+				cmd.setAngle(-1.0);
 			}
 			return cmd;
 		}
@@ -133,9 +133,9 @@ namespace Autodrive {
 
 			// stops the car if it gets too close to something, provided a direction to pay attention too
 			bool EmergencyStop(direction direction){
-				if(SensorData::infrared[2] > -1 && SensorData::infrared[2] < 2.5 && direction == back){
+				if(SensorData::infrared.rear > -1 && SensorData::infrared.rear < 2.5 && direction == back){
 					return true;
-				}else if(((SensorData::ultrasound[0] > -1 && SensorData::ultrasound[0] < 2) || (SensorData::ultrasound[1] > -1 && SensorData::ultrasound[1] <2)) && direction == front){
+				}else if(((SensorData::ultrasound.front > -1 && SensorData::ultrasound.front < 2) || (SensorData::ultrasound.frontright > -1 && SensorData::ultrasound.frontright <2)) && direction == front){
 					return true;
 		        }else{
 		        	return false;
