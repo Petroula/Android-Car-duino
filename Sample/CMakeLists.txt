@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+project( Sample )
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated -Wall -Werror -Wextra -Wfloat-equal -Wshadow -Wpointer-arith -Wwrite-strings -Wpacked -pipe")
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+add_executable(Sample main.cpp)
+target_link_libraries( Sample ${OpenCV_LIBS} )
