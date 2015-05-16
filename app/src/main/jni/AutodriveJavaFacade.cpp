@@ -44,6 +44,11 @@ extern "C"
         return Autodrive::Parking::ObstacleFound;
     }
     
+    TYPE(jboolean)NAME(gapDetected)()
+    {
+        return Autodrive::Parking::GapFound;
+    }
+    
     TYPE(jint)NAME(irFrontAutodrive)()
     {
         return Autodrive::SensorData::infrared.frontright;

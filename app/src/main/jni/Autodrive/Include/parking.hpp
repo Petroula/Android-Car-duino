@@ -16,7 +16,7 @@ namespace Autodrive {
 		int gapLength = 0;
 		int gapStart = 0;
 		
-		//debugStop
+		/* Debug */
 		bool ObstacleFound = false;
 		bool GapFound = false;
 		
