@@ -1,7 +1,6 @@
 package pegasus.bluetootharduino;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,10 +20,6 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
 import java.io.IOException;
-import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 public class CameraActivity extends Activity implements CvCameraViewListener2, OnGestureListener {
@@ -36,7 +31,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
     GestureDetector detector;
     AutomaticCarDriver driver = new AutomaticCarDriver();
 
-    Bluetooth bt = new Bluetooth();
+    BluetoothConnection bt = new BluetoothConnection();
+    BluetoothPairing blue = new BluetoothPairing();
 
     @SuppressWarnings("deprecation")
     @Override
@@ -54,9 +50,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
 
         debugConsole = (TextView) findViewById(R.id.debugConsole);
 
-        bt.checkBT();
-
-        if(bt.btEnabled) {
+        if(blue.btEnabled) {
             try {
                 bt.runBT();
             } catch (IOException e) {
@@ -180,4 +174,14 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         return detector.onTouchEvent(ev);
     }
 
+    /** Changes the behaviour of the back button */
+    public void onBackPressed() {
+
+        // disconnect safely
+        if(bt.socket.isConnected()) {
+            bt.disconnect();
+        }
+        Intent changeToMain= new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(changeToMain);
+    }
 }

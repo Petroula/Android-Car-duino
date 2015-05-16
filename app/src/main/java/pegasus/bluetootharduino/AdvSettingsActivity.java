@@ -175,4 +175,10 @@ public class AdvSettingsActivity extends Activity implements SeekBar.OnSeekBarCh
     public boolean onTouchEvent(MotionEvent ev) {
         return detector.onTouchEvent(ev);
     }
+
+    /** Changes the behaviour of the back button */
+    public void onBackPressed() {
+        Intent changeToMain= new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(changeToMain);
+    }
 }
