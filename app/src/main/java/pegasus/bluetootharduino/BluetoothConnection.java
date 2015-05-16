@@ -8,23 +8,16 @@ package pegasus.bluetootharduino;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Set;
 import java.util.UUID;
-
 import android.bluetooth.*;
-import android.hardware.Sensor;
 import android.os.Handler;
 import android.util.Log;
 
-public class Bluetooth {
+public class BluetoothConnection {
 
-    BluetoothAdapter adapter;
-    BluetoothDevice MiDevice;
     static BluetoothSocket socket;
     InputStream in;
     static OutputStream out;
-
-    boolean btEnabled = true;
     String returnResult;
 
     Thread BlueToothThread;
@@ -33,36 +26,13 @@ public class Bluetooth {
     byte read[];
     static Netstrings nt = new Netstrings();
 
-    //connect
-    public void checkBT() {
-
-        //check if bluetooth on device is enabled
-        adapter = BluetoothAdapter.getDefaultAdapter();
-
-        if (adapter == null || !adapter.isEnabled()) {
-            btEnabled = false;
-        }
-        else{
-            // pairs device
-            Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
-            if(pairedDevices.size() > 0) {
-                for(BluetoothDevice device : pairedDevices) {
-                    if(device.getName().equals("carduino")) {
-                        MiDevice = device;
-                        // data.setText("device paired");
-                        break;
-                    }
-                }
-            }
-        }
-    }
 
     public void runBT() throws IOException, NullPointerException {
 
         //opens connection
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Standard SerialPortService ID
 
-        socket = MiDevice.createRfcommSocketToServiceRecord(uuid);
+        socket = BluetoothPairing.MiDevice.createRfcommSocketToServiceRecord(uuid);
 
 
         socket.connect();
