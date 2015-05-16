@@ -7,9 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.CompoundButton;
-import android.widget.SeekBar;
 import android.widget.Switch;
-import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -23,6 +21,7 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
         ((Button)findViewById(R.id.parking)).setOnClickListener(this);
         ((Button)findViewById(R.id.manual)).setOnClickListener(this);
         ((Button)findViewById(R.id.advanced)).setOnClickListener(this);
+        ((Button)findViewById(R.id.bluetooth)).setOnClickListener(this);
 
         //DISPLAY DEBUG INFORMATION SWITCH
         ((Switch)findViewById(R.id.DisplayDebugSwitch)).setOnCheckedChangeListener(this);
@@ -52,6 +51,11 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
                 Intent changeToSettings= new Intent(getApplicationContext(),
                 AdvSettingsActivity.class);
                 startActivity(changeToSettings);
+                break;
+            case R.id.bluetooth:
+                Intent changeToPair= new Intent(getApplicationContext(),
+                PairDeviceActivity.class);
+                startActivity(changeToPair);
                 break;
         }
     }

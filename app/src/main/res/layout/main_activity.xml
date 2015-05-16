@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background2"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -29,6 +30,7 @@
                 android:layout_width="261dp"
                 android:layout_height="wrap_content"
                 android:text="Parking"
+                android:textColor="#ff00b9ff"
                 android:layout_alignParentTop="true"
                 android:layout_alignRight="@+id/LightNormalizationSwitch"
                 android:layout_alignEnd="@+id/LightNormalizationSwitch" />
@@ -37,6 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Light normalization"
+                android:textColor="#ff00b9ff"
                 android:id="@+id/LightNormalizationSwitch"
                 android:checked="true"
                 android:layout_above="@+id/DisplayDebugSwitch"
@@ -49,6 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Manual"
+                android:textColor="#ff00b9ff"
                 android:layout_gravity="center_vertical"
                 android:layout_below="@+id/parking"
                 android:layout_alignRight="@+id/parking"
@@ -61,6 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Advanced Settings"
+                android:textColor="#ff00b9ff"
                 android:textStyle="italic"
                 android:layout_gravity="center_vertical"
                 android:layout_alignParentBottom="true"
@@ -70,6 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Debug information"
+                android:textColor="#ff00b9ff"
                 android:id="@+id/DisplayDebugSwitch"
                 android:checked="true"
                 android:layout_above="@+id/LeftLineSwitch"
@@ -81,8 +87,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Use Left Line"
+                android:textColor="#ff00b9ff"
                 android:id="@+id/LeftLineSwitch"
                 android:checked="true"
                 android:layout_above="@+id/advanced"
                 android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BT"
+        android:textColor="#ff00b9ff"
+        android:id="@+id/bluetooth"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/advanced"
+        android:layout_toEndOf="@+id/advanced" />
 </RelativeLayout>
