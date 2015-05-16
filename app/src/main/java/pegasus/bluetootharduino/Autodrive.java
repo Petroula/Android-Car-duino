@@ -40,7 +40,11 @@ public class Autodrive
     private static native double getTargetAngle();
 
     public static int getConvertedSpeed(){
-        return (int)(getTargetSpeed() * carConfiguration.maxSpeed);
+        double targetSpeed = getTargetSpeed();
+        if(targetSpeed <= 0.0)
+            return (int)(targetSpeed * carConfiguration.maxSpeed * 2.0);
+        else
+            return (int)(targetSpeed * carConfiguration.maxSpeed);
     }
 
     public static int getConvertedAngle(){

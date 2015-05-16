@@ -15,22 +15,25 @@ public class BluetoothPairing {
     String listNamesAddress;
     ArrayList<String> listDevices = new ArrayList<>();
 
-    //find list of paired devices
-    public void BTsearch() throws NullPointerException{
-
+    BluetoothPairing(){
         adapter = BluetoothAdapter.getDefaultAdapter();
 
         if (adapter == null || !adapter.isEnabled()) {
             btEnabled = false;
         }
+    }
 
-        Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
-        if(pairedDevices.size() > 0) {
-            for(BluetoothDevice device : pairedDevices) {
-                listNames = device.getName();
-                listAddress = "\n" + device.getAddress();
-                listNamesAddress = listNames + listAddress;
-                listDevices.add(listNamesAddress);
+    //find list of paired devices
+    public void BTsearch() throws NullPointerException{
+        if(btEnabled) {
+            Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
+            if (pairedDevices.size() > 0) {
+                for (BluetoothDevice device : pairedDevices) {
+                    listNames = device.getName();
+                    listAddress = "\n" + device.getAddress();
+                    listNamesAddress = listNames + listAddress;
+                    listDevices.add(listNamesAddress);
+                }
             }
         }
     }
