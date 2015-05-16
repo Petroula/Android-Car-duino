@@ -38,11 +38,11 @@ namespace Autodrive
         int currentAngle = 0; 
 		// --------------------
         
-        int carRatio = 1;
+        int carLength = 1;
     
-        void setCarRatio(int ratio)
+        void setCarLength(int length)
         {
-            carRatio = ratio;
+            carLength = length;
         }
 		
         double encoderDistance()

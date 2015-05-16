@@ -13,8 +13,6 @@ namespace Autodrive {
 		enum Procedure { NO_PROCEDURE, PARALLEL_STANDARD, PARALLEL_WIDE, PERPENDICULAR_STANDARD };
         Procedure parkingProcedure;
 		
-		int ratio;
-		
 		int gapLength = 0;
 		int gapStart = 0;
 		
@@ -47,7 +45,7 @@ namespace Autodrive {
 				}
 			}*/
 			
-			if (gapLength > (50 * SensorData::carRatio) && gapLength < (100 * SensorData::carRatio) && SensorData::infrared.rearright > 0) {
+			if (gapLength > (0.5 * SensorData::carLength) && gapLength < (1 * SensorData::carLength) && SensorData::infrared.rearright > 0) {
 				GapFound = true;
 				parkingProcedure = PERPENDICULAR_STANDARD;
 				return Maneuver::Stop();
@@ -85,15 +83,15 @@ namespace Autodrive {
             switch (parkingProcedure) {			                        
 	            
                 case PARALLEL_STANDARD:
-					std::cout << "PARALLEL_STANDARD" << std::endl;						
+					//std::cout << "PARALLEL_STANDARD" << std::endl;						
     				return Maneuver::ParallelStandard();
                     
     			case PARALLEL_WIDE:
-					std::cout << "PARALLEL_WIDE" << std::endl;
+					//std::cout << "PARALLEL_WIDE" << std::endl;
     				return command(); //Maneuver::ParallelWide();
     				
     			case PERPENDICULAR_STANDARD:
-					std::cout << "PARALLEL_WIDE" << std::endl;
+					//std::cout << "PERPENDICULAR_STANDARD" << std::endl;
     				return Maneuver::PerpendicularStandard();
                     
     			default:

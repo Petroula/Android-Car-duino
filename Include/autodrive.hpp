@@ -84,6 +84,7 @@ namespace Autodrive
             // -----------
             
             case Autodrive::PARKING:
+                //std::cout << "PARKING" << std::endl;
                 lastCommand = Parking::Park();
                 break; 
                 
