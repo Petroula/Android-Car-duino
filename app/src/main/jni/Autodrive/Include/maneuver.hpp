@@ -11,7 +11,7 @@ namespace Autodrive {
 		int mInt = 0;
 
 		double slowSpeed = 0.5;
-		double normalSpeed = 0.6;
+		double normalSpeed = 1;
 
 		// measuring distance traveled
 		bool measuringDistance = false;
@@ -263,25 +263,22 @@ namespace Autodrive {
 					
 					case NO_MANEUVER:
 						//std::cout << "NO_MANEUVER" << std::endl;
-						/*if(Status::IsStoped()){
+						if(Status::IsStoped()){
 							currentManeuver = BACKWARDS_RIGHT;
 							return command();
 						}else{
 							return Stop();
-						}*/
-						mInt = 0;
-						currentManeuver = BACKWARDS_RIGHT;
-						return Move(slowSpeed * -1);
+						}
 		
 					case BACKWARDS_RIGHT:
 						//std::cout << "BACKWARDS_RIGHT" << std::endl;
-						mInt = 1;
+						cmd.setSpeed(slowSpeed * -1);
 						
 						if(Status::HasTurnedAngle(90)){
 							currentManeuver = DONE;
 							return Stop();
 						}else{
-							return Turn(right);
+							return Turn(cmd, right);
 						}
 						// return cmd;
 						/*if(Status::EmergencyStop(back)){
@@ -293,7 +290,6 @@ namespace Autodrive {
 		
 		            case BACKWARDS:
 						//std::cout << "BACKWARDS" << std::endl;
-						mInt = 2;
 		                if(Status::HasTraveledDistance(1)){
 							currentManeuver = DONE;
 							return Stop();

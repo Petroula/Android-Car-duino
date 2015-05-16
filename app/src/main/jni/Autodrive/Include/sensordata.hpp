@@ -37,6 +37,13 @@ namespace Autodrive
 		int currentSpeed = 0;
         int currentAngle = 0; 
 		// --------------------
+        
+        int carLength = 1;
+    
+        void setCarLength(int length)
+        {
+            carLength = length;
+        }
 		
         double encoderDistance()
         {
