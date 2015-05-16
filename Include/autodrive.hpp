@@ -43,7 +43,7 @@ namespace Autodrive
 
     void reset()
     {
-        status = SEARCHING_FOR_LANES;
+       status = SEARCHING_FOR_LANES;
     }
 
     void drive()
@@ -68,11 +68,11 @@ namespace Autodrive
             // debug only! will be merged with lane following   
             case Autodrive::DETECTING_GAP:
                 lastCommand = Parking::SetParkingProcedure();
-                /*if(Parking::parkingProcedure == Parking::PERPENDICULAR_STANDARD){ // select parking procedure
+                if(Parking::parkingProcedure == Parking::PERPENDICULAR_STANDARD){ // select parking procedure
                     status = PARKING;
                 }else{
-                    lastCommand.setSpeed(0.4); // this value breaks the simulation if it is higher than 2
-                }*/
+                    lastCommand.setSpeed(Maneuver::normalSpeed); 
+                }
                 break;
             // -----------
             
