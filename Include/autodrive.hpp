@@ -45,6 +45,13 @@ namespace Autodrive
     {
        status = SEARCHING_FOR_LANES;
     }
+    
+    int carRatio = 1;
+    
+    void setCarRatio(int ratio)
+    {
+        carRatio = ratio;
+    }
 
     void drive()
     {

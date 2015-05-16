@@ -13,11 +13,14 @@ namespace Autodrive {
 		enum Procedure { NO_PROCEDURE, PARALLEL_STANDARD, PARALLEL_WIDE, PERPENDICULAR_STANDARD };
         Procedure parkingProcedure;
 		
+		int ratio;
+		
 		int gapLength = 0;
 		int gapStart = 0;
 		
 		//debugStop
 		bool ObstacleFound = false;
+		bool GapFound = false;
 		
 		// measure the length of a gap
 	    void SetGapLength(){
@@ -29,31 +32,27 @@ namespace Autodrive {
 	    }
 	
 	    // defines the procedure to engage depending on the size of a  gap
-		command SetParkingProcedure() {
-			//std::cout << gapLength << std::endl;						
-	        // return the appropriate parking procedure
+		command SetParkingProcedure() {						
 			SetGapLength();
 			/*if (SensorData::usFrontRight < 1) {		
 				parkingProcedure = PARALLEL_WIDE;
 			} else {
-				if (gapLength > 100 && SensorData::infrared[1] > 0) {		
+				if (gapLength > 100 * Autodrive::carRatio && SensorData::infrared.rearright > 0) {		
 					parkingProcedure = PARALLEL_STANDARD;
-				} else if (gapLength > 20 && gapLength < 80 && SensorData::infrared[1] > 0) {
-					//std::cout << "values correct" << std::endl;
-					ObstacleFound = true;
+				} else if (gapLength > 20 && gapLength < 80 && SensorData::infrared.rearright > 0) {
+					GapFound = true;
 					parkingProcedure = PERPENDICULAR_STANDARD;
 				} else {
 					parkingProcedure = NO_PROCEDURE;
 				}
 			}*/
 			
-			if (gapLength > 40 && SensorData::infrared.rearright > 0) {
-					//std::cout << "values correct" << std::endl;
-					ObstacleFound = true;
-					parkingProcedure = PERPENDICULAR_STANDARD;
-					return Maneuver::Stop();
+			if (gapLength > (50 * SensorData::carRatio) && gapLength < (100 * SensorData::carRatio) && SensorData::infrared.rearright > 0) {
+				GapFound = true;
+				parkingProcedure = PERPENDICULAR_STANDARD;
+				return Maneuver::Stop();
 			}else{
-				return Maneuver::Move(Maneuver::slowSpeed);
+				return Maneuver::Move(Maneuver::normalSpeed);
 			}
 		}
 		
@@ -82,24 +81,23 @@ namespace Autodrive {
 		//=====================================================
 		
 		command Park(){
-           	//std::cout << "PARKING" << std::endl;
-			command cmd; // so ugly!
-            
-            switch (parkingProcedure) {			                        // switch to the appropriate parking procedure
+            // switch to the appropriate parking procedure
+            switch (parkingProcedure) {			                        
 	            
                 case PARALLEL_STANDARD:
-					//std::cout << "PARALLEL_STANDARD" << std::endl;						
+					std::cout << "PARALLEL_STANDARD" << std::endl;						
     				return Maneuver::ParallelStandard();
                     
     			case PARALLEL_WIDE:
-					//std::cout << "PARALLEL_WIDE" << std::endl;
-    				return cmd; //Maneuver::ParallelWide();
+					std::cout << "PARALLEL_WIDE" << std::endl;
+    				return command(); //Maneuver::ParallelWide();
     				
     			case PERPENDICULAR_STANDARD:
+					std::cout << "PARALLEL_WIDE" << std::endl;
     				return Maneuver::PerpendicularStandard();
                     
     			default:
-    				return cmd;
+    				return command();
             }
 	    }													
 	} // Parking
