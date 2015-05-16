@@ -15,7 +15,7 @@ public class BluetoothPairing {
     String listNamesAddress;
     ArrayList<String> listDevices = new ArrayList<>();
 
-    //find paired devices
+    //find list of paired devices
     public void BTsearch() throws NullPointerException{
 
         adapter = BluetoothAdapter.getDefaultAdapter();
