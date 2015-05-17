@@ -32,18 +32,18 @@ namespace Autodrive
         DETECTING_GAP,PARKING,SEARCHING_FOR_LANES,FOLLOWING_LANES,UNKNOWN,DEBUG,DISTANCE_MEASURED_DEBUG
     };  
     
-    const carstatus defaultStatus = SEARCHING_FOR_LANES;
+    carstatus initialStatus = SEARCHING_FOR_LANES;
+    carstatus status = initialStatus;
 
-    carstatus status;
-
-    void setStatus(carstatus newStatus)
+    void setInitialStatus(carstatus newStatus)
     {
+        initialStatus = newStatus;
         status = newStatus;
     }
 
-    void reset()
+    void resetStatus()
     {
-       status = SEARCHING_FOR_LANES;
+       status = initialStatus;
     }
     
     int carRatio = 1;
