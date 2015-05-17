@@ -24,12 +24,12 @@ extern "C"
 	
     TYPE(void) NAME(reset)()
     {
-        return Autodrive::reset();
+        return Autodrive::resetStatus();
     }
 
     TYPE(void) NAME(setParkingMode)()
     {
-        return Autodrive::setStatus(Autodrive::DETECTING_GAP);
+        Autodrive::setInitialStatus(Autodrive::DETECTING_GAP);
     }
 
    /*----- DEBUGDATA -----*/
