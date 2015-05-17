@@ -56,7 +56,7 @@ namespace Autodrive
             case Autodrive::SEARCHING_FOR_LANES:
                 if (Autodrive::imageProcessor::init_processing(Autodrive::SensorData::image))
                 {
-                    lastCommand.setSpeed(Maneuver::normalSpeed);
+                    lastCommand.setSpeed(normalSpeed);
                     status = FOLLOWING_LANES;
                 }
                 break;
@@ -69,10 +69,10 @@ namespace Autodrive
             case Autodrive::DETECTING_GAP:
                 Parking::SetParkingManeuver(); // check what parking maneuver to initialize, if any
                 
-                if(Parking::currentManeuver == Parking::PERPENDICULAR_STANDARD){
+                if(Parking::currentManeuver.type == PERPENDICULAR_STANDARD){
                     status = PARKING;
                 }else{
-                    lastCommand.setSpeed(Maneuver::normalSpeed); 
+                    lastCommand.setSpeed(normalSpeed); 
                 }
                 break;
             // -----------
