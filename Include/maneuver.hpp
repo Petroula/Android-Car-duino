@@ -10,8 +10,8 @@ namespace Autodrive {
 		
 		int mInt = 0;
 
-		double slowSpeed = 0.5;
-		double normalSpeed = 1;
+		double slowSpeed = 0.16;
+		double normalSpeed = 0.28;
 
 		// measuring distance traveled
 		bool measuringDistance = false;
