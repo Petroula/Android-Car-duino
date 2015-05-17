@@ -1,3 +1,11 @@
+/**
+ * 
+ *
+ *  - - - - -- - -  Parking , parking logic for Autodrive
+ *
+ *
+ */
+
 #pragma once
 #include <string.h>
 #include <math.h>
@@ -9,16 +17,12 @@ namespace Autodrive {
 
 	namespace Parking {
 		
-		// the different parking procedures
-		enum Procedure { NO_PROCEDURE, PARALLEL_STANDARD, PARALLEL_WIDE, PERPENDICULAR_STANDARD };
-        Procedure parkingProcedure;
+		// the different parking maneuvers
+		enum pManeuver { NO_MANEUVER, PARALLEL_STANDARD, PARALLEL_WIDE, PERPENDICULAR_STANDARD };
+        pManeuver currentManeuver;
 		
 		int gapLength = 0;
 		int gapStart = 0;
-		
-		//debugStop
-		bool ObstacleFound = false;
-		bool GapFound = false;
 		
 		// measure the length of a gap
 	    void SetGapLength(){
@@ -29,75 +33,52 @@ namespace Autodrive {
 			}
 	    }
 	
-	    // defines the procedure to engage depending on the size of a  gap
-		command SetParkingProcedure() {						
+	    // the maneuver to engage depending on the size of a gap
+		void SetParkingManeuver() {						
 			SetGapLength();
-			/*if (SensorData::usFrontRight < 1) {		
-				parkingProcedure = PARALLEL_WIDE;
-			} else {
-				if (gapLength > 100 * Autodrive::carRatio && SensorData::infrared.rearright > 0) {		
-					parkingProcedure = PARALLEL_STANDARD;
-				} else if (gapLength > 20 && gapLength < 80 && SensorData::infrared.rearright > 0) {
-					GapFound = true;
-					parkingProcedure = PERPENDICULAR_STANDARD;
-				} else {
-					parkingProcedure = NO_PROCEDURE;
-				}
-			}*/
 			
+			// perpendicular standard
+			// if the gap length is between half the size of the car and the size of the car
 			if (gapLength > (0.5 * SensorData::carLength) && gapLength < (1 * SensorData::carLength) && SensorData::infrared.rearright > 0) {
-				GapFound = true;
-				parkingProcedure = PERPENDICULAR_STANDARD;
-				return Maneuver::Stop();
+				currentManeuver = PERPENDICULAR_STANDARD;
+			
+			// parallel wide
+			// if there is enought space for the car to park front
+			}else if(SensorData::ultrasound.frontright < 1){
+				currentManeuver = PARALLEL_WIDE;
+				
+			// parallel standard
+			// if there is not enought space for the car to park front on
+			}else if(gapLength > 1 * SensorData::carLength && SensorData::infrared.rearright > 0){
+				currentManeuver = PARALLEL_STANDARD;
+				
+			// no matching maneuver
 			}else{
-				return Maneuver::Move(Maneuver::normalSpeed);
+				currentManeuver = NO_MANEUVER;
 			}
 		}
 		
-		//=====================================================
-		command Debug(){
-			if(SensorData::infrared.frontright > 0 || SensorData::infrared.rearright > 0){
-				ObstacleFound = true;
-				return Maneuver::Stop();
-			}else{
-				if(!ObstacleFound){
-					return Maneuver::Move(Maneuver::slowSpeed * -1);
-				}else{
-					return Maneuver::Stop();
-				}
-			}
-		}
-		
-		command DebugGapLength(){
-			SetGapLength();
-			if(gapLength > 50){
-				return Maneuver::Stop();
-			}else{
-				return Maneuver::Move(Maneuver::normalSpeed);
-			}
-		}
-		//=====================================================
-		
+		// execute the appropriate parking maneuver
 		command Park(){
-            // switch to the appropriate parking procedure
-            switch (parkingProcedure) {			                        
+  
+            switch (currentManeuver) {			                        
 	            
-                case PARALLEL_STANDARD:
-					//std::cout << "PARALLEL_STANDARD" << std::endl;						
+                case PARALLEL_STANDARD:					
     				return Maneuver::ParallelStandard();
                     
     			case PARALLEL_WIDE:
-					//std::cout << "PARALLEL_WIDE" << std::endl;
-    				return command(); //Maneuver::ParallelWide();
+    				return Maneuver::ParallelWide();
     				
     			case PERPENDICULAR_STANDARD:
-					//std::cout << "PERPENDICULAR_STANDARD" << std::endl;
     				return Maneuver::PerpendicularStandard();
+				
+				case NO_MANEUVER:
+					return command();
                     
     			default:
     				return command();
             }
 	    }													
 	} // Parking
-}
+} // Autodrive
 
