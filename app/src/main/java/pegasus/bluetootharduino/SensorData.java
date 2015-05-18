@@ -12,18 +12,6 @@ public class SensorData {
         razorHeading = 0,
         encoderPulses = 0;
 
-    static boolean foundObstacle() {
-        return Autodrive.hasFoundObstacle();
-    }
-
-    static int irFrontAutodrive() {
-        return Autodrive.irFrontAutodrive();
-    }
-
-    static int usFrontAutodrive() {
-        return Autodrive.usFrontAutodrive();
-    }
-
     static void setUltrasound(int sensor, int value){
         Autodrive.setUltrasound(sensor, value);
 
@@ -69,10 +57,6 @@ public class SensorData {
 
         razorHeading = value;
         CameraActivity.updateDebuggingConsole();
-    }
-
-    static int getGapLength() {
-        return Autodrive.getGapLength();
     }
 
     static void handleInput(String input){

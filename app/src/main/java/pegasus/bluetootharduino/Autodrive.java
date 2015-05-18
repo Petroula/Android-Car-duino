@@ -19,13 +19,61 @@ public class Autodrive
     public static native void setParkingMode();
     
 /*----- DEBUGDATA -----*/
-    public static native int getGapLength();
-    public static native boolean hasFoundObstacle();
-    public static native int irFrontAutodrive();
-    public static native int usFrontAutodrive();
+    public static native int gapLength();
     public static native int getManeuver();
+    public static native int getManeuverState();
+    
+    public static String maneuver()
+    {
+        switch(getManeuver())
+        {
+            case 0:
+                return "NO_MANEUVER";
+            case 1:
+                return "PARALLEL_STANDARD";
+            case 2:
+                return "PARALLEL_WIDE";
+            case 3:
+                return "PERPENDICULAR_STANDARD";
+           default:
+                return "ERR";
+        }
+    }
+    
+    public static String maneuverstate()
+    {
+        switch(getManeuverState())
+        {
+            case 0:
+                return "NOT_MOVING";
+            case 1:
+                return "FORWARD";
+            case 2:
+                return "BACKWARD";
+            case 3:
+                return "FORWARD_RIGHT";
+            case 4:
+                return "BACKWARD_RIGHT";
+            case 5:
+                return "FORWARD_LEFT";
+            case 6:
+                return "BACKWARD_LEFT";
+            case 7:
+                return "DONE";
+            default:
+                return "ERR";
+        }
+    }
 
 /*----- SENSORDATA -----*/
+    // getters - for debuging purposes   
+    public static native int usFront();
+    public static native int usFrontRight();
+    public static native int usRear();
+    public static native int irFrontRight();
+    public static native int irRearRight();
+    public static native int irRear();
+
     public static native void setImage(long matAddrRgba);
     public static native void setUltrasound(int sensor, int value);
     public static native void setInfrared(int sensor, int value);

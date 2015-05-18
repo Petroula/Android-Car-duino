@@ -61,19 +61,17 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
 
     static public void updateDebuggingConsole() {
         debugConsole.setText("");
-        debugConsole.append("ultrasonicFront: " + SensorData.ultrasonicFront + "\n");
-        debugConsole.append("ultrasonicFrontRight: " + SensorData.ultrasonicFrontRight + "\n");
-        debugConsole.append("ultrasonicRear: " + SensorData.ultrasonicRear + "\n");
-        debugConsole.append("infraredSideFront: " + SensorData.infraredSideFront + "\n");
-        debugConsole.append("infraredSideRear: " + SensorData.infraredSideRear + "\n");
-        debugConsole.append("infraredRear: " + SensorData.infraredRear + "\n");
-        debugConsole.append("gyroHeading: " + SensorData.gyroHeading + "\n");
-        debugConsole.append("razorHeading: " + SensorData.razorHeading + "\n");
-        debugConsole.append("encoderPulses: " + SensorData.encoderPulses + "\n");
-        debugConsole.append("Obstacle Found: " + ((SensorData.foundObstacle()) ? "true" : "false") + "\n");
-        debugConsole.append("irFrontAutodrive: " + String.valueOf(SensorData.irFrontAutodrive()) + "\n");
-        debugConsole.append("usFrontAutodrive: " + String.valueOf(SensorData.usFrontAutodrive()) + "\n");
-        debugConsole.append("Gap Length: " + SensorData.getGapLength() + "\n");
+        debugConsole.append("SENSORS:\n");
+        debugConsole.append("ultrasonicFront: " + String.valueOf(Autodrive.usFront()) + "\n");
+        debugConsole.append("ultrasonicFrontRight: " + String.valueOf(Autodrive.usFrontRight()) + "\n");
+        debugConsole.append("ultrasonicRear: " + String.valueOf(Autodrive.usRear()) + "\n");
+        debugConsole.append("infraredSideFront: " + String.valueOf(Autodrive.irFrontRight()) + "\n");
+        debugConsole.append("infraredSideRear: " + String.valueOf(Autodrive.irRearRight()) + "\n");
+        debugConsole.append("infraredRear: " + String.valueOf(Autodrive.irRear()) + "\n");
+        debugConsole.append("PARKING:\n");
+        debugConsole.append("gap length: " + String.valueOf(Autodrive.gapLength()) + "\n");
+        debugConsole.append("current maneuver: " + Autodrive.maneuver() + "\n");
+        debugConsole.append("maneuver state: " + Autodrive.maneuverstate() + "\n");
     }
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {

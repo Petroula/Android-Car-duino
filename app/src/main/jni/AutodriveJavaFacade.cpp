@@ -33,37 +33,91 @@ extern "C"
     }
 
    /*----- DEBUGDATA -----*/
-
-   TYPE(jint) NAME(getGapLength)()
+   
+   // parking
+   
+   TYPE(jint) NAME(gapLength)()
   	{
 	    return Autodrive::Parking::gapLength;
 	}
     
-    TYPE(jboolean)NAME(hasFoundObstacle)()
+    TYPE(jint)NAME(getManeuver)()
     {
-        return Autodrive::Parking::ObstacleFound;
+        switch(Autodrive::Parking::currentManeuver.type)
+        {
+            case Autodrive::NO_MANEUVER:
+                return 0;
+            case Autodrive::PARALLEL_STANDARD:
+                return 1;
+            case Autodrive::PARALLEL_WIDE:
+                return 2;
+            case Autodrive::PERPENDICULAR_STANDARD:
+                return 3;
+            default:
+                return -1;
+        }
     }
     
-    TYPE(jboolean)NAME(gapDetected)()
+    TYPE(jint)NAME(getManeuverState)()
     {
-        return Autodrive::Parking::GapFound;
+        switch(Autodrive::Parking::currentManeuver.type)
+        {
+            case Autodrive::maneuver::mState::NOT_MOVING:
+                return 0;
+            case Autodrive::maneuver::mState::FORWARD:
+                return 1;
+            case Autodrive::maneuver::mState::BACKWARD:
+                return 2;
+            case Autodrive::maneuver::mState::FORWARD_RIGHT:
+                return 3;
+            case Autodrive::maneuver::mState::BACKWARD_RIGHT:
+                return 4;
+            case Autodrive::maneuver::mState::FORWARD_LEFT:
+                return 5;
+            case Autodrive::maneuver::mState::BACKWARD_LEFT:
+                return 6;
+            case Autodrive::maneuver::mState::DONE:
+                return 7;
+            default:
+                return -1;
+        }
     }
     
-    TYPE(jint)NAME(irFrontAutodrive)()
-    {
-        return Autodrive::SensorData::infrared.frontright;
-    }
+    /*----- SENSORDATA -----*/
     
-    TYPE(jint)NAME(usFrontAutodrive)()
+    // getters - for debuging purposes
+    
+    TYPE(jint)NAME(usFront)()
     {
         return Autodrive::SensorData::ultrasound.front;
     }
     
-    TYPE(jint)NAME(getManeuver)(){
-        return Autodrive::Maneuver::mInt;
+    TYPE(jint)NAME(usFrontRight)()
+    {
+        return Autodrive::SensorData::ultrasound.frontright;
     }
     
-	/*----- SENSORDATA -----*/
+    TYPE(jint)NAME(usRear)()
+    {
+        return Autodrive::SensorData::ultrasound.rear;
+    }
+    
+    TYPE(jint)NAME(irFrontRight)()
+    {
+        return Autodrive::SensorData::infrared.frontright;
+    }
+    
+    TYPE(jint)NAME(irRearRight)()
+    {
+        return Autodrive::SensorData::infrared.rearright;
+    }
+    
+    TYPE(jint)NAME(irRear)()
+    {
+        return Autodrive::SensorData::infrared.rear;
+    }
+    
+   // setters
 
     TYPE(void) NAME(setImage) PARAMS(long newMat){
         Autodrive::SensorData::image = (cv::Mat*)newMat;
