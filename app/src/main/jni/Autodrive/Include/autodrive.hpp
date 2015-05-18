@@ -29,7 +29,7 @@ namespace Autodrive
 
     enum carstatus
     {
-        DETECTING_GAP,PARKING,SEARCHING_FOR_LANES,FOLLOWING_LANES,UNKNOWN,DEBUG,DISTANCE_MEASURED_DEBUG
+        DETECTING_GAP, PARKING, SEARCHING_FOR_LANES, FOLLOWING_LANES, UNKNOWN
     };  
     
     carstatus initialStatus = SEARCHING_FOR_LANES;
@@ -45,13 +45,6 @@ namespace Autodrive
     {
        status = initialStatus;
     }
-    
-    int carRatio = 1;
-    
-    void setCarRatio(int ratio)
-    {
-        carRatio = ratio;
-    }
 
     void drive()
     {
@@ -63,7 +56,7 @@ namespace Autodrive
             case Autodrive::SEARCHING_FOR_LANES:
                 if (Autodrive::imageProcessor::init_processing(Autodrive::SensorData::image))
                 {
-                    lastCommand.setSpeed(0.28);
+                    lastCommand.setSpeed(normalSpeed);
                     status = FOLLOWING_LANES;
                 }
                 break;
@@ -74,29 +67,21 @@ namespace Autodrive
                 
             // debug only! will be merged with lane following   
             case Autodrive::DETECTING_GAP:
-                lastCommand = Parking::SetParkingProcedure();
-                if(Parking::parkingProcedure == Parking::PERPENDICULAR_STANDARD){ // select parking procedure
+                Parking::SetParkingManeuver(); // check what parking maneuver to initialize, if any
+                
+                if(Parking::currentManeuver.type == PERPENDICULAR_STANDARD){
                     status = PARKING;
                 }else{
-                    lastCommand.setSpeed(Maneuver::normalSpeed); 
+                    lastCommand.setSpeed(normalSpeed); 
                 }
                 break;
             // -----------
             
             case Autodrive::PARKING:
-                //std::cout << "PARKING" << std::endl;
                 lastCommand = Parking::Park();
                 break; 
                 
             case Autodrive::UNKNOWN:
-                break;
-                
-            case Autodrive::DEBUG:
-                lastCommand = Parking::Debug();
-                break;
-                
-            case Autodrive::DISTANCE_MEASURED_DEBUG:
-                lastCommand = Parking::DebugGapLength();
                 break;
                 
             default:
