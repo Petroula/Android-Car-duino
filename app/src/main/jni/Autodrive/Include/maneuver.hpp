@@ -15,8 +15,9 @@
 namespace Autodrive {
 
 	// TODO: put in appropriate namespace
-	const double slowSpeed = 0.2;
-	const double normalSpeed = 0.28;
+	const double slowSpeed = 0.26;
+	const double normalSpeed = 0.32;
+	const double backwardsSpeed = -0.7;
 	
 	enum side { right, left};
 	enum direction { front, back };
@@ -34,6 +35,8 @@ namespace Autodrive {
 		// measuring angle turned
 		bool measuringAngle = false;
 		int startAngle = 0;
+		
+		int currentAngle = 0;
 
 		// is the car stopped 
 		bool IsStoped(){
@@ -44,8 +47,8 @@ namespace Autodrive {
 			}
 		}
 		
-		// checks if the car has traveled a specific distance (in ?)
-		bool HasTraveledDistance(int distance){
+		// checks if the car has traveled a specific distance (in cm?)
+		bool HasTraveledDistance(float distance){
 
 			// initialize start point
 			if(!measuringDistance){
@@ -64,7 +67,7 @@ namespace Autodrive {
 		// checks if the car has turned a specific angle
 		bool HasTurnedAngle(int desiredAngle){
 
-			float currentAngle = 0;
+			currentAngle = 0;
 
 			// initialize start point
 			if(!measuringAngle){
@@ -73,10 +76,10 @@ namespace Autodrive {
 			}
 
 			// get the current angle from where the car was, to where it is now
-			currentAngle = fmod((startAngle - SensorData::gyroHeading),360);
+			currentAngle = (startAngle - SensorData::gyroHeading) % 360;
 			if(currentAngle > 180) currentAngle = 360 - currentAngle;
 
-			if(abs(currentAngle) > abs(desiredAngle)) {
+			if(abs(currentAngle) * 0.9 > abs(desiredAngle) || HasTraveledDistance(desiredAngle * 1.55) ) {
 				measuringAngle = false;
 				return true;
 			}else{
@@ -102,6 +105,9 @@ namespace Autodrive {
 		
 		// returns the appropriate command depending on the current maneuver and its state
 		command GetCommand(){
+			if(currentState == DONE){
+				type = NO_MANEUVER;
+			}
 			switch (type) {			                        
                 case PARALLEL_STANDARD:					
     				return ParallelStandard();
@@ -175,22 +181,39 @@ namespace Autodrive {
 					}
 				break;
 				case BACKWARD_RIGHT:
-					cmd.setSpeed(slowSpeed * -1);
-					if(Status::HasTurnedAngle(80)){
+					if(Status::HasTurnedAngle(45)){
 						currentState = BACKWARD_LEFT;
 						cmd.setSpeed(0);
 					}else{
 						cmd.setAngle(1.0);
+						cmd.setSpeed(backwardsSpeed);
 					}
 				break;
 				case BACKWARD_LEFT:
-					cmd.setSpeed(slowSpeed * -1);
-					if(Status::HasTurnedAngle(80)){
+					
+					if(Status::HasTurnedAngle(45)){
 						currentState = DONE;
 						cmd.setSpeed(0);
 					}else{
 						cmd.setAngle(-1.0);
+						cmd.setSpeed(backwardsSpeed);
 					}
+					
+					if(SensorData::infrared.rear > 1 && SensorData::ultrasound.rear > 1 && SensorData::ultrasound.rear < 25){	// TODO emergency stop maneuver
+						cmd.setSpeed(0);
+						currentState = FORWARD_RIGHT;
+					}
+				break;
+				case FORWARD_RIGHT:
+					
+					if(Status::HasTurnedAngle(10)){
+						currentState = DONE;
+						cmd.setSpeed(0);
+					}else{
+						cmd.setSpeed(normalSpeed);
+						cmd.setAngle(1);
+					}
+					
 				break;
 				default:
 					cmd = command();

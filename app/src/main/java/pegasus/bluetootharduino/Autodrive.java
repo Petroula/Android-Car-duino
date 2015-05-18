@@ -23,6 +23,8 @@ public class Autodrive
     public static native int getManeuver();
     public static native int getManeuverState();
     
+    public static native int angleTurned();
+    
     public static String maneuver()
     {
         switch(getManeuver())
@@ -74,6 +76,7 @@ public class Autodrive
     public static native int irRearRight();
     public static native int irRear();
     public static native int gyroHeading();
+    public static native int razorHeading();
 
     public static native void setImage(long matAddrRgba);
     public static native void setUltrasound(int sensor, int value);

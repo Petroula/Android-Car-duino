@@ -41,6 +41,11 @@ extern "C"
 	    return Autodrive::Parking::gapLength;
 	}
     
+    TYPE(jint) NAME(angleTurned)()
+    {
+        return Autodrive::Status::currentAngle;
+    }
+    
     TYPE(jint)NAME(getManeuver)()
     {
         switch(Autodrive::Parking::currentManeuver.type)
@@ -120,6 +125,11 @@ extern "C"
     TYPE(jint)NAME(gyroHeading)()
     {
         return Autodrive::SensorData::gyroHeading;
+    }
+    
+    TYPE(jint)NAME(razorHeading)()
+    {
+        return Autodrive::SensorData::razorHeading;
     }
     
    // setters
