@@ -158,6 +158,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         if(e1.getX()<e2.getX()) {
             // disconnect safely
             if(bt.socket.isConnected()) {
+                bt.sendToManualMode("stop");
                 bt.disconnect();
             }
             /** Changes to Main screen */
@@ -178,6 +179,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
 
         // disconnect safely
         if(bt.socket.isConnected()) {
+            bt.sendToManualMode("stop");
             bt.disconnect();
         }
         Intent changeToMain= new Intent(getApplicationContext(), MainActivity.class);
