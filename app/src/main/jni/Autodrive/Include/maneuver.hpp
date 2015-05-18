@@ -15,7 +15,7 @@
 namespace Autodrive {
 
 	// TODO: put in appropriate namespace
-	const double slowSpeed = 0.16;
+	const double slowSpeed = 0.2;
 	const double normalSpeed = 0.28;
 	
 	enum side { right, left};
@@ -204,27 +204,28 @@ namespace Autodrive {
 			switch(currentState){
 				case NOT_MOVING:
 					if(Status::IsStoped()){
-						currentState = BACKWARD_RIGHT;
+						currentState = FORWARD_RIGHT;
 						cmd = command();
 					}else{
 						cmd.setSpeed(0);
 					}
 				break;
 				case FORWARD_RIGHT:
-					cmd.setSpeed(slowSpeed * 1);
-					if(Status::HasTurnedAngle(80)){
+					if(Status::HasTurnedAngle(60)){
 						currentState = FORWARD_LEFT;
 						cmd.setSpeed(0);
 					}else{
+						cmd.setSpeed(slowSpeed);
 						cmd.setAngle(1.0);
 					}
 				break;
 				case FORWARD_LEFT:
-					cmd.setSpeed(slowSpeed * 1);
-					if(Status::HasTurnedAngle(80)){
+					if(Status::HasTurnedAngle(60)){
 						currentState = DONE;
 						cmd.setSpeed(0);
+						cmd.setAngle(0);
 					}else{
+						cmd.setSpeed(slowSpeed);
 						cmd.setAngle(-1.0);
 					}
 				break;

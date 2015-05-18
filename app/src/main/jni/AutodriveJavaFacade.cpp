@@ -60,7 +60,7 @@ extern "C"
     
     TYPE(jint)NAME(getManeuverState)()
     {
-        switch(Autodrive::Parking::currentManeuver.type)
+        switch(Autodrive::Parking::currentManeuver.currentState)
         {
             case Autodrive::maneuver::mState::NOT_MOVING:
                 return 0;
@@ -115,6 +115,11 @@ extern "C"
     TYPE(jint)NAME(irRear)()
     {
         return Autodrive::SensorData::infrared.rear;
+    }
+    
+    TYPE(jint)NAME(gyroHeading)()
+    {
+        return Autodrive::SensorData::gyroHeading;
     }
     
    // setters

@@ -73,6 +73,7 @@ public class Autodrive
     public static native int irFrontRight();
     public static native int irRearRight();
     public static native int irRear();
+    public static native int gyroHeading();
 
     public static native void setImage(long matAddrRgba);
     public static native void setUltrasound(int sensor, int value);
