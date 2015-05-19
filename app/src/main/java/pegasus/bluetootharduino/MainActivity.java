@@ -45,7 +45,6 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
                 break;
             case R.id.parking:
                 Autodrive.setParkingMode();
-                break;
             case R.id.auto:
                 Intent changeToCamera = new Intent(getApplicationContext(),
                 CameraActivity.class);
