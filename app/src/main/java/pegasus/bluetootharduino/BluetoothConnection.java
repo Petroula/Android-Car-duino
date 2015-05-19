@@ -16,9 +16,11 @@ import android.util.Log;
 public class BluetoothConnection {
 
     static BluetoothSocket socket;
+    BluetoothAdapter adapt;
     InputStream in;
     static OutputStream out;
     String returnResult;
+    String carduino = "98:D3:31:70:22:71";
 
     Thread BlueToothThread;
     boolean stop = false;
@@ -32,8 +34,12 @@ public class BluetoothConnection {
         //opens connection
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Standard SerialPortService ID
 
-        socket = BluetoothPairing.MiDevice.createRfcommSocketToServiceRecord(uuid);
-
+        if(BluetoothPairing.MiDevice == null) {
+            adapt = BluetoothAdapter.getDefaultAdapter();
+            socket = adapt.getRemoteDevice(carduino).createRfcommSocketToServiceRecord(uuid);
+        } else {
+            socket = BluetoothPairing.MiDevice.createRfcommSocketToServiceRecord(uuid);
+        }
 
         socket.connect();
         out = socket.getOutputStream();
@@ -109,6 +115,36 @@ public class BluetoothConnection {
             } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendToManualMode(String command) {
+        try {
+            String text ="";
+            if(command.equals("front")) {
+                text = nt.encodedNetstring("m80");
+                text += nt.encodedNetstring("t0");
+            } else if(command.equals("back")) {
+                text = nt.encodedNetstring("m-250");
+                text += nt.encodedNetstring("t0");
+            } else if(command.equals("right")) {
+                text = nt.encodedNetstring("t20");
+            } else if(command.equals("left")) {
+                text = nt.encodedNetstring("t-20");
+            } else if(command.equals("stop")) {
+                text = nt.encodedNetstring("m0");
+                text += nt.encodedNetstring("t0");
+            }
+
+            if(!text.isEmpty()) {
+                if (socket.isConnected()) {
+                    out.write(text.getBytes());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
     }
 
     public void disconnect() {

@@ -39,9 +39,13 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
 
         switch (v.getId()){
             case R.id.manual:
+                Intent changeToManual = new Intent(getApplicationContext(),
+                ManualActivity.class);
+                startActivity(changeToManual);
                 break;
             case R.id.parking:
                 Autodrive.setParkingMode();
+                break;
             case R.id.auto:
                 Intent changeToCamera = new Intent(getApplicationContext(),
                 CameraActivity.class);
