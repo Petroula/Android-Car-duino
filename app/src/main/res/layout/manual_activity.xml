@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/background2"
+    android:background="@drawable/background"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Front"
-        android:textColor="#ff00b9ff"
         android:id="@+id/front"
         android:layout_above="@+id/left"
         android:layout_centerHorizontal="true" />
@@ -16,7 +15,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Back"
-        android:textColor="#ff00b9ff"
         android:id="@+id/back"
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/front"
@@ -26,7 +24,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Right"
-        android:textColor="#ff00b9ff"
         android:id="@+id/right"
         android:layout_above="@+id/back"
         android:layout_toRightOf="@+id/back" />
@@ -35,7 +32,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Left"
-        android:textColor="#ff00b9ff"
         android:id="@+id/left"
         android:layout_above="@+id/back"
         android:layout_toLeftOf="@+id/back" />
@@ -44,7 +40,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Stop"
-        android:textColor="#ff00b9ff"
         android:id="@+id/stop"
         android:layout_above="@+id/back"
         android:layout_alignRight="@+id/front"
