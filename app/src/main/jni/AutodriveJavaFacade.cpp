@@ -37,6 +37,11 @@ extern "C"
     {
         Autodrive::SensorData::carLength = carLength;
     }
+    
+    TYPE(jint) NAME(getCarLength)()
+    {
+        return Autodrive::SensorData::carLength;
+    }
 
    /*----- DEBUGDATA -----*/
    
