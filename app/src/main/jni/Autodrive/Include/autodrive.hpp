@@ -79,6 +79,9 @@ namespace Autodrive
             
             case Autodrive::PARKING:
                 lastCommand = Parking::Park();
+                if(Parking::currentManeuver.currentState == Autodrive::maneuver::mState::DONE){
+                    Parking::currentManeuver.type = NO_MANEUVER;
+                }
                 break; 
                 
             case Autodrive::UNKNOWN:

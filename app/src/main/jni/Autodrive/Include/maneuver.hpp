@@ -94,7 +94,7 @@ namespace Autodrive {
 		pManeuver type;
 		
 		// the different states of the maneuver
-        enum mState { NOT_MOVING, FORWARD, BACKWARD, FORWARD_RIGHT, BACKWARD_RIGHT, FORWARD_LEFT, BACKWARD_LEFT, DONE};
+        enum mState { NOT_MOVING, FORWARD, BACKWARD, FORWARD_RIGHT, BACKWARD_RIGHT, FORWARD_LEFT, BACKWARD_LEFT, DONE, EMERGENCY};
         mState currentState;
 		
 		// constructor 
@@ -199,9 +199,9 @@ namespace Autodrive {
 						cmd.setSpeed(backwardsSpeed);
 					}
 					
-					if(SensorData::infrared.rear > 1 && SensorData::ultrasound.rear > 1 && SensorData::ultrasound.rear < 25){	// TODO emergency stop maneuver
+					if(SensorData::infrared.rear > 1 || (SensorData::ultrasound.rear > 1 && SensorData::ultrasound.rear < 25)){	// TODO emergency stop maneuver
 						cmd.setSpeed(0);
-						currentState = FORWARD_RIGHT;
+						currentState = EMERGENCY;
 					}
 				break;
 				case FORWARD_RIGHT:
