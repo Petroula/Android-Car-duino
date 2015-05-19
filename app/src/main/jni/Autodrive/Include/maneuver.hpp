@@ -154,7 +154,7 @@ namespace Autodrive {
 					}
 				break;
 				case BACKWARD_RIGHT:
-					cmd.setSpeed(slowSpeed * -1);
+					cmd.setSpeed(backwardsSpeed);
 					if(Status::HasTurnedAngle(80)){
 						currentState = DONE;
 						cmd.setSpeed(0);

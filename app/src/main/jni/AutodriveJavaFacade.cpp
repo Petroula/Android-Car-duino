@@ -29,7 +29,13 @@ extern "C"
 
     TYPE(void) NAME(setParkingMode)()
     {
+        Autodrive::SensorData::carLength = 40;
         Autodrive::setInitialStatus(Autodrive::DETECTING_GAP);
+    }
+    
+    TYPE(void) NAME(setCarLength)(int carLength)
+    {
+        Autodrive::SensorData::carLength = carLength;
     }
 
    /*----- DEBUGDATA -----*/

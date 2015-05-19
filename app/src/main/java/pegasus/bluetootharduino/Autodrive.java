@@ -18,6 +18,8 @@ public class Autodrive
     public static native void drive();
     public static native void setParkingMode();
     
+    public static native void setCarLength(int carLength);
+    
 /*----- DEBUGDATA -----*/
     public static native int gapLength();
     public static native int getManeuver();
