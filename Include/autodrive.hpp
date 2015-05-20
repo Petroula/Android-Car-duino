@@ -69,7 +69,7 @@ namespace Autodrive
             case Autodrive::DETECTING_GAP:
                 Parking::SetParkingManeuver(); // check what parking maneuver to initialize, if any
                 
-                if(Parking::currentManeuver.type == PERPENDICULAR_STANDARD){
+                if(Parking::currentManeuver.type != NO_MANEUVER){
                     status = PARKING;
                 }else{
                     lastCommand.setSpeed(normalSpeed); 
@@ -79,6 +79,9 @@ namespace Autodrive
             
             case Autodrive::PARKING:
                 lastCommand = Parking::Park();
+                if(Parking::currentManeuver.currentState == Autodrive::maneuver::mState::DONE){
+                    Parking::currentManeuver.type = NO_MANEUVER;
+                }
                 break; 
                 
             case Autodrive::UNKNOWN:
