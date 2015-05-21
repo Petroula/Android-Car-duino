@@ -21,6 +21,9 @@ namespace Autodrive {
 		
 		int gapLength = 0;
 		int gapStart = 0;
+		bool gapDepthOk = false;
+		
+		bool initialGap = true;
 		
 		// measure the length of a gap
 	    void SetGapLength(){
@@ -30,17 +33,32 @@ namespace Autodrive {
 				gapStart = SensorData::encoderDistance();
 			}
 	    }
+		
+		bool GapDepthOk(){
+			if(SensorData::ultrasound.rear < 1 || SensorData::ultrasound.rear > 10){
+				return true;
+			}else{
+				return false;
+			}
+		}
 	
 	    // the maneuver to engage depending on the size of a gap
-		void SetParkingManeuver() {						
-			SetGapLength();
+		void SetParkingManeuver() {		
 			
+			SetGapLength();
+		
 			// perpendicular standard
 			// if the gap length is between the size of the car and double the size of the car
 			if (gapLength > (1 * SensorData::carLength) && gapLength < (1.5 * SensorData::carLength) && SensorData::infrared.rearright > 0) {
-				gapLength = 0;
-				currentManeuver = maneuver(PERPENDICULAR_STANDARD);
-			
+				if(initialGap){
+					gapLength = 0;
+					initialGap = false;
+				}else{
+					if(GapDepthOk()){
+						currentManeuver = maneuver(PERPENDICULAR_STANDARD);
+					}
+				}
+	
 			// parallel wide	// this is dangerous without a front infrared
 			// if there is enought space for the car to park front
 //			}else if(SensorData::ultrasound.frontright < 1){
@@ -48,9 +66,17 @@ namespace Autodrive {
 
 			// parallel standard
 			// if there is not enought space for the car to park front on
-			}else if(gapLength > 1.5 * SensorData::carLength && SensorData::infrared.rearright > 0){
-				gapLength = 0;
-				currentManeuver = maneuver(PARALLEL_STANDARD);
+			}else if(gapLength > 1.4 * SensorData::carLength && SensorData::infrared.rearright > 0){
+				
+				// workarround to avoid the initial gap
+				if(initialGap){
+					gapLength = 0;
+					initialGap = false;
+				}else{
+					if(GapDepthOk()){
+						currentManeuver = maneuver(PARALLEL_STANDARD);
+					}
+				}
 				
 			// no matching maneuver
 			}else{
