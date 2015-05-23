@@ -49,7 +49,7 @@ public class PairDeviceActivity extends Activity implements AdapterView.OnItemCl
             alert.setCanceledOnTouchOutside(false);
             alert.show();
         }
-        ArrayAdapter<String> listAdapter = new ArrayAdapter<>(PairDeviceActivity.this, android.R.layout.simple_list_item_1, blue.listDevices);
+        ArrayAdapter<String> listAdapter = new ArrayAdapter<>(PairDeviceActivity.this, R.layout.custom_listview_item, android.R.id.text1, blue.listDevices);
 
         if(blue.listDevices.size() > 0) {
             progress.dismiss();
