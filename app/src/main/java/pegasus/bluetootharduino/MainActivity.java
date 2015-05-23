@@ -2,19 +2,17 @@ package pegasus.bluetootharduino;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.CompoundButton;
-import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements OnClickListener, CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener {
-
-
-    SeekBar kp, ki, kd;
+public class MainActivity extends Activity implements OnClickListener, CompoundButton.OnCheckedChangeListener, TextWatcher {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,41 +20,51 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
         setContentView(R.layout.main_activity);
 
         /* BUTTONS */
-        ((Button)findViewById(R.id.auto)).setOnClickListener(this);
-        ((Button)findViewById(R.id.parking)).setOnClickListener(this);
-        ((Button)findViewById(R.id.manual)).setOnClickListener(this);
+        findViewById(R.id.auto).setOnClickListener(this);
+        findViewById(R.id.parking).setOnClickListener(this);
+        findViewById(R.id.manual).setOnClickListener(this);
+        findViewById(R.id.advanced).setOnClickListener(this);
+        findViewById(R.id.bluetooth).setOnClickListener(this);
 
         //DISPLAY DEBUG INFORMATION SWITCH
         ((Switch)findViewById(R.id.DisplayDebugSwitch)).setOnCheckedChangeListener(this);
         //USE LIGHT NORMALIZATION SWITCH
         ((Switch)findViewById(R.id.LightNormalizationSwitch)).setOnCheckedChangeListener(this);
+        //USE LEFT LINE SWITCH
+        ((Switch)findViewById(R.id.LeftLineSwitch)).setOnCheckedChangeListener(this);
 
-        //PID SEEK BARS
-        ((SeekBar)findViewById(R.id.InnerIterationLength)).setOnSeekBarChangeListener(this);
-        ((SeekBar)findViewById(R.id.outerIterationLength)).setOnSeekBarChangeListener(this);
-        ((SeekBar)findViewById(R.id.smoothening)).setOnSeekBarChangeListener(this);
-        ((SeekBar)findViewById(R.id.ForwardWhenLostNFrames)).setOnSeekBarChangeListener(this);
-
-        //PID DESCRIPTIONS
-        ((TextView)findViewById(R.id.progress1)).setText("InnerIterationLength value set to 10");
-        ((TextView)findViewById(R.id.outerIterationLengthText)).setText("outerIterationLength value set to 6");
-        ((TextView)findViewById(R.id.lostThresholdText)).setText("lostThreshold value set to 0");
-        ((TextView)findViewById(R.id.smootheningText)).setText("smoothing value set to 2");
-
+        /* TEXT INPUTS */
+        TextView carLength = (TextView) findViewById(R.id.carLength);
+        carLength.setText("40");
+        carLength.addTextChangedListener(this);
     }
 
     /* BUTTONS */
     @Override
     public void onClick(View v) {
-
         switch (v.getId()){
             case R.id.manual:
+                Intent changeToManual = new Intent(getApplicationContext(),
+                ManualActivity.class);
+                startActivity(changeToManual);
                 break;
             case R.id.parking:
+                Autodrive.setParkingMode();
             case R.id.auto:
-                Intent changeToCamera= new Intent(getApplicationContext(),
+                Intent changeToCamera = new Intent(getApplicationContext(),
                 CameraActivity.class);
                 startActivity(changeToCamera);
+                break;
+            case R.id.advanced:
+                Intent changeToSettings= new Intent(getApplicationContext(),
+                AdvSettingsActivity.class);
+                startActivity(changeToSettings);
+                break;
+            case R.id.bluetooth:
+                Intent changeToPair= new Intent(getApplicationContext(),
+                PairDeviceActivity.class);
+                startActivity(changeToPair);
+                break;
         }
     }
 
@@ -70,46 +78,27 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
             case R.id.DisplayDebugSwitch:
                 Settings.DisplayDebugInformation = isChecked;
                 break;
-        }
-    }
-
-    /* SEEK BAR */
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        switch (seekBar.getId()) {
-            case R.id.outerIterationLength:
-                if(fromUser) {
-                    ((TextView)findViewById(R.id.outerIterationLengthText)).setText("outerIterationLength set to " + progress);
-                    Autodrive.setSettingRightIterationLength(progress);
-                }
-                break;
-
-            case R.id.InnerIterationLength:
-                if(fromUser) {
-                    ((TextView)findViewById(R.id.progress1)).setText("InnerIterationLength set to " + progress);
-                    Autodrive.setSettingLeftIterationLength(progress);
-                }
-                break;
-            case R.id.ForwardWhenLostNFrames:
-                    if(progress > 0) {
-                        ((TextView) findViewById(R.id.lostThresholdText)).setText("will reset angle after " + progress + " frames");
-                    }else {
-                        ((TextView) findViewById(R.id.lostThresholdText)).setText("will never reset angle");
-                    }
-                    Autodrive.setForwardWhenLost(progress);
-                break;
-            case R.id.smoothening:
-                if(fromUser) {
-                    ((TextView)findViewById(R.id.smootheningText)).setText("smoothening value set to " + progress);
-                    Autodrive.setSettingSmoothening(progress);
-                }
+            case R.id.LeftLineSwitch:
+                Autodrive.setSettingUseLeftLine(isChecked);
                 break;
         }
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {}
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {}
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        String string = charSequence.toString();
+        if (string.equals("")) string = "0";
+        Integer integer = Integer.parseInt(string);
+        Autodrive.setCarLength(integer);
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
 }

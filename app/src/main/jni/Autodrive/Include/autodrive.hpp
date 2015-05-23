@@ -1,5 +1,6 @@
 #pragma once
 #include "sensordata.hpp"
+#include "parking.hpp"
 #include "imageprocessor/imageprocessor.hpp"
 
 namespace Autodrive
@@ -16,29 +17,34 @@ namespace Autodrive
         return lastCommand.changedAngle;
     }
 
-    int getSpeed()
+    double getSpeed()
     {
         return lastCommand.speed;
     }
 
-    float getAngle()
+    double getAngle()
     {
         return lastCommand.angle;
     }
 
     enum carstatus
     {
-        SEARCHING_FOR_LANES,FOLLOWING_LANES,UNKNOWN
-    };
+        DETECTING_GAP, PARKING, SEARCHING_FOR_LANES, FOLLOWING_LANES, UNKNOWN
+    };  
+    
+    carstatus initialStatus = SEARCHING_FOR_LANES;
+    carstatus status = initialStatus;
 
-    carstatus status;
-
-
-    void reset()
+    void setInitialStatus(carstatus newStatus)
     {
-        status = SEARCHING_FOR_LANES;
+        initialStatus = newStatus;
+        status = newStatus;
     }
 
+    void resetStatus()
+    {
+       status = initialStatus;
+    }
 
     void drive()
     {
@@ -50,31 +56,39 @@ namespace Autodrive
             case Autodrive::SEARCHING_FOR_LANES:
                 if (Autodrive::imageProcessor::init_processing(Autodrive::SensorData::image))
                 {
-                    lastCommand.setSpeed(55);
+                    lastCommand.setSpeed(normalSpeed);
                     status = FOLLOWING_LANES;
                 }
                 break;
+                
             case Autodrive::FOLLOWING_LANES:
                 lastCommand = Autodrive::imageProcessor::continue_processing(*Autodrive::SensorData::image);
                 break;
-            case Autodrive::UNKNOWN:
-                /*
                 
-                EXAMPLE:
-
-                if(Autodrive::SensorData::infrared[1] < 10)
-                    lastCommand.setSpeed(0);
-
-                */
+            // debug only! will be merged with lane following   
+            case Autodrive::DETECTING_GAP:
+                Parking::SetParkingManeuver(); // check what parking maneuver to initialize, if any
+                
+                if(Parking::currentManeuver.type != NO_MANEUVER){
+                    status = PARKING;
+                }else{
+                    lastCommand.setSpeed(normalSpeed); 
+                }
                 break;
+            // -----------
+            
+            case Autodrive::PARKING:
+                lastCommand = Parking::Park();
+                if(Parking::currentManeuver.currentState == Autodrive::maneuver::mState::DONE){
+                    Parking::currentManeuver.type = NO_MANEUVER;
+                }
+                break; 
+                
+            case Autodrive::UNKNOWN:
+                break;
+                
             default:
                 break;
         }
     }
-
-
-
-
-
-
 }

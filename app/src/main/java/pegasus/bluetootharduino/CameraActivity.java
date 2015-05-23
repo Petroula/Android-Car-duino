@@ -1,16 +1,15 @@
 package pegasus.bluetootharduino;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -21,22 +20,19 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import org.opencv.android.NativeCameraView;
 
 
 public class CameraActivity extends Activity implements CvCameraViewListener2, OnGestureListener {
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private static final String TAG = "CameraActivity";
+    static TextView debugConsole;
 
     GestureDetector detector;
     AutomaticCarDriver driver = new AutomaticCarDriver();
 
-    Bluetooth bt = new Bluetooth();
+    BluetoothConnection bt = new BluetoothConnection();
+    BluetoothPairing blue = new BluetoothPairing();
 
     @SuppressWarnings("deprecation")
     @Override
@@ -52,25 +48,37 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
 
         detector = new GestureDetector(this);
 
-        bt.checkBT();
+        debugConsole = (TextView) findViewById(R.id.debugConsole);
 
-        //if device does not support bluetooth (not really needed)
-        if(bt.adapter == null) {
-            Intent enable = new Intent(String.valueOf(BluetoothAdapter.ERROR));
-            startActivityForResult(enable,  0);
-        }
-
-        if(!bt.btEnabled) {
-            Intent enable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enable,  1);
-        }
-        try {
-            bt.runBT();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(blue.btEnabled) {
+            try {
+                bt.runBT();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
+    static public void updateDebuggingConsole() {
+        debugConsole.setText("");
+        debugConsole.append("SENSORS:\n");
+        debugConsole.append("ultrasonicFront: " + String.valueOf(Autodrive.usFront()) + "\n");
+        debugConsole.append("ultrasonicFrontRight: " + String.valueOf(Autodrive.usFrontRight()) + "\n");
+        debugConsole.append("ultrasonicRear: " + String.valueOf(Autodrive.usRear()) + "\n");
+        debugConsole.append("infraredSideFront: " + String.valueOf(Autodrive.irFrontRight()) + "\n");
+        debugConsole.append("infraredSideRear: " + String.valueOf(Autodrive.irRearRight()) + "\n");
+        debugConsole.append("infraredRear: " + String.valueOf(Autodrive.irRear()) + "\n");
+        debugConsole.append("gyroscope: " + String.valueOf(Autodrive.gyroHeading()) + "\n");
+        debugConsole.append("razorboard: " + String.valueOf(Autodrive.razorHeading()) + "\n");
+        debugConsole.append("\n");
+        debugConsole.append("PARKING:\n");
+        debugConsole.append("gap length: " + String.valueOf(Autodrive.gapLength()) + "\n");
+        debugConsole.append("current maneuver: " + Autodrive.maneuver() + "\n");
+        debugConsole.append("maneuver state: " + Autodrive.maneuverstate() + "\n");
+        debugConsole.append("current angle: " + Autodrive.angleTurned() + "\n");
+        debugConsole.append("is initial gap: " + String.valueOf(Autodrive.isInitialGap()) + "\n");
+        debugConsole.append("has correct depth: " + String.valueOf(Autodrive.isGapDepthOk()) + "\n");
+    }
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -155,6 +163,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         if(e1.getX()<e2.getX()) {
             // disconnect safely
             if(bt.socket.isConnected()) {
+                bt.sendToManualMode("stop");
                 bt.disconnect();
             }
             /** Changes to Main screen */
@@ -170,4 +179,15 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         return detector.onTouchEvent(ev);
     }
 
+    /** Changes the behaviour of the back button */
+    public void onBackPressed() {
+
+        // disconnect safely
+        if(bt.socket.isConnected()) {
+            bt.sendToManualMode("stop");
+            bt.disconnect();
+        }
+        Intent changeToMain= new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(changeToMain);
+    }
 }

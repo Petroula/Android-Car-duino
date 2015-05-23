@@ -8,23 +8,19 @@ package pegasus.bluetootharduino;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Set;
 import java.util.UUID;
-
 import android.bluetooth.*;
 import android.os.Handler;
 import android.util.Log;
 
-public class Bluetooth {
+public class BluetoothConnection {
 
-    BluetoothAdapter adapter;
-    BluetoothDevice MiDevice;
     static BluetoothSocket socket;
+    BluetoothAdapter adapt;
     InputStream in;
     static OutputStream out;
-
-    boolean btEnabled = true;
     String returnResult;
+    String carduino = "98:D3:31:70:22:71";
 
     Thread BlueToothThread;
     boolean stop = false;
@@ -32,36 +28,18 @@ public class Bluetooth {
     byte read[];
     static Netstrings nt = new Netstrings();
 
-    //connect
-    public void checkBT() {
-
-        //check if bluetooth on device is enabled
-        adapter = BluetoothAdapter.getDefaultAdapter();
-
-        if (!adapter.isEnabled()) {
-            btEnabled = false;
-        }
-
-        // pairs device
-        Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
-        if(pairedDevices.size() > 0) {
-            for(BluetoothDevice device : pairedDevices) {
-                if(device.getName().equals("carduino")) {
-                    MiDevice = device;
-                    // data.setText("device paired");
-                    break;
-                }
-            }
-        }
-    }
 
     public void runBT() throws IOException, NullPointerException {
 
         //opens connection
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Standard SerialPortService ID
 
-        socket = MiDevice.createRfcommSocketToServiceRecord(uuid);
-
+        if(BluetoothPairing.MiDevice == null) {
+            adapt = BluetoothAdapter.getDefaultAdapter();
+            socket = adapt.getRemoteDevice(carduino).createRfcommSocketToServiceRecord(uuid);
+        } else {
+            socket = BluetoothPairing.MiDevice.createRfcommSocketToServiceRecord(uuid);
+        }
 
         socket.connect();
         out = socket.getOutputStream();
@@ -99,6 +77,7 @@ public class Bluetooth {
                                         public void run() {
                                             returnResult = nt.decodedNetstring(result);
                                             Log.i("result", returnResult);
+                                            SensorData.handleInput(returnResult);
                                         }
                                     });
 
@@ -124,9 +103,9 @@ public class Bluetooth {
         try {
                 String text = "";
                 if(Autodrive.speedChanged())
-                    text +=nt.encodedNetstring("m" + String.valueOf(Autodrive.getTargetSpeed()));
+                    text +=nt.encodedNetstring("m" + String.valueOf(Autodrive.getConvertedSpeed()));
                 if(Autodrive.angleChanged())
-                    text += nt.encodedNetstring("t" + String.valueOf(Autodrive.getTargetAngle()));
+                    text += nt.encodedNetstring("t" + String.valueOf(Autodrive.getConvertedAngle()));
 
                 if(!text.isEmpty()) {
                     if (socket.isConnected()) {
@@ -136,6 +115,36 @@ public class Bluetooth {
             } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendToManualMode(String command) {
+        try {
+            String text ="";
+            if(command.equals("front")) {
+                text = nt.encodedNetstring("m80");
+                text += nt.encodedNetstring("t0");
+            } else if(command.equals("back")) {
+                text = nt.encodedNetstring("m-250");
+                text += nt.encodedNetstring("t0");
+            } else if(command.equals("right")) {
+                text = nt.encodedNetstring("t20");
+            } else if(command.equals("left")) {
+                text = nt.encodedNetstring("t-20");
+            } else if(command.equals("stop")) {
+                text = nt.encodedNetstring("m0");
+                text += nt.encodedNetstring("t0");
+            }
+
+            if(!text.isEmpty()) {
+                if (socket.isConnected()) {
+                    out.write(text.getBytes());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
     }
 
     public void disconnect() {

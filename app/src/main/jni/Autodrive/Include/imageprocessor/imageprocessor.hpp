@@ -2,7 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 
-#include "command.hpp"
+#include "../command.hpp"
 #include "util.hpp"
 #include "lightnormalizer.hpp"
 #include "../settings.hpp"

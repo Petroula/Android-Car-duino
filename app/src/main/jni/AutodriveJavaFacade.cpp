@@ -17,45 +17,192 @@ using namespace cv;
 
 extern "C" 
 {
-    TYPE(void) NAME (drive) ()
+    TYPE(void) NAME (drive)()
     {
         Autodrive::drive();
     }
 	
     TYPE(void) NAME(reset)()
     {
-        return Autodrive::reset();
+        return Autodrive::resetStatus();
     }
-	
-	/*----- SENSORDATA -----*/
+
+    TYPE(void) NAME(setParkingMode)()
+    {
+        Autodrive::SensorData::carLength = 40;
+        Autodrive::setInitialStatus(Autodrive::DETECTING_GAP);
+    }
+    
+    TYPE(void) NAME(setCarLength)(int carLength)
+    {
+        Autodrive::SensorData::carLength = carLength;
+    }
+    
+    TYPE(jint) NAME(getCarLength)()
+    {
+        return Autodrive::SensorData::carLength;
+    }
+
+   /*----- DEBUGDATA -----*/
+   
+   // parking
+
+   TYPE(jboolean)NAME(isGapDepthOk)()
+   {
+        return Autodrive::Parking::gapDepthOk;
+   }
+
+   TYPE(jboolean)NAME(isInitialGap)()
+   {
+        return Autodrive::Parking::initialGap;
+   }
+
+   
+   TYPE(jint) NAME(gapLength)()
+  	{
+	    return Autodrive::Parking::gapLength;
+	}
+    
+    TYPE(jint) NAME(angleTurned)()
+    {
+        return Autodrive::Status::currentAngle;
+    }
+    
+    TYPE(jint)NAME(getManeuver)()
+    {
+        switch(Autodrive::Parking::currentManeuver.type)
+        {
+            case Autodrive::NO_MANEUVER:
+                return 0;
+            case Autodrive::PARALLEL_STANDARD:
+                return 1;
+            case Autodrive::PARALLEL_WIDE:
+                return 2;
+            case Autodrive::PERPENDICULAR_STANDARD:
+                return 3;
+            default:
+                return -1;
+        }
+    }
+    
+    TYPE(jint)NAME(getManeuverState)()
+    {
+        switch(Autodrive::Parking::currentManeuver.currentState)
+        {
+            case Autodrive::maneuver::mState::NOT_MOVING:
+                return 0;
+            case Autodrive::maneuver::mState::FORWARD:
+                return 1;
+            case Autodrive::maneuver::mState::BACKWARD:
+                return 2;
+            case Autodrive::maneuver::mState::FORWARD_RIGHT:
+                return 3;
+            case Autodrive::maneuver::mState::BACKWARD_RIGHT:
+                return 4;
+            case Autodrive::maneuver::mState::FORWARD_LEFT:
+                return 5;
+            case Autodrive::maneuver::mState::BACKWARD_LEFT:
+                return 6;
+            case Autodrive::maneuver::mState::DONE:
+                return 7;
+            default:
+                return -1;
+        }
+    }
+    
+    /*----- SENSORDATA -----*/
+    
+    // getters - for debuging purposes
+    
+    TYPE(jint)NAME(usFront)()
+    {
+        return Autodrive::SensorData::ultrasound.front;
+    }
+    
+    TYPE(jint)NAME(usFrontRight)()
+    {
+        return Autodrive::SensorData::ultrasound.frontright;
+    }
+    
+    TYPE(jint)NAME(usRear)()
+    {
+        return Autodrive::SensorData::ultrasound.rear;
+    }
+    
+    TYPE(jint)NAME(irFrontRight)()
+    {
+        return Autodrive::SensorData::infrared.frontright;
+    }
+    
+    TYPE(jint)NAME(irRearRight)()
+    {
+        return Autodrive::SensorData::infrared.rearright;
+    }
+    
+    TYPE(jint)NAME(irRear)()
+    {
+        return Autodrive::SensorData::infrared.rear;
+    }
+    
+    TYPE(jint)NAME(gyroHeading)()
+    {
+        return Autodrive::SensorData::gyroHeading;
+    }
+    
+    TYPE(jint)NAME(razorHeading)()
+    {
+        return Autodrive::SensorData::razorHeading;
+    }
+    
+   // setters
 
     TYPE(void) NAME(setImage) PARAMS(long newMat){
         Autodrive::SensorData::image = (cv::Mat*)newMat;
     }
 
-    TYPE(void) NAME(setUltraSound) PARAMS(int sensor,int value){
-        Autodrive::SensorData::ultrasound[sensor] = value;
-
+    TYPE(void) NAME(setUltrasound) PARAMS(int sensor,int value){
+        switch (sensor)
+        {
+            case 0:
+                Autodrive::SensorData::ultrasound.front = value;
+                break;
+            case 1:
+                Autodrive::SensorData::ultrasound.frontright = value;
+                break;
+            default:
+            case 2:
+                Autodrive::SensorData::ultrasound.rear = value;
+                break;
+        }
     }
 
     TYPE(void) NAME(setInfrared) PARAMS(int sensor,int value){
-        Autodrive::SensorData::infrared[sensor] = value;
+        switch (sensor)
+        {
+            case 0:
+                Autodrive::SensorData::infrared.frontright = value;
+                break;
+            case 1:
+                Autodrive::SensorData::infrared.rearright = value;
+                break;
+            default:
+            case 2:
+                Autodrive::SensorData::infrared.rear = value;
+                break;
+        }
+
     }
 
-    TYPE(jint) NAME(getUltraSound) PARAMS(int sensor){
-        return Autodrive::SensorData::ultrasound[sensor];
-    }
-    
-    TYPE(jint) NAME(getInfrared) PARAMS(int sensor){
-        return Autodrive::SensorData::infrared[sensor];
-    }
-    
-    TYPE(void) NAME(setEncoderPulses) PARAMS(int value){
+    TYPE(void) NAME(setEncoderPulses) PARAMS(long value){
         Autodrive::SensorData::encoderPulses = value;
     }
     
-    TYPE(jdouble) NAME(getEncoderDistance) (){
-        return Autodrive::SensorData::encoderDistance();
+    TYPE(void) NAME(setGyroHeading) PARAMS(int value){
+        Autodrive::SensorData::gyroHeading = value;
+    }
+    
+    TYPE(void) NAME(setRazorHeading) PARAMS(int value){
+        Autodrive::SensorData::razorHeading = value;
     }
     
 	
@@ -71,12 +218,12 @@ extern "C"
         return Autodrive::angleChanged();
     }
 
-    TYPE(jint) NAME(getTargetSpeed)()
+    TYPE(jdouble) NAME(getTargetSpeed)()
     {
         return Autodrive::getSpeed();
     }
 
-    TYPE(jint) NAME(getTargetAngle)()
+    TYPE(jdouble) NAME(getTargetAngle)()
     {
         return Autodrive::getAngle();
     }

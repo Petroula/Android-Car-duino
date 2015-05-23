@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:opencv="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -10,6 +10,21 @@
         android:visibility="gone"
         android:id="@+id/CameraView"
         opencv:show_fps="true"
-        opencv:camera_id="any" />
+        opencv:camera_id="any"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp" />
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/debugConsole"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="#d1000000"
+        android:textColor="#ffff4270"
+        android:padding="10dp" />
+
+</RelativeLayout>
