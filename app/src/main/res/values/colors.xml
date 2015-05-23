@@ -1,0 +1,13 @@
+<resources>
+
+    <color name = "black">#000000</color>
+    <color name = "green">#00FF00</color>
+    <color name = "gray">#808080</color>
+    <color name = "dark_gray">#ff5e5e5e</color>
+    <color name = "lighter_gray">#ffcecece</color>
+    <color name = "white">#FFFFFF</color>
+    <color name = "blue">#0000FF</color>
+    <color name = "light_blue">#ff378acf</color>
+    <color name = "lighter_blue">#ffbee2ff</color>
+
+    </resources>
