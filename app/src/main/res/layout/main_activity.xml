@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@color/black"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -14,6 +14,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Auto Drive"
+                android:background="@drawable/rectangle_buttons"
+                android:textColor="@color/white"
                 android:textSize="30sp"
                 android:enabled="true"
                 android:clickable="true"
@@ -29,6 +31,8 @@
                 android:layout_width="261dp"
                 android:layout_height="wrap_content"
                 android:text="Parking"
+                android:background="@drawable/rectangle_buttons"
+                android:textColor="@color/white"
                 android:layout_alignParentTop="true"
                 android:layout_alignRight="@+id/LightNormalizationSwitch"
                 android:layout_alignEnd="@+id/LightNormalizationSwitch" />
@@ -37,18 +41,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Light normalization"
+                android:thumb="@color/black"
+                android:textColor="@color/white"
                 android:id="@+id/LightNormalizationSwitch"
-                android:checked="true"
+                android:checked="false"
                 android:layout_above="@+id/DisplayDebugSwitch"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginBottom="2dp" />
+                android:layout_marginBottom="4dp" />
 
             <Button
                 android:id="@+id/manual"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Manual"
+                android:background="@drawable/rectangle_buttons"
+                android:textColor="@color/white"
                 android:layout_gravity="center_vertical"
                 android:layout_below="@+id/parking"
                 android:layout_alignRight="@+id/parking"
@@ -61,29 +69,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Advanced Settings"
-                android:textStyle="italic"
+                android:background="@drawable/rectangle_buttons"
+                android:textColor="@color/white"
                 android:layout_gravity="center_vertical"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/bluetooth"
+                android:layout_toStartOf="@+id/bluetooth" />
 
             <Switch
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Debug information"
+                android:thumb="@color/black"
+                android:textColor="@color/white"
                 android:id="@+id/DisplayDebugSwitch"
-                android:checked="true"
+                android:checked="false"
                 android:layout_above="@+id/LeftLineSwitch"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginBottom="2dp" />
+                android:layout_marginBottom="4dp" />
 
             <Switch
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Use Left Line"
+                android:thumb="@color/black"
+                android:textColor="@color/white"
                 android:id="@+id/LeftLineSwitch"
-                android:checked="true"
+                android:checked="false"
                 android:layout_above="@+id/advanced"
+                android:layout_marginBottom="4dp"
                 android:layout_centerHorizontal="true" />
 
     <Button
@@ -91,34 +108,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="BT"
+        android:textColor="@color/white"
+        android:background="@drawable/rectangle_buttons"
         android:id="@+id/bluetooth"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/advanced"
-        android:layout_toEndOf="@+id/advanced" />
+        android:layout_alignRight="@+id/LeftLineSwitch"
+        android:layout_alignEnd="@+id/LeftLineSwitch" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
+        android:textColor="@color/white"
         android:ems="10"
         android:id="@+id/carLength"
         android:layout_above="@+id/LightNormalizationSwitch"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/bluetooth"
-        android:layout_toRightOf="@+id/bluetooth"
-        android:text="50" />
+        android:text="50"
+        android:layout_alignRight="@+id/LightNormalizationSwitch"
+        android:layout_alignEnd="@+id/LightNormalizationSwitch"
+        android:layout_toRightOf="@+id/advanced"
+        android:layout_toEndOf="@+id/advanced" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Car length"
+        android:textColor="@color/white"
         android:id="@+id/textView"
-        android:layout_above="@+id/LightNormalizationSwitch"
+        android:textSize="17sp"
+        android:typeface="normal"
+        android:layout_alignBottom="@+id/carLength"
+        android:layout_marginBottom="4dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="16dp"
-        android:typeface="normal" />
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
