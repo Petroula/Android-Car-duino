@@ -76,6 +76,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         debugConsole.append("current maneuver: " + Autodrive.maneuver() + "\n");
         debugConsole.append("maneuver state: " + Autodrive.maneuverstate() + "\n");
         debugConsole.append("current angle: " + Autodrive.angleTurned() + "\n");
+        debugConsole.append("is initial gap: " + String.valueOf(Autodrive.isInitialGap()) + "\n");
+        debugConsole.append("has correct depth: " + String.valueOf(Autodrive.isGapDepthOk()) + "\n");
     }
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {

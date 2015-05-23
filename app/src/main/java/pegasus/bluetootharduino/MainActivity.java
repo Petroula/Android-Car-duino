@@ -35,7 +35,7 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
 
         /* TEXT INPUTS */
         TextView carLength = (TextView) findViewById(R.id.carLength);
-        carLength.setText(Autodrive.getCarLength() + "");
+        carLength.setText("40");
         carLength.addTextChangedListener(this);
     }
 

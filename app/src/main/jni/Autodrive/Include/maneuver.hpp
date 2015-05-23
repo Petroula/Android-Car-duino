@@ -35,13 +35,9 @@ namespace Autodrive {
 		// measuring angle turned
 		bool measuringAngle = false;
 		int startAngle = 0;
-<<<<<<< HEAD
-		
-		int currentAngle = 0;
-=======
+
 		int currentAngle = 0;
 		int remainingAngle = 0;
->>>>>>> 4f182f16d768bc825c52d31ed4cf971ac6023c3d
 
 		// is the car stopped 
 		bool IsStoped(){
@@ -71,13 +67,7 @@ namespace Autodrive {
 		
 		// checks if the car has turned a specific angle
 		bool HasTurnedAngle(int desiredAngle){
-<<<<<<< HEAD
 
-			currentAngle = 0;
-
-=======
-			
->>>>>>> 4f182f16d768bc825c52d31ed4cf971ac6023c3d
 			// initialize start point
 			if(!measuringAngle){
 				startAngle = SensorData::gyroHeading;
@@ -89,11 +79,7 @@ namespace Autodrive {
 			currentAngle = (startAngle - SensorData::gyroHeading) % 360;
 			if(currentAngle > 180) currentAngle = 360 - currentAngle;
 
-<<<<<<< HEAD
-			if(abs(currentAngle) * 0.9 > abs(desiredAngle) || HasTraveledDistance(desiredAngle * 1.55) ) {
-=======
 			if(abs(currentAngle) >= abs(desiredAngle) || HasTraveledDistance(desiredAngle * 1.55 )) {
->>>>>>> 4f182f16d768bc825c52d31ed4cf971ac6023c3d
 				measuringAngle = false;
 				return true;
 			}else{
@@ -136,35 +122,16 @@ namespace Autodrive {
             }
 		}
 		
-		mState GetOpositeState(mState m){
-			switch(m){
-				case FORWARD:
-					return BACKWARD;
-				case BACKWARD:
-					return FORWARD;
-				case FORWARD_RIGHT:
-					return BACKWARD_LEFT;
-				case BACKWARD_LEFT:
-					return FORWARD_RIGHT;
-				case FORWARD_LEFT:
-					return BACKWARD_RIGHT;
-				case BACKWARD_RIGHT:
-					return FORWARD_LEFT;
-				default:
-					return NOT_MOVING;
-			}
-		}
-		
 		// the procedure for perpendicular parking
 		command PerpendicularStandard(){
 			command cmd;
 			switch(currentState){
 				case NOT_MOVING:
-					if(Status::IsStoped()){
+					if(Status::HasTraveledDistance(0.25*SensorData::carLength)){
 						currentState = BACKWARD_RIGHT;
 						cmd = command();
 					}else{
-						cmd.setSpeed(0);
+						cmd.setSpeed(slowSpeed);
 					}
 				break;
 				case BACKWARD_RIGHT:
@@ -188,7 +155,7 @@ namespace Autodrive {
 			
 			switch(currentState){
 				case NOT_MOVING:
-					if(Status::HasTraveledDistance(0.25*SensorData::carLength)){
+					if(Status::HasTraveledDistance(0.1*SensorData::carLength)){
 						currentState = BACKWARD_RIGHT;
 						cmd = command();
 					}else{
@@ -212,28 +179,31 @@ namespace Autodrive {
 						cmd.setAngle(-1.0);
 						cmd.setSpeed(backwardsSpeed);
 					}
-					if((SensorData::infrared.rear > 0 && SensorData::infrared.rear < 2)  /*|| (SensorData::ultrasound.rear > 1 && SensorData::ultrasound.rear < 25)*/){	// TODO emergency stop maneuver
-						cmd.setSpeed(0);
+					if(SensorData::infrared.rear > 0 || (SensorData::ultrasound.rear > 1 && SensorData::ultrasound.rear < 40)){	// TODO emergency stop maneuver
+						cmd.setSpeed(normalSpeed);
 						
-						Status::remainingAngle = 45 - Status::currentAngle; // err if the car turns in several directions
+						Status::remainingAngle = 20 - Status::currentAngle; // err if the car turns in several directions
 						Status::measuringAngle = false;
 						Status::measuringDistance = false;
 						currentState = FORWARD_RIGHT;
 					}
 				break;
 				case FORWARD_RIGHT:
-					if(Status::HasTurnedAngle(Status::remainingAngle)){
-						currentState = BACKWARD;
+					/*if(Status::HasTurnedAngle(Status::remainingAngle)){
+						currentState = DONE;
 						cmd.setSpeed(0);
 					}else{
-						cmd.setSpeed(normalSpeed);
+						cmd.setSpeed(slowSpeed);
 						cmd.setAngle(1);
-					}
+					}*/
 					
-					if((SensorData::ultrasound.front > 0 && SensorData::ultrasound.front < 2)){	// TODO emergency stop maneuver
+					if((SensorData::ultrasound.front > 0 && SensorData::ultrasound.front < 25)){	// TODO emergency stop maneuver
 						cmd.setSpeed(0);
-						currentState = BACKWARD;
+						currentState = DONE;
 						Status::measuringDistance = false;
+					}else{
+						cmd.setSpeed(slowSpeed);
+						cmd.setAngle(0);
 					}
 				break;
 				case BACKWARD:
@@ -244,17 +214,6 @@ namespace Autodrive {
 						cmd.setSpeed(backwardsSpeed);
 						cmd.setAngle(0);
 					}
-				break;
-				case FORWARD_RIGHT:
-					
-					if(Status::HasTurnedAngle(10)){
-						currentState = DONE;
-						cmd.setSpeed(0);
-					}else{
-						cmd.setSpeed(normalSpeed);
-						cmd.setAngle(1);
-					}
-					
 				break;
 				default:
 					cmd = command();

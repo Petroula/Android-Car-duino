@@ -46,6 +46,17 @@ extern "C"
    /*----- DEBUGDATA -----*/
    
    // parking
+
+   TYPE(jboolean)NAME(isGapDepthOk)()
+   {
+        return Autodrive::Parking::gapDepthOk;
+   }
+
+   TYPE(jboolean)NAME(isInitialGap)()
+   {
+        return Autodrive::Parking::initialGap;
+   }
+
    
    TYPE(jint) NAME(gapLength)()
   	{

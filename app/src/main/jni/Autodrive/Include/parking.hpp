@@ -49,14 +49,14 @@ namespace Autodrive {
 		
 			// perpendicular standard
 			// if the gap length is between the size of the car and double the size of the car
-			if (gapLength > (1 * SensorData::carLength) && gapLength < (1.5 * SensorData::carLength) && SensorData::infrared.rearright > 0) {
+			if (gapLength > (0.8 * SensorData::carLength) && gapLength < (1.5 * SensorData::carLength) && SensorData::infrared.rearright > 0) {
 				if(initialGap){
 					gapLength = 0;
 					initialGap = false;
 				}else{
-					if(GapDepthOk()){
+					//if(GapDepthOk()){
 						currentManeuver = maneuver(PERPENDICULAR_STANDARD);
-					}
+					//}
 				}
 			// parallel wide	// this is dangerous without a front infrared
 			// if there is enought space for the car to park front
@@ -72,14 +72,18 @@ namespace Autodrive {
 					gapLength = 0;
 					initialGap = false;
 				}else{
-					if(GapDepthOk()){
+					//if(GapDepthOk()){
 						currentManeuver = maneuver(PARALLEL_STANDARD);
-					}
+					//}
 				}
 				
 			// no matching maneuver
 			}else{
+				if(SensorData::infrared.rearright > 0 && initialGap){
+					initialGap = false;
+				}
 				currentManeuver = maneuver(NO_MANEUVER);
+
 			}
 		}
 		

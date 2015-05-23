@@ -25,6 +25,9 @@ public class Autodrive
     public static native int gapLength();
     public static native int getManeuver();
     public static native int getManeuverState();
+
+    public static native boolean isInitialGap();
+    public static native boolean isGapDepthOk();
     
     public static native int angleTurned();
     
