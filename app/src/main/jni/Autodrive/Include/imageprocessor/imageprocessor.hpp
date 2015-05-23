@@ -71,7 +71,8 @@ namespace Autodrive
 
             if (cmnd.changedAngle)
             {
-                angle = ((90 - cmnd.angle*1.5)* Autodrive::Mathf::PI) / 180.f ;
+                //TODO: *15 really needed
+                angle = ((90 - cmnd.angle*15)* Autodrive::Mathf::PI) / 180.f ;
             }
 
             //leftImageBorder.draw(mat, cv::Scalar(0, 255, 255), 8);

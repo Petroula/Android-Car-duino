@@ -10,10 +10,11 @@ namespace Autodrive
         std::unique_ptr<linefollower> rightLineFollower = nullptr;
         
         std::vector<int> prevDirs;
+        int unfoundCounter = 0;
 
         int FindCarEnd(const cv::Mat& cannied)
         {
-            POINT center_bottom(centerX, cannied.size().height - 5);
+            POINT center_bottom(centerX, cannied.size().height - 8);
             //SEARCH UPWARDS UNTIL _NOT_ HIT ON THE CENTER +/- 10
             bool hit = true;
             while (hit)
@@ -61,8 +62,8 @@ namespace Autodrive
             POINT rightLineStart = FindLineStart(cannied, Direction::RIGHT);
             POINT leftLineStart = FindLineStart(cannied, Direction::LEFT);
 
-            leftLineFollower = make_unique<linefollower>(cannied, leftLineStart, centerX);
-            rightLineFollower = make_unique<linefollower>(cannied, rightLineStart, centerX);
+            leftLineFollower = make_unique<linefollower>(cannied, leftLineStart, centerX,carY);
+            rightLineFollower = make_unique<linefollower>(cannied, rightLineStart, centerX,carY);
         }
 
 
@@ -75,25 +76,27 @@ namespace Autodrive
 
             drawMat = draw(cannied);
 
-            //optional<int> leftTargetAngle = leftLineFollower->getPreferedAngle();
+            optional<int> leftTargetAngle = leftLineFollower->getPreferedAngle();
             optional<int> rightTargetAngle = rightLineFollower->getPreferedAngle();
             optional<int> targetAngle = nullptr;
 
-            /*if (leftTargetAngle && rightTargetAngle && Settings::useLeftLine)
+            if (leftTargetAngle && rightTargetAngle && Settings::useLeftLine)
             {
                 // Give the right line just a bit more priority since it seems more reliable
                 targetAngle = weighted_average(*rightTargetAngle, *leftTargetAngle, 3);
             } else if (leftTargetAngle && Settings::useLeftLine)
             {
                 targetAngle = *leftTargetAngle;
-            } else*/ if (rightTargetAngle)
+            } else if (rightTargetAngle)
             {
                 targetAngle = *rightTargetAngle;
+            }else if(unfoundCounter++ > 5){
+                 cmd.setAngle(0);
             }
             
             if(targetAngle)
             {
-
+                unfoundCounter = 0;
                 if(Settings::smoothening == 0)
                 {
                     cmd.setAngle(*targetAngle / 25.0);

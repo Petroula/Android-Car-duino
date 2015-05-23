@@ -34,9 +34,9 @@ namespace Autodrive
                 linef(bottom_center + offsetX, POINT(centerX, 0) + offsetX).draw(*colorCopy, cv::Scalar(255, 255, 0));
         }
 
-        linefollower(const cv::Mat& cannied, POINT laneStartPoint, int center_x)
+        linefollower(const cv::Mat& cannied, POINT laneStartPoint, int center_x,int carY)
         {
-            roadBuilder = make_unique<roadlinebuilder>(laneStartPoint, center_x);
+            roadBuilder = make_unique<roadlinebuilder>(laneStartPoint, center_x,carY);
 
             roadLine = roadBuilder->build(cannied, roadsize);
 
@@ -54,42 +54,21 @@ namespace Autodrive
         {
             if(!isFound())
                 return targetRoadDistance;
-            float startDistance = roadLine.getMeanStartDistance(5);
+            float startDistance = roadLine.getMeanStartDistance(4);
             return (startDistance - targetRoadDistance) * 1.1f;
-
         }
-
-        float outMax=25;
-        float outMin=-25;
-        float error;
-        float integral = 0;
-        float previous_error=0;
-        float derivate;
-        float kp = Settings::kp;
-        float ki = Settings::ki;
-        float kd = Settings::kd;
-        float Output;
-        int degrees ;
 
         optional<int> getPreferedAngle()
         {
             if (isFound())
             {
                 /* Start by setting the target angle to the mean road angle*/
-                //int degrees = Mathf::toDegrees(roadLine.getMeanAngle(4)) - 90;
-                //degrees = int((degrees / 48.f) * 25);
-                //degrees *= -1;
-                // If the current distance is larger than, target distance, turn more right, vice versa
-
-                error =  roadLine.getMeanStartDistance(5) - targetRoadDistance;
-                integral = integral + error;
-                derivate = (error - previous_error);
-                Output = (kp * error) + (ki*integral) + (kd * derivate);
-                previous_error = error;
-
-                degrees=int(Output)*0.25;
-                usleep(1000);
-
+                int degrees = Mathf::toDegrees(roadLine.getMeanAngle(4)) - 90;
+                degrees = int((degrees / 65.f) * 25);
+                degrees *= -1;
+                
+                degrees+=distanceDeviation();
+                
                 degrees = std::min(degrees, 25);
                 degrees = std::max(degrees, -25);
                 return degrees;

@@ -41,7 +41,7 @@ namespace Autodrive
 
             if ( leftx > center + 20) 
             {
-                    if (rightx > leftx && topy > boty && vector.length() > 10) 
+                    if (rightx > leftx && topy > boty && vector.length() > 50) 
                     {
                         leftMostLine = linef(line);
                         foundLeft = true;

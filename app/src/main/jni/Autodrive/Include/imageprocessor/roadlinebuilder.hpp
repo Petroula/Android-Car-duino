@@ -10,7 +10,7 @@ namespace Autodrive
     {
         static const int pointDist = 4;
         static const int maxDistFromStart = 22;
-        static const int maxUpwardsIteration = 13;
+        static const int maxUpwardsIteration = 100;
         int carY = 0;
 
         static SearchResult FindPoint(const cv::Mat& cannied, POINT start, float leftAngle, float rightAngle,float iterationReduction = 0)
@@ -19,7 +19,7 @@ namespace Autodrive
             SearchResult leftSearch = firstnonzero_direction(cannied, start, leftAngle, Settings::leftIterationLength -iterationReduction);
             if (leftSearch.found && rightSearch.found)
             {
-                if (leftSearch.distance <= rightSearch.distance + 3)
+                if (leftSearch.distance <= rightSearch.distance + 15)
                 {
                     {
                         return leftSearch;
@@ -80,7 +80,7 @@ namespace Autodrive
             POINT it = prevPoint;
             SearchResult searchResult;
             int unfound = 0;
-            while (!searchResult.found && unfound < maxUpwardsIteration)
+            while (!searchResult.found && unfound < maxUpwardsIteration && it.y > 0)
             {
                 it.y-=delta;
                 it.x += cosf(est_angle)*delta;
@@ -100,8 +100,8 @@ namespace Autodrive
         POINT last_start;
         float centerX;
 
-        roadlinebuilder(POINT startPoint, float center_x) :
-            first_start(startPoint), last_start(startPoint), centerX(center_x)
+        roadlinebuilder(POINT startPoint, float center_x,int car_y) :
+            carY(car_y),first_start(startPoint), last_start(startPoint), centerX(center_x)
         {
 
         }
