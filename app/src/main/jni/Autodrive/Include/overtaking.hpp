@@ -38,7 +38,20 @@ namespace Autodrive {
                     cv::putText(*mat, "obstacle met", POINT(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
 
                     if (irFrontRight < 0 || irFrontRight > 20) {
-                        lastCommand.setSpeed(0);
+                        overtaking = -1;
+                        obstacleMet = false;
+
+                        if (finaliseOvertaking < 0) finaliseOvertaking = SensorData::encoderDistance();
+                    }
+                }
+
+                if (finaliseOvertaking > 0) {
+                    cv::putText(*mat, "back to lane", POINT(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+
+                    if (SensorData::encoderDistance() - finaliseOvertaking < 75) {
+                        lastCommand.setAngle(1);
+                    } else {
+                        finaliseOvertaking = -1;
                     }
                 }
             }
