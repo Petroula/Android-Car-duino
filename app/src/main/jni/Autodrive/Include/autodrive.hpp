@@ -2,6 +2,7 @@
 #include "sensordata.hpp"
 #include "parking.hpp"
 #include "imageprocessor/imageprocessor.hpp"
+#include "overtaking.hpp"
 
 namespace Autodrive
 {
@@ -63,6 +64,7 @@ namespace Autodrive
                 
             case Autodrive::FOLLOWING_LANES:
                 lastCommand = Autodrive::imageProcessor::continue_processing(*Autodrive::SensorData::image);
+                lastCommand = Overtaking::run(lastCommand);
                 break;
                 
             // debug only! will be merged with lane following   
