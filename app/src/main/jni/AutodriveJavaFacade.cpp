@@ -7,6 +7,7 @@
 #define _DEBUG
 #include "Autodrive/Include/autodrive.hpp"
 #include "Autodrive/Include/sensordata.hpp"
+#include "Autodrive/Include/maneuver.hpp"
 
 using namespace std;
 using namespace cv;
@@ -31,6 +32,11 @@ extern "C"
     {
         Autodrive::SensorData::carLength = 40;
         Autodrive::setInitialStatus(Autodrive::DETECTING_GAP);
+    }
+
+    TYPE(void) NAME(setRightLane)(bool boolean)
+    {
+        Autodrive::Status::setRightLane(boolean);
     }
     
     TYPE(void) NAME(setCarLength)(int carLength)

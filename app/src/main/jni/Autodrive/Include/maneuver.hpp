@@ -16,9 +16,9 @@ namespace Autodrive {
 
 	// TODO: put in appropriate namespace
 	const double slowSpeed = 0.23;
-	const double normalSpeed = 0.28;
+	const double normalSpeed = 0.26;
 	const double backwardsSpeed = -0.7;
-	
+
 	enum side { right, left};
 	enum direction { front, back };
 
@@ -27,10 +27,12 @@ namespace Autodrive {
 	
 	// functions providing info about the status of the car
 	namespace Status {
-		
+
 		// measuring distance traveled
 		bool measuringDistance = false;
 		double startPos = 0;
+
+		bool isRightLane = true;
 
 		// measuring angle turned
 		bool measuringAngle = false;
@@ -38,6 +40,10 @@ namespace Autodrive {
 
 		int currentAngle = 0;
 		int remainingAngle = 0;
+
+		void setRightLane(bool boolean) {
+			isRightLane = boolean;
+		}
 
 		// is the car stopped 
 		bool IsStoped(){
