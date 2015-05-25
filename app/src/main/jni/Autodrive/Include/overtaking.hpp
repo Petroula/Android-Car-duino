@@ -4,8 +4,12 @@
 namespace Autodrive {
     namespace Overtaking {
         int usFront = SensorData::ultrasound.front;
+        int irFrontRight = SensorData::infrared.frontright;
+        int irRearRight = SensorData::infrared.rearright;
         int objectDistance = 50;
         float overtaking = 0;
+        bool obstacleMet = false;
+
 
         command run(command lastCommand) {
             if (usFront > 0 && usFront < objectDistance) {
@@ -17,6 +21,14 @@ namespace Autodrive {
 
                 if ((SensorData::encoderDistance() - overtaking < 40)) {
                     lastCommand.setAngle(-1);
+                }
+
+                if (irRearRight > 0 && irRearRight < 10) if (! obstacleMet) obstacleMet = true;
+
+                if (obstacleMet) {
+                    if (irFrontRight < 0 || irFrontRight > 20) {
+                        lastCommand.setSpeed(0);
+                    }
                 }
             }
 
