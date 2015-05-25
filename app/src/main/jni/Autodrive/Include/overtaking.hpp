@@ -1,4 +1,5 @@
 #include "sensordata.hpp"
+#include "maneuver.hpp"
 
 namespace Autodrive {
     namespace Overtaking {
@@ -12,7 +13,7 @@ namespace Autodrive {
             }
 
             if (overtaking) {
-                lastCommand.setSpeed(0);
+                lastCommand.setSpeed(slowSpeed);
             }
 
              return lastCommand;
