@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
         findViewById(R.id.bluetooth).setOnClickListener(this);
 
         //DISPLAY DEBUG INFORMATION SWITCH
-        ((Switch)findViewById(R.id.DisplayDebugSwitch)).setOnCheckedChangeListener(this);
+        ((Switch)findViewById(R.id.LeftLaneSwitch)).setOnCheckedChangeListener(this);
         //USE LIGHT NORMALIZATION SWITCH
         ((Switch)findViewById(R.id.LightNormalizationSwitch)).setOnCheckedChangeListener(this);
         //USE LEFT LINE SWITCH
@@ -74,8 +74,8 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
             case R.id.LightNormalizationSwitch:
                 Autodrive.setSettingLightNormalization(isChecked);
                 break;
-            case R.id.DisplayDebugSwitch:
-                Settings.DisplayDebugInformation = isChecked;
+            case R.id.LeftLaneSwitch:
+                Autodrive.setLeftLane(isChecked);
                 break;
             case R.id.LeftLineSwitch:
                 Autodrive.setSettingUseLeftLine(isChecked);

@@ -10,7 +10,6 @@ namespace Autodrive {
         float overtaking = 0;
         bool obstacleMet = false;
         float finaliseOvertaking = 0;
-        bool isRightLane = true;
 
         command run(command lastCommand, Mat* mat) {
             int usFront = SensorData::ultrasound.front;
@@ -30,7 +29,7 @@ namespace Autodrive {
                 }
 
                 if ((SensorData::encoderDistance() - overtaking < 50)) {
-                    if (isRightLane) lastCommand.setAngle(-1); else lastCommand.setAngle(1);
+                    if (! Status::isLeftLane) lastCommand.setAngle(-1); else lastCommand.setAngle(1);
                 }
 
                 if (irRearRight > 0 && irRearRight < 10) if (! obstacleMet) obstacleMet = true;
@@ -53,7 +52,7 @@ namespace Autodrive {
                 cv::putText(*mat, "back to lane", POINT(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
 
                 if (SensorData::encoderDistance() - finaliseOvertaking < 60) {
-                    if (isRightLane) lastCommand.setAngle(1); else lastCommand.setAngle(-1);
+                    if (! Status::isLeftLane) lastCommand.setAngle(1); else lastCommand.setAngle(-1);
                 } else {
                     finaliseOvertaking = -1;
                 }

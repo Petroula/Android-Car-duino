@@ -44,7 +44,7 @@
                 android:textColor="@color/white"
                 android:id="@+id/LightNormalizationSwitch"
                 android:checked="false"
-                android:layout_above="@+id/DisplayDebugSwitch"
+                android:layout_above="@+id/LeftLaneSwitch"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginBottom="1dp" />
@@ -80,9 +80,9 @@
             <Switch
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Debug information"
+                android:text="Left Lane"
                 android:textColor="@color/white"
-                android:id="@+id/DisplayDebugSwitch"
+                android:id="@+id/LeftLaneSwitch"
                 android:checked="false"
                 android:layout_above="@+id/LeftLineSwitch"
                 android:layout_alignParentRight="true"

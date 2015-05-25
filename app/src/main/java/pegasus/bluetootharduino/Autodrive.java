@@ -113,6 +113,8 @@ public class Autodrive
     public static native void setSettingLightNormalization(boolean on);
     public static native void setSettingUseLeftLine(boolean on);
 
+    public static native void setLeftLane(boolean on);
+
     // N Frames to take the mean value from, value should be between 0 - 8
     public static native void setSettingSmoothening(int value);
 

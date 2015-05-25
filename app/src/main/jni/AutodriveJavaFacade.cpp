@@ -34,9 +34,9 @@ extern "C"
         Autodrive::setInitialStatus(Autodrive::DETECTING_GAP);
     }
 
-    TYPE(void) NAME(setRightLane)(bool boolean)
+    TYPE(void) NAME(setLeftLane)(bool boolean)
     {
-        Autodrive::Status::setRightLane(boolean);
+        Autodrive::Status::setLeftLane(boolean);
     }
     
     TYPE(void) NAME(setCarLength)(int carLength)

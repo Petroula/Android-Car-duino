@@ -32,7 +32,7 @@ namespace Autodrive {
 		bool measuringDistance = false;
 		double startPos = 0;
 
-		bool isRightLane = true;
+		bool isLeftLane = false;
 
 		// measuring angle turned
 		bool measuringAngle = false;
@@ -41,8 +41,8 @@ namespace Autodrive {
 		int currentAngle = 0;
 		int remainingAngle = 0;
 
-		void setRightLane(bool boolean) {
-			isRightLane = boolean;
+		void setLeftLane(bool boolean) {
+			isLeftLane = boolean;
 		}
 
 		// is the car stopped 
