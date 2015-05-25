@@ -1,6 +1,11 @@
 #include "sensordata.hpp"
 #include "maneuver.hpp"
 
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+
+using namespace cv;
+
 namespace Autodrive {
     namespace Overtaking {
         int usFront = SensorData::ultrasound.front;
