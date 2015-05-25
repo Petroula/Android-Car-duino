@@ -9,11 +9,15 @@ namespace Autodrive {
 
         command run(command lastCommand) {
             if (usFront > 0 && usFront < objectDistance) {
-                if (! overtaking) overtaking = true;
+                if (overtaking < 1) overtaking = SensorData::encoderDistance();;
             }
 
-            if (overtaking) {
+            if (overtaking > 0) {
                 lastCommand.setSpeed(slowSpeed);
+
+                if ((SensorData::encoderDistance() - overtaking < 40)) {
+                    lastCommand.setAngle(-1);
+                }
             }
 
              return lastCommand;
