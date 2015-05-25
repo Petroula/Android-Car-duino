@@ -9,6 +9,7 @@ using namespace cv;
 namespace Autodrive {
     namespace Overtaking {
         int usFront = SensorData::ultrasound.front;
+        int usFrontRight = SensorData::ultrasound.frontright;
         int irFrontRight = SensorData::infrared.frontright;
         int irRearRight = SensorData::infrared.rearright;
         int objectDistance = 50;
@@ -37,7 +38,7 @@ namespace Autodrive {
                 if (obstacleMet) {
                     cv::putText(*mat, "obstacle met", POINT(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
 
-                    if (irFrontRight < 0 || irFrontRight > 20) {
+                    if ((irFrontRight < 0 || irFrontRight > 20) && ! (usFrontRight > 0 && usFrontRight < objectDistance)) {
                         overtaking = -1;
                         obstacleMet = false;
 
