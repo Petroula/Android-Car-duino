@@ -161,7 +161,7 @@ namespace Autodrive {
 			
 			switch(currentState){
 				case NOT_MOVING:
-					if(Status::HasTraveledDistance(0.25*SensorData::carLength)){
+					if(Status::HasTraveledDistance(0.5*SensorData::carLength)){
 						currentState = BACKWARD_RIGHT;
 						cmd = command();
 					}else{
