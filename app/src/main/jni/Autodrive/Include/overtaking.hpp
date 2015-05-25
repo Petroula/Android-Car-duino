@@ -58,7 +58,7 @@ namespace Autodrive {
                 }
             }
 
-            if (usFront < 15) lastCommand.setSpeed(0);
+            if (usFront > 0 && usFront < 15) lastCommand.setSpeed(0);
 
             return lastCommand;
         }
