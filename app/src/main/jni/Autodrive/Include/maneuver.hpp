@@ -16,7 +16,7 @@ namespace Autodrive {
 
 	// TODO: put in appropriate namespace
 	const double slowSpeed = 0.23;
-	const double normalSpeed = 0.26;
+	const double normalSpeed = 0.28;
 	const double backwardsSpeed = -0.7;
 
 	enum side { right, left};

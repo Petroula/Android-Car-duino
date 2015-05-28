@@ -30,7 +30,7 @@ namespace Autodrive
 
     enum carstatus
     {
-        DETECTING_GAP, PARKING, SEARCHING_FOR_LANES, FOLLOWING_LANES, UNKNOWN
+        DETECTING_GAP, PARKING, SEARCHING_FOR_LANES, FOLLOWING_LANES, OVERTAKING, UNKNOWN
     };  
     
     carstatus initialStatus = SEARCHING_FOR_LANES;
@@ -85,7 +85,11 @@ namespace Autodrive
                     Parking::currentManeuver.type = NO_MANEUVER;
                 }
                 break; 
-                
+
+            case OVERTAKING:
+                lastCommand = Overtaking::run(lastCommand, Autodrive::SensorData::image);
+                break;
+
             case Autodrive::UNKNOWN:
                 break;
                 
