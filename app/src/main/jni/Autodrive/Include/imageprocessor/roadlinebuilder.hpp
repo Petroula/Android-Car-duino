@@ -11,6 +11,7 @@ namespace Autodrive
         static const int pointDist = 4;
         static const int maxDistFromStart = 22;
         static const int maxUpwardsIteration = 100;
+        int totalGap = 0;
         int carY = 0;
 
         static SearchResult FindPoint(const cv::Mat& cannied, POINT start, float leftAngle, float rightAngle,float iterationReduction = 0)
@@ -74,7 +75,7 @@ namespace Autodrive
         }
 
 
-        static optional<POINT> GetNextPoint(const cv::Mat& cannied, float est_angle, const POINT& prevPoint,int delta = 2)
+        optional<POINT> GetNextPoint(const cv::Mat& cannied, float est_angle, const POINT& prevPoint,int delta = 2)
         {
 
             POINT it = prevPoint;
@@ -85,7 +86,7 @@ namespace Autodrive
                 it.y-=delta;
                 it.x += cosf(est_angle)*delta;
                 searchResult = FindPoint(cannied, it, Direction::LEFT, Direction::RIGHT);
-                
+                totalGap++;
                 unfound++;
             }
 
@@ -110,11 +111,13 @@ namespace Autodrive
         {
             RoadLine road(centerX, GetFirstPoint(cannied));
             optional<POINT> newPoint;
+            totalGap = 0;
             while ((newPoint = GetNextPoint(cannied, road.getEstimatedAngle(), road.points.back(),pointDist)).valid && road.points.size() < maxsize)
             {
                 if (!road.addPoint(*newPoint))
                     break;
             }
+            road.totalGap = totalGap;
 
             return road;
         }

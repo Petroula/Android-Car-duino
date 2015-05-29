@@ -12,6 +12,7 @@ namespace Autodrive
         std::vector<int> distances;
         std::vector<float> angles;
         std::vector<float> angleDiffs;
+        int totalGap = 0;
 
         int centerX;
 

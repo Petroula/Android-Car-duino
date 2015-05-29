@@ -1,7 +1,6 @@
 #include "line.hpp"
 #include "roadlinebuilder.hpp"
 #include "lightnormalizer.hpp"
-#include <unistd.h>
 #include <chrono>
 
 namespace Autodrive
@@ -10,6 +9,7 @@ namespace Autodrive
     {
         RoadLine roadLine;
         int roadsize = 40;
+        bool isfound = false;
     public:
         float targetRoadDistance = 0;
         std::unique_ptr<roadlinebuilder> roadBuilder = nullptr;
@@ -47,7 +47,7 @@ namespace Autodrive
         // Prerequicite for wheter a road is found or not
         bool isFound()
         {
-            return roadLine.points.size() > 5 && fabs(roadLine.getMeanAngle() - Direction::FORWARD) < Mathf::PI_2;
+            return isfound;
         }
 
         float distanceDeviation()
@@ -56,6 +56,11 @@ namespace Autodrive
                 return targetRoadDistance;
             float startDistance = roadLine.getMeanStartDistance(4);
             return (startDistance - targetRoadDistance) * 1.1f;
+        }
+
+        int totalGap()
+        {
+            return roadLine.totalGap;
         }
 
         optional<int> getPreferedAngle()
@@ -80,6 +85,7 @@ namespace Autodrive
         void update(cv::Mat& cannied)
         {
             roadLine = roadBuilder->build(cannied, roadsize);
+            isfound = (roadLine.points.size() > 5 && fabs(roadLine.getMeanAngle() - Direction::FORWARD) < Mathf::PI_2);
         }
 
     };
