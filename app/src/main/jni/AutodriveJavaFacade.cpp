@@ -36,7 +36,7 @@ extern "C"
     
     TYPE(void) NAME(resetParking)()
     {
-        Autodrive::Parking:Reset();
+        Autodrive::Parking::Reset();
     }
 
     TYPE(void) NAME(setLeftLane)(bool boolean)
