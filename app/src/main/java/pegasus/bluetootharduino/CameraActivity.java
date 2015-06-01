@@ -64,7 +64,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         debugConsole.append("SENSORS:\n");
         debugConsole.append("ultrasonicFront: " + String.valueOf(Autodrive.usFront()) + "\n");
         debugConsole.append("ultrasonicFrontRight: " + String.valueOf(Autodrive.usFrontRight()) + "\n");
-        debugConsole.append("ultrasonicRear: " + String.valueOf(Autodrive.usRear()) + "\n");
+        debugConsole.append("ultrasonicRearLeft: " + String.valueOf(Autodrive.usRear()) + "\n");
         debugConsole.append("infraredSideFront: " + String.valueOf(Autodrive.irFrontRight()) + "\n");
         debugConsole.append("infraredSideRear: " + String.valueOf(Autodrive.irRearRight()) + "\n");
         debugConsole.append("infraredRear: " + String.valueOf(Autodrive.irRear()) + "\n");
