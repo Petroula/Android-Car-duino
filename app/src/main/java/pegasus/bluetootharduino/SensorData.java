@@ -22,7 +22,6 @@ public class SensorData {
         } else if (sensor == 2) {
             ultrasonicRear = value;
         }
-//        CameraActivity.updateDebuggingConsole();
     }
 
     static void setInfrared(int sensor, int value){
@@ -35,28 +34,24 @@ public class SensorData {
         } else if (sensor == 2) {
             infraredRear = value;
         }
-//        CameraActivity.updateDebuggingConsole();
     }
 
     static void setEncoderPulses(int value){
         Autodrive.setEncoderPulses(value);
 
         encoderPulses = value;
-//        CameraActivity.updateDebuggingConsole();
     }
 
     static void setGyroHeading(int value){
         Autodrive.setGyroHeading(value);
 
         gyroHeading = value;
-//        CameraActivity.updateDebuggingConsole();
     }
 
     static void setRazorHeading(int value){
         Autodrive.setRazorHeading(value);
 
         razorHeading = value;
-//        CameraActivity.updateDebuggingConsole();
     }
 
     static void handleInput(String input){
@@ -75,5 +70,7 @@ public class SensorData {
             int sensorNum = Integer.parseInt(input.substring(2,3));
             setInfrared(sensorNum - 1,Integer.parseInt(input.substring(4)));
         }
+
+        CameraActivity.updateDebuggingConsole();
     }
 }
