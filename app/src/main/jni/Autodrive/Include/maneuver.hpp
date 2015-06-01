@@ -107,6 +107,15 @@ namespace Autodrive {
 		maneuver(pManeuver m){
 			type = m;
 			currentState = NOT_MOVING;
+			
+			// reset all values
+			Status::measuringDistance = false;
+			Status::startPos = 0;
+			Status::isLeftLane = false;
+			Status::measuringAngle = false;
+			Status::startAngle = 0;
+			Status::currentAngle = 0;
+			Status::remainingAngle = 0;
 		}
 		
 		// returns the appropriate command depending on the current maneuver and its state
@@ -158,10 +167,9 @@ namespace Autodrive {
 		// the procedure for parallel parking
 		command ParallelStandard(){
 			command cmd;
-			
 			switch(currentState){
 				case NOT_MOVING:
-					if(Status::HasTraveledDistance(0.25*SensorData::carLength)){
+					if(Status::HasTraveledDistance(0.5*SensorData::carLength)){
 						currentState = BACKWARD_RIGHT;
 						cmd = command();
 					}else{
@@ -169,7 +177,7 @@ namespace Autodrive {
 					}
 				break;
 				case BACKWARD_RIGHT:
-					if(Status::HasTurnedAngle(50)){
+					if(Status::HasTurnedAngle(50)){ // to compensate for right left turn diffs
 						currentState = BACKWARD_LEFT;
 						cmd.setSpeed(0);
 					}else{
@@ -178,6 +186,7 @@ namespace Autodrive {
 					}
 				break;
 				case BACKWARD_LEFT:
+					
 					if(Status::HasTurnedAngle(45)){
 						currentState = DONE;
 						cmd.setSpeed(0);
@@ -185,41 +194,28 @@ namespace Autodrive {
 						cmd.setAngle(-1.0);
 						cmd.setSpeed(backwardsSpeed);
 					}
-					if(SensorData::infrared.rear > 0 || (SensorData::ultrasound.rear > 1 && SensorData::ultrasound.rear < 40)){	// TODO emergency stop maneuver
-						cmd.setSpeed(normalSpeed);
+					
+					if(SensorData::infrared.rear > 0 || (SensorData::ultrasound.rear > 0 && SensorData::ultrasound.rear < 25)){	// TODO emergency stop maneuver
+						cmd.setSpeed(0);
 						
-						Status::remainingAngle = 20 - Status::currentAngle; // err if the car turns in several directions
+						// calculate remaining angle
+						Status::remainingAngle = 45 - Status::currentAngle; // err if the car turns in several directions
 						Status::measuringAngle = false;
 						Status::measuringDistance = false;
 						currentState = FORWARD_RIGHT;
 					}
 				break;
 				case FORWARD_RIGHT:
-					/*if(Status::HasTurnedAngle(Status::remainingAngle)){
-						currentState = DONE;
-						cmd.setSpeed(0);
-					}else{
-						cmd.setSpeed(slowSpeed);
-						cmd.setAngle(1);
-					}*/
 					
-					if((SensorData::ultrasound.front > 0 && SensorData::ultrasound.front < 25)){	// TODO emergency stop maneuver
-						cmd.setSpeed(0);
-						currentState = DONE;
-						Status::measuringDistance = false;
-					}else{
-						cmd.setSpeed(slowSpeed);
-						cmd.setAngle(0);
-					}
-				break;
-				case BACKWARD:
-					if(Status::HasTraveledDistance(0.25*SensorData::carLength) || (SensorData::infrared.rear > 0 && SensorData::infrared.rear < 3)){
+					if(Status::HasTurnedAngle(Status::remainingAngle) || (SensorData::ultrasound.front > 0 && SensorData::ultrasound.front < 25)){
 						currentState = DONE;
 						cmd.setSpeed(0);
-					}else{
-						cmd.setSpeed(backwardsSpeed);
 						cmd.setAngle(0);
+					}else{
+						cmd.setSpeed(normalSpeed);
+						cmd.setAngle(1);
 					}
+					
 				break;
 				default:
 					cmd = command();

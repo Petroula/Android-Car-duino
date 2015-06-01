@@ -33,6 +33,11 @@ extern "C"
         Autodrive::SensorData::carLength = 40;
         Autodrive::setInitialStatus(Autodrive::DETECTING_GAP);
     }
+    
+    TYPE(void) NAME(resetParking)()
+    {
+        Autodrive::Parking:Reset();
+    }
 
     TYPE(void) NAME(setLeftLane)(bool boolean)
     {

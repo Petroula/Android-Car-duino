@@ -41,6 +41,14 @@ namespace Autodrive {
 				return false;
 			}
 		}
+		
+		void Reset(){
+			gapLength = 0;
+			gapStart = 0;
+			gapDepthOk = false;
+			initialGap = true;
+			currentManeuver = maneuver(NO_MANEUVER);
+		}
 	
 	    // the maneuver to engage depending on the size of a gap
 		void SetParkingManeuver() {		
@@ -83,7 +91,6 @@ namespace Autodrive {
 					initialGap = false;
 				}
 				currentManeuver = maneuver(NO_MANEUVER);
-
 			}
 		}
 		

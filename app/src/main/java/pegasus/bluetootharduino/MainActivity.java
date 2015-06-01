@@ -49,6 +49,7 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
                 startActivity(changeToManual);
                 break;
             case R.id.parking:
+                Autodrive.resetParking(); // reset values used for parking
                 Autodrive.setParkingMode();
             case R.id.auto:
                 Intent changeToCamera = new Intent(getApplicationContext(),

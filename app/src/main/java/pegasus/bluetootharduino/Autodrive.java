@@ -21,6 +21,8 @@ public class Autodrive
     public static native void setCarLength(int carLength);
     public static native int getCarLength();
     
+    public static native void resetParking();
+    
 /*----- DEBUGDATA -----*/
     public static native int gapLength();
     public static native int getManeuver();
