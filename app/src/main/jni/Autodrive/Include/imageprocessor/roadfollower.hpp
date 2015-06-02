@@ -84,6 +84,11 @@ namespace Autodrive
 			return leftGaps < rightGaps;
 		}
 
+        bool isRightLane() {
+            int leftGaps = leftLineFollower->totalGap();
+            int rightGaps = rightLineFollower->totalGap();
+            return rightGaps < leftGaps;
+        }
 
         command update(cv::Mat& cannied, cv::Mat& drawMat)
         {

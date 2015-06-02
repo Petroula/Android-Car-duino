@@ -97,10 +97,10 @@ namespace Autodrive
             Returns wether the car is on the left lane
             Currently only works if both roadlines are found by comparing their gaps
         */
-        optional<bool> isLeftLane()
+        bool isLeftLane()
         {
-            if (!leftLineFound() || !rightLineFound())
-                return nullptr;
+            if (! leftLineFound() || ! rightLineFound())
+                return false;
             else
                 return roadFollower->isLeftLane();
         }
@@ -108,13 +108,12 @@ namespace Autodrive
         /*
         Returns wether the car is on the right lane
         */
-        optional<bool> isRightLane()
+        bool isRightLane()
         {
-            optional<bool> isLeft = isLeftLane();
-            if (isLeft.valid)
-                return !(*isLeft);
+            if (! leftLineFound() || ! rightLineFound())
+                return false;
             else
-                return nullptr;
+                return roadFollower->isRightLane();
         }
     }
 }
