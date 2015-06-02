@@ -23,7 +23,7 @@ namespace Autodrive {
 
             if (usFront > 0 && usFront < objectDistance) {
                 if (! overtaking) overtaking = true;
-                if (! turnLeft) turnLeft = SensorData::encoderDistance();
+                if (! turnLeft) turnLeft = true;
             }
 
             if (overtaking) {
@@ -34,11 +34,11 @@ namespace Autodrive {
                     oomph = SensorData::encoderDistance();
                 }
 
-                if (SensorData::encoderDistance() - oomph < 40) {
+                if (SensorData::encoderDistance() - oomph < 15) {
                     lastCommand.setAngle(0);
                 }
 
-                if (irRearRight > 5 && irRearRight < 5) if (! obstacleMet) obstacleMet = true;
+                if (irRearRight > 5 && irRearRight < 10) if (! obstacleMet) obstacleMet = true;
 
                 if (obstacleMet) {
                     if (! irFrontRight) {
