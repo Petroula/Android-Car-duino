@@ -60,7 +60,7 @@ namespace Autodrive
 
         int totalGap()
         {
-            return roadLine.totalGap;
+            return roadLine.totalGap / roadLine.points.size();
         }
 
         optional<int> getPreferedAngle()
