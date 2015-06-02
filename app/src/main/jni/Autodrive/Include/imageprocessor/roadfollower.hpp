@@ -90,6 +90,16 @@ namespace Autodrive
             return rightGaps < leftGaps;
         }
 
+        int dashedLineGaps() {
+            if (leftLineFound() && ! rightLineFound()) {
+                return leftLineFollower->totalGap();
+            } else if (rightLineFound() && ! leftLineFound()) {
+                return rightLineFollower->totalGap();
+            } else {
+                return 0;
+            }
+        }
+
         command update(cv::Mat& cannied, cv::Mat& drawMat)
         {
             command cmd;

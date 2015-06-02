@@ -71,6 +71,6 @@ public class SensorData {
             setInfrared(sensorNum - 1,Integer.parseInt(input.substring(4)));
         }
 
-        CameraActivity.updateDebuggingConsole();
+//        CameraActivity.updateDebuggingConsole();
     }
 }

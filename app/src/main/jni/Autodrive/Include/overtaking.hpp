@@ -2,29 +2,20 @@
 #include "sensordata.hpp"
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
+#include "imageprocessor/imageprocessor.hpp"
 
 using namespace cv;
 
 namespace Autodrive {
     namespace Overtaking {
-        struct sensor {
-            int previous = 0;
-            int value = 0;
-            int skipZero = true;
-            void set(int val) {
-                value = val;
-                filter();
-            };
-            void filter() {
-                int initValue = value;
-                if (skipZero) if (! value && previous) value = previous;
-                if (! initValue) skipZero = false;
-            }
-        };
-
-        int overtaking = 0;
+        bool overtaking = false;
         bool obstacleMet = false;
-        int finaliseOvertaking = 0;
+        bool finaliseOvertaking = false;
+        bool stop = false;
+        bool goToLeftLane = false;
+        bool goToRightLane = false;
+        bool oomph = false;
+        bool dashed = false;
 
 //        sensor usFront, irFrontRight, irRearRight;
 
@@ -53,53 +44,80 @@ namespace Autodrive {
             int usFront = SensorData::ultrasound.front;
             int irFrontRight = SensorData::infrared.frontright;
             int irRearRight = SensorData::infrared.rearright;
-            int objectDistance = 50;
+            int objectDistance = 70;
 
             if (usFront > 0 && usFront < objectDistance) {
-                if (! overtaking) overtaking = SensorData::encoderDistance();
+                if (! overtaking) overtaking = true;
+                if (! goToLeftLane) goToLeftLane = true;
             }
 
             if (overtaking && ! finaliseOvertaking) {
-//                lastCommand.setSpeed(slowSpeed);
-
                 if (! obstacleMet) {
-                        cv::putText(*mat, "overtaking", POINT(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+                    cv::putText(*mat, "overtaking", POINT(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
                 }
 
-                if ((SensorData::encoderDistance() - overtaking < 60)) {
-                    lastCommand.setAngle(-1);
+                if (goToLeftLane) lastCommand.setAngle(-1);
+
+                if (imageProcessor::dashedLineGaps() > 1) {
+                    goToLeftLane = false;
+                    dashed = true;
+//                    oomph = SensorData::encoderDistance();
                 }
 
-                if (irRearRight > 5 && irRearRight < 10) if (! obstacleMet) obstacleMet = true;
+                if (dashed) cv::putText(*mat, "dashed", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
 
-                if (obstacleMet) {
-                    cv::putText(*mat, "obstacle met", POINT(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+//                if (SensorData::encoderDistance() - oomph < 30) {
+//                    ran = true;
+//                    cv::putText(*mat, "dashed", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+//                    lastCommand.setAngle(0);
+//                }
+//
+//                if (ran) cv::putText(*mat, "runs", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
 
-                    if (irFrontRight > 15 || ! irFrontRight) {
-                        overtaking = 0;
-                        obstacleMet = false;
 
-                        if (! finaliseOvertaking) finaliseOvertaking = SensorData::encoderDistance();
-                    }
-                }
+
+//                if (irRearRight > 5 && irRearRight < 10) if (! obstacleMet) obstacleMet = true;
+//
+//                if (obstacleMet) {
+//                    cv::putText(*mat, "obstacle met", POINT(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+//
+//                    if (irFrontRight > 15 || ! irFrontRight) {
+//                        overtaking = 0;
+//                        obstacleMet = false;
+//
+//                        if (! finaliseOvertaking) finaliseOvertaking = SensorData::encoderDistance();
+//                    }
+//                }
             }
 
-            if (finaliseOvertaking) {
-//                lastCommand.setSpeed(slowSpeed);
+//            if (finaliseOvertaking) {
+////                lastCommand.setSpeed(slowSpeed);
+//
+//                cv::putText(*mat, "back to lane", POINT(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+//
+//                if (! imageProcessor::isRightLane()) {
+//                    lastCommand.setAngle(1);
+//                } else if (imageProcessor::isLeftLane()) {
+//                    finaliseOvertaking = 0;
+//                }
+//            }
 
-                cv::putText(*mat, "back to lane", POINT(50.f, mat->size().height / 3.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+//            if (stop) {
+//                lastCommand.setSpeed(0);
+//                cv::putText(*mat, "stop", POINT(50.f, mat->size().height / 1.5f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+//            }
+//
+//            if (usFront > 0 && usFront < 15) lastCommand.setSpeed(0);
+//
+//            if (imageProcessor::isLeftLane()) {
+//                cv::putText(*mat, "left lane", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+//            } else if (imageProcessor::isRightLane()) {
+//                cv::putText(*mat, "right lane", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+//            } else {
+//                cv::putText(*mat, "not found", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+//            }
 
-                if (SensorData::encoderDistance() - finaliseOvertaking < 40) {
-                    lastCommand.setAngle(1);
-                } else {
-                    finaliseOvertaking = 0;
-                }
-            }
-
-            if (usFront > 0 && usFront < 15) lastCommand.setSpeed(0);
-
-            lastCommand.setSpeed(normalSpeed);
-
+            lastCommand.setSpeed(0.25);
             return lastCommand;
         }
     }

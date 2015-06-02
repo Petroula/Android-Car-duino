@@ -115,5 +115,9 @@ namespace Autodrive
             else
                 return roadFollower->isRightLane();
         }
+
+        int dashedLineGaps() {
+            return roadFollower->dashedLineGaps();
+        }
     }
 }
