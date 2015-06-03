@@ -44,7 +44,7 @@ namespace Autodrive {
                 if (turnLeft) {
                     lastCommand.setAngle(-1);
 
-                    if (distanceTravelled - turnLeft > 50) { // turn left for 50 cm
+                    if (distanceTravelled - turnLeft > 45) { // turn left for 50 cm
                         turnLeft = 0;
 
                         if (! turnLeftCalibration) turnLeftCalibration = distanceTravelled;
@@ -54,7 +54,7 @@ namespace Autodrive {
                 if (turnLeftCalibration) {
                     lastCommand.setAngle(1);
 
-                    if (distanceTravelled - turnLeftCalibration > 10) { // turn a bit to the right for 10cm to calibrate for easier lane following
+                    if (distanceTravelled - turnLeftCalibration > 15) { // turn a bit to the right for 10cm to calibrate for easier lane following
                         turnLeftCalibration = 0;
                         turnRightCalibrationFinished = true;
                     }
@@ -82,7 +82,7 @@ namespace Autodrive {
                     if (turnRight) {
                         lastCommand.setAngle(1);
 
-                        if (distanceTravelled - turnRight > 50) { // turn right for 50cm
+                        if (distanceTravelled - turnRight > 30) { // turn right for 50cm
                             turnRight = 0;
                             if (! turnRightCalibration) turnRightCalibration = distanceTravelled;
                         }
@@ -91,7 +91,7 @@ namespace Autodrive {
                     if (turnRightCalibration) {
                         lastCommand.setAngle(-1);
 
-                        if (distanceTravelled - turnRightCalibration > 10) { // turn a bit to the left for 10cm to calibrate for easier lane following
+                        if (distanceTravelled - turnRightCalibration > 20) { // turn a bit to the left for 10cm to calibrate for easier lane following
                             turnRightCalibration = 0;
                             obstacleMet = false;
                             obstaclePassed = false;
