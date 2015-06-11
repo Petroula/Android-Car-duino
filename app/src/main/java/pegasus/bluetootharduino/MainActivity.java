@@ -34,8 +34,7 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
 
         /* TEXT INPUTS */
         TextView carLength = (TextView) findViewById(R.id.carLength);
-        carLength.setText("40");
-        Autodrive.setCarLength(40);
+        carLength.setText(String.valueOf(Autodrive.getCarLength()));
         carLength.addTextChangedListener(this);
     }
 
@@ -92,9 +91,9 @@ public class MainActivity extends Activity implements OnClickListener, CompoundB
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        String string = charSequence.toString();
+        String string = charSequence.toString().trim();
         if (string.equals("")) string = "0";
-        Integer integer = Integer.parseInt(string);
+        int integer = Integer.parseInt(string);
         Autodrive.setCarLength(integer);
     }
 

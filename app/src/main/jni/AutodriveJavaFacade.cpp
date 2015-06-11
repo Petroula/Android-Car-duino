@@ -30,7 +30,6 @@ extern "C"
 
     TYPE(void) NAME(setParkingMode)()
     {
-        Autodrive::SensorData::carLength = 40;
         Autodrive::setInitialStatus(Autodrive::DETECTING_GAP);
     }
     
@@ -39,14 +38,14 @@ extern "C"
         Autodrive::Parking::Reset();
     }
 
-    TYPE(void) NAME(setLeftLane)(bool boolean)
+    TYPE(void) NAME(setLeftLane) PARAMS(bool boolean)
     {
         Autodrive::Status::setLeftLane(boolean);
     }
     
-    TYPE(void) NAME(setCarLength)(int carLength)
+    TYPE(void) NAME(setCarLength) PARAMS(int _carLength)
     {
-        Autodrive::SensorData::carLength = carLength;
+        Autodrive::SensorData::carLength = _carLength;
     }
     
     TYPE(jint) NAME(getCarLength)()
