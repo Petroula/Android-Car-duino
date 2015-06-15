@@ -92,7 +92,8 @@ public class Autodrive
     public static native void setEncoderPulses(long value);
     public static native void setGyroHeading(int value);
     public static native void setRazorHeading(int value);
-    public static native void lineFound();
+    public static native void lineLeftFound();
+    public static native void lineRightFound();
 
 /*----- RESULTING AUTODRIVE DATA -----*/
     public static native boolean speedChanged();
