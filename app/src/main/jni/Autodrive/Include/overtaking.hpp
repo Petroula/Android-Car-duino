@@ -82,7 +82,7 @@ namespace Autodrive {
                     if (turnRight) {
                         lastCommand.setAngle(1);
 
-                        if (distanceTravelled - turnRight > 30) { // turn right for 50cm
+                        if (distanceTravelled - turnRight > 35) { // turn right for 50cm
                             turnRight = 0;
                             if (! turnRightCalibration) turnRightCalibration = distanceTravelled;
                         }
