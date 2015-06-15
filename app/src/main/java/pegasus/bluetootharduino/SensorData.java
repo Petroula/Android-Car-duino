@@ -12,6 +12,8 @@ public class SensorData {
         razorHeading = 0,
         encoderPulses = 0;
 
+    public static boolean lineFound = false;
+
     static void setUltrasound(int sensor, int value){
         Autodrive.setUltrasound(sensor, value);
 
@@ -54,6 +56,12 @@ public class SensorData {
         razorHeading = value;
     }
 
+    static void lineFound() {
+        Autodrive.lineFound();
+
+        lineFound = true;
+    }
+
     static void handleInput(String input){
         input = input.replaceAll("\\r|\\n", "");
 
@@ -69,6 +77,8 @@ public class SensorData {
         } else if (input.startsWith("IR")){
             int sensorNum = Integer.parseInt(input.substring(2,3));
             setInfrared(sensorNum - 1,Integer.parseInt(input.substring(4)));
+        } else if (input.startsWith("line")){
+            lineFound();
         }
 
 //        CameraActivity.updateDebuggingConsole();
