@@ -23,7 +23,8 @@ namespace Autodrive
         int razorHeading = 0;   // from -180 to 180
         int gyroHeading = 0;    // NOT from 0 to 360
 
-        bool lineFound = false;
+        bool lineLeftFound = false;
+        bool lineRightFound = false;
 
 		int currentSpeed = 0;
         int currentAngle = 0; 
