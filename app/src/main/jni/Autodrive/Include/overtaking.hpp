@@ -21,10 +21,12 @@ namespace Autodrive {
         int turnLeftCalibration = 0;
         int turnRight = 0;
         int turnRightCalibration = 0;
-        bool turnRightCalibrationFinished = false;
+        bool turnLeftCalibrationFinished = false;
         int obstacleDistance = 70;
         bool obstacleMet = false;
         bool obstaclePassed = false;
+        bool lineLeftFound = false;
+        bool lineRightFound = false;
 
         command run(command lastCommand, Mat* mat) {
             usFront = SensorData::ultrasound.front;
@@ -32,19 +34,27 @@ namespace Autodrive {
             irFrontRight = SensorData::infrared.frontright;
             irRearRight = SensorData::infrared.rearright;
             distanceTravelled = SensorData::encoderDistance();
+            lineLeftFound = SensorData::lineLeftFound;
+            lineRightFound = SensorData::lineRightFound;
+
+            lastCommand.setSpeed(0.32);
 
             if (usFront > 0 && usFront < obstacleDistance) {
                 if (! overtaking) {
                     overtaking = true;
                     if (! turnLeft) turnLeft = distanceTravelled;
+                    SensorData::lineLeftFound = false;
+                    SensorData::lineRightFound = false;
                 }
             }
 
             if (overtaking) { // obstacle spotted, start turning left
+//                if (lineRightFound) lastCommand.setSpeed(0);
+
                 if (turnLeft) {
                     lastCommand.setAngle(-1);
 
-                    if (distanceTravelled - turnLeft > 45) { // turn left for 50 cm
+                    if (lineRightFound) {
                         turnLeft = 0;
 
                         if (! turnLeftCalibration) turnLeftCalibration = distanceTravelled;
@@ -56,14 +66,16 @@ namespace Autodrive {
 
                     if (distanceTravelled - turnLeftCalibration > 15) { // turn a bit to the right for 10cm to calibrate for easier lane following
                         turnLeftCalibration = 0;
-                        turnRightCalibrationFinished = true;
+                        turnLeftCalibrationFinished = true;
+                        SensorData::lineLeftFound = false;
+                        SensorData::lineRightFound = false;
                     }
                 }
 
-                if (turnRightCalibrationFinished) {
+                if (turnLeftCalibrationFinished) {
                     if (irRearRight > 1 && irRearRight < 21) { // if irRearRight sees something it met the obstacle
                         if (! obstacleMet) {
-                                turnRightCalibrationFinished = false;
+                                turnLeftCalibrationFinished = false;
                                 obstacleMet = true;
                             }
                     }
@@ -82,7 +94,7 @@ namespace Autodrive {
                     if (turnRight) {
                         lastCommand.setAngle(1);
 
-                        if (distanceTravelled - turnRight > 35) { // turn right for 50cm
+                        if (lineLeftFound) {
                             turnRight = 0;
                             if (! turnRightCalibration) turnRightCalibration = distanceTravelled;
                         }
@@ -96,6 +108,8 @@ namespace Autodrive {
                             obstacleMet = false;
                             obstaclePassed = false;
                             overtaking = false;
+                            SensorData::lineLeftFound = false;
+                            SensorData::lineRightFound = false;
                         }
                     }
                 }
@@ -104,6 +118,14 @@ namespace Autodrive {
             if (debugMode) {
                 if (overtaking) {
                     cv::putText(*mat, "overtaking", POINT(50.f, mat->size().height / 6.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+
+                    if (obstaclePassed && lineLeftFound) {
+                        cv::putText(*mat, "line LEFT found", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+                    }
+
+                    if (! obstaclePassed && lineRightFound) {
+                        cv::putText(*mat, "line RIGHT found", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+                    }
                 }
 
                 char turningLeftText[50];
@@ -122,8 +144,6 @@ namespace Autodrive {
                     cv::putText(*mat, "obstacle met", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
                 }
             }
-
-            lastCommand.setSpeed(normalSpeed);
 
             return lastCommand;
         }
