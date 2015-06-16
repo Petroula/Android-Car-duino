@@ -19,14 +19,17 @@ namespace Autodrive {
         bool overtaking = false;
         int turnLeft = 0;
         int turnLeftCalibration = 0;
+        int oomphTurnLeft = 0;
         int turnRight = 0;
         int turnRightCalibration = 0;
+        int oomphTurnRight = 0;
         bool turnLeftCalibrationFinished = false;
         int obstacleDistance = 70;
         bool obstacleMet = false;
         bool obstaclePassed = false;
         bool lineLeftFound = false;
         bool lineRightFound = false;
+        bool stop = false;
 
         command run(command lastCommand, Mat* mat) {
             usFront = SensorData::ultrasound.front;
@@ -38,6 +41,7 @@ namespace Autodrive {
             lineRightFound = SensorData::lineRightFound;
 
             lastCommand.setSpeed(0.32);
+            if (stop) lastCommand.setSpeed(0);
 
             if (usFront > 0 && usFront < obstacleDistance) {
                 if (! overtaking) {
@@ -49,14 +53,26 @@ namespace Autodrive {
             }
 
             if (overtaking) { // obstacle spotted, start turning left
-//                if (lineRightFound) lastCommand.setSpeed(0);
-
                 if (turnLeft) {
                     lastCommand.setAngle(-1);
 
                     if (lineRightFound) {
                         turnLeft = 0;
 
+                        if (! turnLeftCalibration) turnLeftCalibration = distanceTravelled;
+                    }
+
+                    if (lineLeftFound) {
+                        turnLeft = 0;
+
+                        if (! oomphTurnLeft) oomphTurnLeft = distanceTravelled;
+                    }
+                }
+
+                if (oomphTurnLeft) {
+                    if (distanceTravelled - oomphTurnLeft > 10) {
+                        oomphTurnLeft = 0;
+                        
                         if (! turnLeftCalibration) turnLeftCalibration = distanceTravelled;
                     }
                 }
@@ -92,10 +108,26 @@ namespace Autodrive {
                     }
 
                     if (turnRight) {
+                        stop = true;
+
                         lastCommand.setAngle(1);
 
                         if (lineLeftFound) {
                             turnRight = 0;
+                            if (! turnRightCalibration) turnRightCalibration = distanceTravelled;
+                        }
+
+                        if (lineRightFound){
+                            turnRight = 0;
+                            
+                            if (! oomphTurnRight) oomphTurnRight = distanceTravelled;
+                        }
+                    }
+
+                    if (oomphTurnRight) {
+                        if (distanceTravelled - oomphTurnRight > 10) {
+                            oomphTurnRight = 0;
+                            stop = true;
                             if (! turnRightCalibration) turnRightCalibration = distanceTravelled;
                         }
                     }
@@ -119,11 +151,11 @@ namespace Autodrive {
                 if (overtaking) {
                     cv::putText(*mat, "overtaking", POINT(50.f, mat->size().height / 6.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
 
-                    if (obstaclePassed && lineLeftFound) {
+                    if (lineLeftFound) {
                         cv::putText(*mat, "line LEFT found", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
                     }
 
-                    if (! obstaclePassed && lineRightFound) {
+                    if (lineRightFound) {
                         cv::putText(*mat, "line RIGHT found", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
                     }
                 }
@@ -142,6 +174,10 @@ namespace Autodrive {
 
                 if (obstacleMet) {
                     cv::putText(*mat, "obstacle met", POINT(50.f, mat->size().height / 2.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
+                }
+
+                if (stop) {
+                    cv::putText(*mat, "stopped", POINT(50.f, mat->size().height / 6.f), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0), 2);
                 }
             }
 
