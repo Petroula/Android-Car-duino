@@ -40,7 +40,7 @@ namespace Autodrive {
             lineLeftFound = SensorData::lineLeftFound;
             lineRightFound = SensorData::lineRightFound;
 
-            lastCommand.setSpeed(0.32);
+            lastCommand.setSpeed(0.35);
             if (stop) lastCommand.setSpeed(0);
 
             if (usFront > 0 && usFront < obstacleDistance) {
@@ -103,13 +103,13 @@ namespace Autodrive {
                             if (! turnRight) turnRight = distanceTravelled; // so start turning right
 
                             obstaclePassed = true;
+                            SensorData::lineLeftFound = false;
+                            SensorData::lineRightFound = false;
                         }
 
                     }
 
                     if (turnRight) {
-                        stop = true;
-
                         lastCommand.setAngle(1);
 
                         if (lineLeftFound) {
@@ -119,15 +119,14 @@ namespace Autodrive {
 
                         if (lineRightFound){
                             turnRight = 0;
-                            
+
                             if (! oomphTurnRight) oomphTurnRight = distanceTravelled;
                         }
                     }
 
                     if (oomphTurnRight) {
-                        if (distanceTravelled - oomphTurnRight > 10) {
+                        if (distanceTravelled - oomphTurnRight > 6) {
                             oomphTurnRight = 0;
-                            stop = true;
                             if (! turnRightCalibration) turnRightCalibration = distanceTravelled;
                         }
                     }
@@ -140,8 +139,6 @@ namespace Autodrive {
                             obstacleMet = false;
                             obstaclePassed = false;
                             overtaking = false;
-                            SensorData::lineLeftFound = false;
-                            SensorData::lineRightFound = false;
                         }
                     }
                 }
