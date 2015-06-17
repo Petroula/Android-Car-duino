@@ -90,6 +90,6 @@ public class SensorData {
             lineRightFound();
         }
 
-//        CameraActivity.updateDebuggingConsole();
+        CameraActivity.updateDebuggingConsole();
     }
 }
