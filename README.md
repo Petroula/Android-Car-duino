@@ -1,5 +1,8 @@
 # ANDROID CAR DUINO
 
+### Project overview
+[The world's first Autonomous android vehicle](https://platis.solutions/blog/2015/06/29/worlds-first-android-autonomous-vehicle/)
+
 ![Alt text](Diagram.png?raw=true "You are now looking at the android app")
 
 ###Related repos:
