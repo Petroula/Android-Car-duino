@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -17,17 +18,66 @@ import java.io.InputStreamReader;
 
 /**
  * Created by dimi on 16/7/2015.
+ * HTTP POST request code based on: http://hmkcode.com/android-send-json-data-to-server/
  */
 public class DataPoster implements Runnable {
+    private JSONObject telematics;
 
-    //peripheral sensors (and lights) constructor
-    public DataPoster(String sensorType, String sensorNumber, int value) {
+    //peripheral sensors (and lights) constructor (sensors, lights)
+    public DataPoster(String sensorType, String sensorID, int value) {
+        postJSON(buildJSON(sensorType, sensorID, value));
+    }
+
+    //vehicle data constructor (speed and heading)
+    public DataPoster(String sensorType, String value) {
+        postJSON(buildJSON(sensorType, value));
+    }
+
+    private JSONObject buildJSON(String sensorType, String sensorID, int value){
+
+        JSONObject sensorContents = new JSONObject();
+        Object val = value;
+        if (sensorID.equalsIgnoreCase("lights")){
+            val = (value == 1); //convert 0,1 to false,true
+        }
+        try {
+            JSONObject sensor = new JSONObject();
+            sensor.put(sensorID,val);
+            sensorContents.put(sensorType,sensor);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return sensorContents;
+    }
+
+    private JSONObject buildJSON(String sensorType, String value){
+
+        JSONObject sensorContents = new JSONObject();
+        Object val = value;
+        if (sensorType.equalsIgnoreCase("speed")) { //if it is speed, it should be an integer
+            val = Integer.parseInt(value);
+        }
+        try {
+            sensorContents.put(sensorType,val);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return sensorContents;
+    }
+
+    private void postJSON(JSONObject vehicleData) {
+        telematics = new JSONObject();
+        try {
+            telematics.put("telematics",vehicleData);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         beginThread();
     }
 
-    //vehicle data constructor
-    public DataPoster(String sensorType, String value) {
-        beginThread();
+    private void beginThread(){
+        Thread t = new Thread(this);
+        t.start();
     }
 
     @Override
@@ -54,49 +104,11 @@ public class DataPoster implements Runnable {
             totalPost.put("topic", "interchange.vehicle.1.stream");
 
             JSONArray args = new JSONArray();
-            JSONObject telematics = new JSONObject();
-            telematics.put("fuel_level", "10");
-            telematics.put("battery_level", "10");
-            telematics.put("speed", "30");
-            telematics.put("heading", "NORTH");
 
-            JSONObject lights = new JSONObject();
-            lights.put("head",true);      // head,tail,...
-            lights.put("tail", false);
-            lights.put("brake",false);
-
-            JSONObject signal = new JSONObject();
-            signal.put("right",false); // right, left,...
-            signal.put("left", true);
-
-            lights.put("signal",signal);
-            telematics.put("lights",lights);
-
-            JSONObject infraredSensors = new JSONObject();
-            infraredSensors.put("sensor1","14");
-            infraredSensors.put("sensor2", "22");
-            infraredSensors.put("sensor3", "4");
-
-            JSONObject ultrasonicSensors = new JSONObject();
-            ultrasonicSensors.put("sensor1","14");
-            ultrasonicSensors.put("sensor2", "22");
-            ultrasonicSensors.put("sensor3", "4");
-
-            JSONObject periferalSensors = new JSONObject();
-            periferalSensors.put("infrared",infraredSensors);
-            periferalSensors.put("ultrasonic",infraredSensors);
-
-            telematics.put("periferal_sensors", periferalSensors);
-            JSONObject telematicsArray = new JSONObject();
-            telematicsArray.put("telematics",telematics);
-            args.put(telematicsArray);
+            args.put(telematics);
             totalPost.put("args", args);
 
             json = totalPost.toString();
-
-            // ** Alternative way to convert Person object to JSON string usin Jackson Lib
-            // ObjectMapper mapper = new ObjectMapper();
-            // json = mapper.writeValueAsString(person);
 
             // 5. set json to StringEntity
             StringEntity se = new StringEntity(json);
@@ -140,8 +152,5 @@ public class DataPoster implements Runnable {
 
     }
 
-    private void beginThread(){
-        Thread t = new Thread(this);
-        t.start();
-    }
+
 }

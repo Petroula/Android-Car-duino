@@ -112,11 +112,11 @@ public class SensorData {
     }
 
     private static void setRightLights(int status) {
-        new DataPoster("lights", "right", status);
+        new DataPoster("lights", "signal-right", status);
     }
 
     private static void setLeftLights(int status){
-        new DataPoster("lights", "left", status);
+        new DataPoster("lights", "signal-left", status);
     }
 
     private static void setStopLights(int status){
