@@ -3,6 +3,9 @@
 ### Project overview
 [The world's first Autonomous android vehicle](https://platis.solutions/blog/2015/06/29/worlds-first-android-autonomous-vehicle/)
 
+### Ericsson branch
+If you don't know why you are here, then you are probably at the wrong place.
+
 ![Alt text](Diagram.png?raw=true "You are now looking at the android app")
 
 ###Related repos:
