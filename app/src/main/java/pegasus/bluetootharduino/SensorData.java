@@ -55,6 +55,15 @@ public class SensorData {
 
     static void setRazorHeading(int value){
         Autodrive.setRazorHeading(value);
+        String heading = "WEST";
+        if (value >= -45 && value < 45){
+            heading = "NORTH";
+        }else if (value >= 45 && value < 135){
+            heading = "EAST";
+        }else if (value >= 135 && value < -135){
+            heading = "SOUTH";
+        }
+        new DataPoster("heading",heading);
         razorHeading = value;
     }
 
@@ -89,8 +98,32 @@ public class SensorData {
             lineLeftFound();
         } else if (input.startsWith("lineR")){
             lineRightFound();
+        }else if (input.startsWith("RI")){
+            setRightLights(Integer.parseInt(input.substring(3)));
+        }else if (input.startsWith("LE")){
+            setLeftLights(Integer.parseInt(input.substring(3)));
+        }else if (input.startsWith("ST")){
+            setStopLights(Integer.parseInt(input.substring(3)));
+        }else if (input.startsWith("SP")){
+            setSpeed(Integer.parseInt(input.substring(3)));
         }
 
 //        CameraActivity.updateDebuggingConsole();
+    }
+
+    private static void setRightLights(int status) {
+        new DataPoster("lights", "right", status);
+    }
+
+    private static void setLeftLights(int status){
+        new DataPoster("lights", "left", status);
+    }
+
+    private static void setStopLights(int status){
+        new DataPoster("lights", "brake", status);
+    }
+
+    private static void setSpeed(int speed) {
+        new DataPoster("speed",String.valueOf(speed));
     }
 }

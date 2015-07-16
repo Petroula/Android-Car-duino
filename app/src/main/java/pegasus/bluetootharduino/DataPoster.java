@@ -20,12 +20,14 @@ import java.io.InputStreamReader;
  */
 public class DataPoster implements Runnable {
 
-    public DataPoster(){
-        Thread t = new Thread(this);
-        t.start();
+    //peripheral sensors (and lights) constructor
+    public DataPoster(String sensorType, String sensorNumber, int value) {
+        beginThread();
     }
 
-    public DataPoster(String sensorType, String sensorNumber, int value) {
+    //vehicle data constructor
+    public DataPoster(String sensorType, String value) {
+        beginThread();
     }
 
     @Override
@@ -136,5 +138,10 @@ public class DataPoster implements Runnable {
         inputStream.close();
         return result;
 
+    }
+
+    private void beginThread(){
+        Thread t = new Thread(this);
+        t.start();
     }
 }
