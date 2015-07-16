@@ -18,6 +18,7 @@ namespace Autodrive {
 	const double slowSpeed = 0.26;
 	const double normalSpeed = 0.28;
 	const double backwardsSpeed = -0.65;
+	uint8_t executedEnoughTimes = 0;
 
 	enum side { right, left};
 	enum direction { front, back };
@@ -188,8 +189,13 @@ namespace Autodrive {
 				case BACKWARD_LEFT:
 					
 					if(Status::HasTurnedAngle(50)){
+						if (executedEnoughTimes >= 5){
 						currentState = DONE;
 						cmd.setSpeed(0);
+						}else{
+							cmd.setSpeed(slowSpeed);
+							executedEnoughTimes++;			
+						}
 					}else{
 						cmd.setAngle(-1.0);
 						cmd.setSpeed(backwardsSpeed);

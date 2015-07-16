@@ -17,6 +17,7 @@ public class SensorData {
 
     static void setUltrasound(int sensor, int value){
         Autodrive.setUltrasound(sensor, value);
+        new DataPoster("ultrasonic", "sensor" + sensor, value);
 
         if (sensor == 0) {
             ultrasonicFront = value;
@@ -29,6 +30,7 @@ public class SensorData {
 
     static void setInfrared(int sensor, int value){
         Autodrive.setInfrared(sensor, value);
+        new DataPoster("infrared", "sensor" + sensor, value);
 
         if (sensor == 0) {
             infraredSideFront = value;
@@ -53,7 +55,6 @@ public class SensorData {
 
     static void setRazorHeading(int value){
         Autodrive.setRazorHeading(value);
-
         razorHeading = value;
     }
 
