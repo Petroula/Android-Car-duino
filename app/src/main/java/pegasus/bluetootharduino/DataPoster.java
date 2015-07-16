@@ -74,7 +74,6 @@ public class DataPoster implements Runnable {
         }
         beginThread();
     }
-
     private void beginThread(){
         Thread t = new Thread(this);
         t.start();
@@ -89,13 +88,14 @@ public class DataPoster implements Runnable {
 
         InputStream inputStream = null;
         String result = "";
+        final String serverURL = "http://ec2-54-172-35-25.compute-1.amazonaws.com/publish";
         try {
 
             // 1. create HttpClient
             HttpClient httpclient = new DefaultHttpClient();
 
             // 2. make POST request to the given URL
-            HttpPost httpPost = new HttpPost("http://ec2-54-172-35-25.compute-1.amazonaws.com/publish");
+            HttpPost httpPost = new HttpPost(serverURL);
 
             String json = "";
 
