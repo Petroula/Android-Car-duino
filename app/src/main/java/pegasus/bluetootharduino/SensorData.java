@@ -1,5 +1,7 @@
 package pegasus.bluetootharduino;
 
+import android.util.Log;
+
 //TODO: We might want to remove this class completely and just use something like Autodrive.SensorData instead
 public class SensorData {
     public static int ultrasonicFront = 0,
@@ -17,6 +19,7 @@ public class SensorData {
 
     static void setUltrasound(int sensor, int value){
         Autodrive.setUltrasound(sensor, value);
+        sensor++;
         new DataPoster("ultrasonic", "sensor" + sensor, value);
 
         if (sensor == 0) {
@@ -30,6 +33,7 @@ public class SensorData {
 
     static void setInfrared(int sensor, int value){
         Autodrive.setInfrared(sensor, value);
+        sensor++;
         new DataPoster("infrared", "sensor" + sensor, value);
 
         if (sensor == 0) {
@@ -79,8 +83,25 @@ public class SensorData {
         lineRightFound = true;
     }
 
+    private static void postRightLights(int status) {
+        new DataPoster("lights", "signal-right", status);
+    }
+
+    private static void postLeftLights(int status){
+        new DataPoster("lights", "signal-left", status);
+    }
+
+    private static void postStopLights(int status){
+        new DataPoster("lights", "brake", status);
+    }
+
+    private static void postSpeed(int speed) {
+        new DataPoster("speed",String.valueOf(speed));
+    }
+
     static void handleInput(String input){
         input = input.replaceAll("\\r|\\n", "");
+        Log.i("Input: ", input);
 
         if (input.startsWith("EN")){
             setEncoderPulses(Integer.parseInt(input.substring(3)));
@@ -99,31 +120,26 @@ public class SensorData {
         } else if (input.startsWith("lineR")){
             lineRightFound();
         }else if (input.startsWith("RI")){
-            setRightLights(Integer.parseInt(input.substring(3)));
+            postRightLights(parseInt(input.substring(3)));
         }else if (input.startsWith("LE")){
-            setLeftLights(Integer.parseInt(input.substring(3)));
+            postLeftLights(parseInt(input.substring(3)));
         }else if (input.startsWith("ST")){
-            setStopLights(Integer.parseInt(input.substring(3)));
+            postStopLights(Integer.parseInt(input.substring(3)));
         }else if (input.startsWith("SP")){
-            setSpeed(Integer.parseInt(input.substring(3)));
+            postSpeed(Integer.parseInt(input.substring(3)));
         }
 
 //        CameraActivity.updateDebuggingConsole();
     }
 
-    private static void setRightLights(int status) {
-        new DataPoster("lights", "signal-right", status);
-    }
+    private static int parseInt(String string) {
+        int parsedInteger;
 
-    private static void setLeftLights(int status){
-        new DataPoster("lights", "signal-left", status);
-    }
-
-    private static void setStopLights(int status){
-        new DataPoster("lights", "brake", status);
-    }
-
-    private static void setSpeed(int speed) {
-        new DataPoster("speed",String.valueOf(speed));
+        try {
+            parsedInteger = Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+        return parsedInteger;
     }
 }

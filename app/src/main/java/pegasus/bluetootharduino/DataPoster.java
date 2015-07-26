@@ -19,6 +19,8 @@ import java.io.InputStreamReader;
 /**
  * Created by dimi on 16/7/2015.
  * HTTP POST request code based on: http://hmkcode.com/android-send-json-data-to-server/
+ * Posts data from the car, to the Ericsson connected vehicle cloud.
+ * API: http://ec2-54-172-35-25.compute-1.amazonaws.com/docs/
  */
 public class DataPoster implements Runnable {
     private JSONObject telematics;
@@ -36,7 +38,7 @@ public class DataPoster implements Runnable {
     private JSONObject buildJSON(String sensorType, String sensorID, int value){
 
         JSONObject sensorContents = new JSONObject();
-        Object val = value;
+        Object val = value; //Object since we do not know if it
         if (sensorID.equalsIgnoreCase("lights")){
             val = (value == 1); //convert 0,1 to false,true
         }
